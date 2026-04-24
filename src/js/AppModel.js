@@ -60,6 +60,7 @@ class AppModel {
     this.data[this.currentPeriod].projects.push(project);
     this.callbacks.onModelChange();
     this.saveToRepo();
+    console.log("Projects :", this.getProjects());
   }
 
   getEmployees() {
@@ -71,6 +72,7 @@ class AppModel {
     this.data[this.currentPeriod].employees.push(employee);
     this.callbacks.onModelChange();
     this.saveToRepo();
+    console.log("Employees :", this.getEmployees());
   }
 
   getAssignments() {
