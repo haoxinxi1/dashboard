@@ -19,16 +19,27 @@ class AddProjectPanel {
         employeeCapacity: parseInt(document.getElementById('employee-capacity').value, 10),
       };
       this.callbacks.onCreateProject(projectData);
-    });
+    }, this.showOpenButton, this.hideAddProjectPanelView);
   }
 
-    // handlers
+  // handlers
   showOpenButton = () => {
     document.getElementById('add-project-btn').classList.remove("hidden");
   }
 
   hideAddProjectPanelView = () => {
     document.getElementById('add-project-panel').classList.remove("open");
+  }
+
+  // reset
+  resetForm() {
+    document.getElementById('add-project-form').reset();
+    this.formTouched = false;
+    this.fields.forEach(field => {
+      field.classList.remove('invalid');
+      document.getElementById(`${field.id}-error`).style.display = 'none';
+    });
+    document.getElementById('add-project-btn-form').disabled = true;
   }
 
   // validation

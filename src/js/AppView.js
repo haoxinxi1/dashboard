@@ -57,10 +57,12 @@ class AppView {
   }
 
   showAddProjectPanelView = () => {
+    this.staticViews.addProjectPanel.resetForm();
     document.getElementById('add-project-panel').classList.add("open");
   }
 
   showAddEmployeePanelView = () => {
+    this.staticViews.addEmployeePanel.resetForm();
     document.getElementById('add-employee-panel').classList.add("open");
   }
 }

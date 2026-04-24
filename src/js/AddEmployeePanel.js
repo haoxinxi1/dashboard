@@ -20,7 +20,7 @@ class AddEmployeePanel {
         salary: parseFloat(document.getElementById('salary').value),
       };
       this.callbacks.onCreateEmployee(employeeData);
-    });
+    }, this.showOpenButton, this.hideAddEmployeePanelView);
   }
 
     // handlers
@@ -30,6 +30,17 @@ class AddEmployeePanel {
 
   hideAddEmployeePanelView = () => {
     document.getElementById('add-employee-panel').classList.remove("open");
+  }
+
+  // reset
+  resetForm() {
+    document.getElementById('add-employee-form').reset();
+    this.formTouched = false;
+    this.fields.forEach(field => {
+      field.classList.remove('invalid');
+      document.getElementById(`${field.id}-error`).style.display = 'none';
+    });
+    document.getElementById('add-btn-form').disabled = true;
   }
 
   // validation
