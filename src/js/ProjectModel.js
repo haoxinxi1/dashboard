@@ -10,10 +10,10 @@
 class ProjectModel {
   constructor (params) {
     this.id = crypto.randomUUID();
-    this.projectName = params.projectName,
-    this.companyName = params.companyName,
-    this.budget = params.budget,
-    this.employeeCapacity = params.employeeCapacity
+    this.projectName = params.projectName;
+    this.companyName = params.companyName;
+    this.budget = params.budget;
+    this.employeeCapacity = params.employeeCapacity;
   }
 }
 

@@ -15,14 +15,15 @@ class AppView {
 
   createStaticViews (callbacks) {
     let staticViews = {};
-    staticViews['employeesContentView'] = new EmployeesContentView();
+    callbacks.employeesContentView['showAddEmployeePanelView'] = this.showAddEmployeePanelView;
+    staticViews['employeesContentView'] = new EmployeesContentView(callbacks.employeesContentView);
     callbacks.projectsContentView['showAddProjectPanelView'] = this.showAddProjectPanelView;
     staticViews['projectsContentView'] = new ProjectsContentView(callbacks.projectsContentView);
     callbacks.sidePanelView['showProjects'] = this.showProjects;
     callbacks.sidePanelView['showEmployees'] = this.showEmployees;
     staticViews['sidePanelView'] = new SidePanelView(callbacks.sidePanelView);
-    staticViews['addEmployeePanel'] = new AddEmployeePanel();
-    staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.AddProjectPanel);
+    staticViews['addEmployeePanel'] = new AddEmployeePanel(callbacks.addEmployeePanel);
+    staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.addProjectPanel);
     staticViews['seedDataPopupView'] =  new SeedDataPopupView();
     return staticViews;
   }
@@ -57,6 +58,10 @@ class AppView {
 
   showAddProjectPanelView = () => {
     document.getElementById('add-project-panel').classList.add("open");
+  }
+
+  showAddEmployeePanelView = () => {
+    document.getElementById('add-employee-panel').classList.add("open");
   }
 }
 

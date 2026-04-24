@@ -12,11 +12,11 @@
 class EmployeeModel {
   constructor (params) {
     this.id = crypto.randomUUID();
-    this.name = params.name,
-    this.surname = params.surname,
-    this.dateOfBirth = params.dateOfBirth,
-    this.position = params.position,
-    this.salary = params.salary,
+    this.name = params.name;
+    this.surname = params.surname;
+    this.dateOfBirth = params.dateOfBirth;
+    this.position = params.position;
+    this.salary = params.salary;
     this.vacationDays = {};
   }
 }

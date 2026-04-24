@@ -10,10 +10,10 @@
 class AssignmentModel {
   constructor (params) {
     this.id = crypto.randomUUID();
-    this.projectID = params.projectID,
-    this.employeeID = params.employeeID,
-    this.capacity = params.capacity,
-    this.projectFit = params.projectFit
+    this.projectID = params.projectID;
+    this.employeeID = params.employeeID;
+    this.capacity = params.capacity;
+    this.projectFit = params.projectFit;
   }
 }
 

@@ -1,4 +1,4 @@
-import { bindEvent} from './utils'
+import { bindEvent} from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {

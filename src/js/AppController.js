@@ -28,7 +28,7 @@ class AppController {
       },
       'addProjectPanel': { 'onCreateProject': this.onCreateProject.bind(this), },
       'projectsContentView': {},
-      'addEmployeePanel': {},
+      'addEmployeePanel': {'onCreateEmployee': this.onCreateEmployee.bind(this),},
       'employeesContentView': {},
       'seedDataPopupView': {}
     }
@@ -60,6 +60,11 @@ class AppController {
   /* Create new Project */
   onCreateProject(projectData) {
     this.appModel.addProject(new ProjectModel(projectData));
+  }
+
+  /* Create new Employee */
+  onCreateEmployee(employeeData) {
+    this.appModel.addEmployee(new EmployeeModel(employeeData));
   }
 }
 
