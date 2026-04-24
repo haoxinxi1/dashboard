@@ -7,9 +7,8 @@
  * @throws {TypeError} If the selector does not match any element.
  */
 
-export function bindClick(selector, ...handlers) {
-  document.querySelector(selector).addEventListener('click', (e) => {
+export function bindEvent(event, selector, ...handlers) {
+  document.querySelector(selector).addEventListener(event, (e) => {
     handlers.forEach(fn => fn(e));
   });
 }
-

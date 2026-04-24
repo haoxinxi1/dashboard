@@ -4,39 +4,55 @@ import SidePanelView from './SidePanelView';
 import AddEmployeePanel from './AddEmployeePanel';
 import AddProjectPanel from './AddProjectPanel';
 import SeedDataPopupView from './SeedDataPopupView';
-import { bindClick } from './utils'
+import { bindEvent} from './utils'
 
 class AppView {
   constructor (callbacks) {
-    this.callbacks = callbacks;
-    this.staticViews = this.createStaticViews();
-    this.init();
+    this.callbacks = callbacks.appViewCB;
+    this.staticViews = this.createStaticViews(callbacks);
+    this.bindListeners();
   }
 
-  createStaticViews () {
+  createStaticViews (callbacks) {
     let staticViews = {};
     staticViews['employeesContentView'] = new EmployeesContentView();
     staticViews['projectsContentView'] = new ProjectsContentView();
-    staticViews['sidePanelView'] = new SidePanelView();
+    callbacks.sidePanelViewCB['showProjects'] = this.showProjects;
+    callbacks.sidePanelViewCB['showEmployees'] = this.showEmployees;
+    staticViews['sidePanelView'] = new SidePanelView(callbacks.sidePanelViewCB);
     staticViews['addEmployeePanel'] = new AddEmployeePanel();
     staticViews['addProjectPanel'] = new AddProjectPanel();
     staticViews['seedDataPopupView'] =  new SeedDataPopupView();
     return staticViews;
   }
 
-  init() {
-    let openButton = document.getElementById('#open-button')
-    bindClick('#open-button', this.hideOpenButton, this.showSidePanelView);
+  bindListeners() {
+    bindEvent('click', '#open-button', this.hideOpenButton, this.showSidePanelView);
   }
 
+  // render
+  fillContentAll(content) {
+    this.staticViews.sidePanelView.fillContent(content.sidePanelViewContent);
+  }
+
+  // handlers
   hideOpenButton = () => {
-    document.getElementById('#open-button').classList.add("hidden");
+    document.getElementById('open-button').classList.add("hidden");
   }
 
   showSidePanelView = () => {
-    document.getElementById('#hide-panel').classList.remove("hidden");
+    document.getElementById('side-panel').classList.remove("hidden");
   }
 
+  showProjects = () => {
+    document.getElementById('employees-content').classList.add("hidden");
+    document.getElementById('projects-content').classList.remove("hidden");
+  }
+
+  showEmployees = () => {
+    document.getElementById('projects-content').classList.add("hidden");
+    document.getElementById('employees-content').classList.remove("hidden");
+  }
 }
 
 export default AppView ;

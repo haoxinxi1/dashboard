@@ -3,17 +3,50 @@ import AppView from './AppView';
 
 class AppController {
   constructor () {
-    this.appModel = new AppModel();
+    this.appModel = new AppModel(this.setAppModelCallbacks());
     this.appView = new AppView(this.setAppViewCallbacks());
+    this.appView.fillContentAll(this.setAppViewContent())
   }
+
+  setAppModelCallbacks() {
+    return {
+      'appModelCB': {
+        'onModelChange': this.onModelChange.bind(this),
+      }
+    }
+  }
+
   setAppViewCallbacks() {
-    return {cb1 : this.cb1, cb2 : this.cb2};
+    return {
+      'appViewCB': {},
+      'sidePanelViewCB': {
+        'onPeriodChangeMonth': this.onPeriodChangeMonth.bind(this),
+        'onPeriodChangeYear': this.onPeriodChangeYear.bind(this),
+      },
+    }
   }
-  cb1 = () => {
-    return 0;
+
+  setAppViewContent() {
+    return {
+      'appViewContent': {},
+      'sidePanelViewContent': {
+        'currentPeriod': this.appModel.getCurrentPeriod(),
+      }
+    }
   }
-  cb2 = () => {
-    return 0;
+
+  /* AppModel CB */
+  onModelChange() {
+    this.appView.fillContentAll(this.setAppViewContent());
+  }
+
+  /* SidePanelView CB */
+  onPeriodChangeMonth(e) {
+    this.appModel.setCurrentMonth(e.target.value);
+  }
+
+  onPeriodChangeYear(e) {
+    this.appModel.setCurrentYear(e.target.value);
   }
 }
 
