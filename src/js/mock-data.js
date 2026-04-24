@@ -53,6 +53,7 @@ const assignment2 = {
 };
 
 const mockData = [
+  { '2026-0': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } },
   { '2026-1': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } },
   { '2026-2': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } }
 ];
