@@ -3,7 +3,11 @@ import { bindEvent} from './utils'
 class AddEmployeePanel {
   constructor(callbacks){
     this.callbacks = callbacks;
+    this.formTouched = false;
+    this.fields = document.querySelectorAll('#add-employee-form input, #add-employee-form select');
     this.bindListeners();
+    this.bindValidation();
+
   }
   bindListeners() {
     bindEvent('click', '#cancel-btn-form', this.showOpenButton, this.hideAddEmployeePanelView);
@@ -26,6 +30,40 @@ class AddEmployeePanel {
 
   hideAddEmployeePanelView = () => {
     document.getElementById('add-employee-panel').classList.remove("open");
+  }
+
+  // validation
+  bindValidation() {
+    this.fields.forEach(field => {
+      bindEvent('blur', `#${field.id}`, () => {
+        this.formTouched = true;
+        this.validateAll();
+      });
+      bindEvent('input', `#${field.id}`, () => {
+        if (this.formTouched) this.validateAll();
+      });
+    });
+  }
+
+  validateAll() {
+    let allValid = true;
+    this.fields.forEach(field => {
+      const isValid = field.id === 'dob' ? this.isAtLeast18(field.value) : field.checkValidity();
+      field.classList.toggle('invalid', !isValid);
+      document.getElementById(`${field.id}-error`).style.display = isValid ? 'none' : 'block';
+      if (!isValid) allValid = false;
+    });
+    document.getElementById('add-btn-form').disabled = !allValid;
+  }
+
+  isAtLeast18(value) {
+    if (!value) return false;
+    const dob = new Date(value);
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+    return age >= 18;
   }
 }
 
