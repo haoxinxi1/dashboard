@@ -1,6 +1,6 @@
 import mockData from "./mock-data";
 
-export default class Repo {
+class Repo {
   constructor () {
     this.data = mockData;
   }
@@ -11,3 +11,5 @@ export default class Repo {
     return this.data;
   }
 }
+
+export default Repo;

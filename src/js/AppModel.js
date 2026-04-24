@@ -1,6 +1,6 @@
-import { Repo } from './Repo';
+import Repo from './Repo';
 
-export default class AppModel {
+class AppModel {
   constructor () {
     this.repo = new Repo();
     this.currentPeriod =  this.getCurrentMonthYear();
@@ -61,3 +61,5 @@ export default class AppModel {
            this.data[this.currentPeriod]?.assignments.find((el) => el.id === id);
   }
 }
+
+export default AppModel;
