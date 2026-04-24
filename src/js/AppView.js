@@ -16,6 +16,7 @@ class AppView {
   createStaticViews (callbacks) {
     let staticViews = {};
     staticViews['employeesContentView'] = new EmployeesContentView();
+    callbacks.projectsContentView['showAddProjectPanelView'] = this.showAddProjectPanelView;
     staticViews['projectsContentView'] = new ProjectsContentView();
     callbacks.sidePanelViewCB['showProjects'] = this.showProjects;
     callbacks.sidePanelViewCB['showEmployees'] = this.showEmployees;
@@ -52,6 +53,10 @@ class AppView {
   showEmployees = () => {
     document.getElementById('projects-content').classList.add("hidden");
     document.getElementById('employees-content').classList.remove("hidden");
+  }
+
+  showAddProjectPanelView = () => {
+    document.getElementById('add-project-panel').classList.add("open");
   }
 }
 
