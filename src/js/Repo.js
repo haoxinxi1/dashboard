@@ -1,6 +1,8 @@
+import mockData from "./mock-data";
+
 export default class Repo {
   constructor () {
-    this.data = [];
+    this.data = mockData;
   }
   save(data) {
     this.data = data;
