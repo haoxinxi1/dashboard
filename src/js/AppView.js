@@ -8,7 +8,7 @@ import { bindEvent} from './utils'
 
 class AppView {
   constructor (callbacks) {
-    this.callbacks = callbacks.appViewCB;
+    this.callbacks = callbacks.appView;
     this.staticViews = this.createStaticViews(callbacks);
     this.bindListeners();
   }
@@ -17,12 +17,12 @@ class AppView {
     let staticViews = {};
     staticViews['employeesContentView'] = new EmployeesContentView();
     callbacks.projectsContentView['showAddProjectPanelView'] = this.showAddProjectPanelView;
-    staticViews['projectsContentView'] = new ProjectsContentView();
-    callbacks.sidePanelViewCB['showProjects'] = this.showProjects;
-    callbacks.sidePanelViewCB['showEmployees'] = this.showEmployees;
-    staticViews['sidePanelView'] = new SidePanelView(callbacks.sidePanelViewCB);
+    staticViews['projectsContentView'] = new ProjectsContentView(callbacks.projectsContentView);
+    callbacks.sidePanelView['showProjects'] = this.showProjects;
+    callbacks.sidePanelView['showEmployees'] = this.showEmployees;
+    staticViews['sidePanelView'] = new SidePanelView(callbacks.sidePanelView);
     staticViews['addEmployeePanel'] = new AddEmployeePanel();
-    staticViews['addProjectPanel'] = new AddProjectPanel();
+    staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.AddProjectPanel);
     staticViews['seedDataPopupView'] =  new SeedDataPopupView();
     return staticViews;
   }

@@ -2,7 +2,7 @@ import { bindEvent } from './utils'
 
 class SidePanelView {
   constructor(callbacks) {
-    this.callbacks = callbacks.sidePanelViewCB;
+    this.callbacks = callbacks;
     this.bindListeners();
   }
 

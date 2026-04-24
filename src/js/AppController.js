@@ -13,7 +13,7 @@ class AppController {
 
   setAppModelCallbacks() {
     return {
-      'appModelCB': {
+      'appModel': {
         'onModelChange': this.onModelChange.bind(this),
       }
     }
@@ -21,16 +21,16 @@ class AppController {
 
   setAppViewCallbacks() {
     return {
-      'appViewCB': {},
-      'sidePanelViewCB': {
+      'appView': {},
+      'sidePanelView': {
         'onPeriodChangeMonth': this.onPeriodChangeMonth.bind(this),
         'onPeriodChangeYear': this.onPeriodChangeYear.bind(this),
       },
-      'addProjectPanelCB': { 'onCreateProject': this.onCreateProject.bind(this), },
-      'projectsContentViewCB': {},
-      'addEmployeePanelCB': {},
-      'employeesContentViewCB': {},
-      'seedDataPopupViewCB': {}
+      'addProjectPanel': { 'onCreateProject': this.onCreateProject.bind(this), },
+      'projectsContentView': {},
+      'addEmployeePanel': {},
+      'employeesContentView': {},
+      'seedDataPopupView': {}
     }
   }
 
@@ -43,12 +43,12 @@ class AppController {
     }
   }
 
-  /* AppModel CB */
+  /* AppModel  */
   onModelChange() {
     this.appView.fillContentAll(this.setAppViewContent());
   }
 
-  /* SidePanelView CB */
+  /* SidePanelView  */
   onPeriodChangeMonth(e) {
     this.appModel.setCurrentMonth(e.target.value);
   }

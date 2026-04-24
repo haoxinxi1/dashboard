@@ -1,6 +1,8 @@
+import { bindEvent} from './utils'
+
 class AddProjectPanel {
   constructor(callbacks){
-    this.callbacks = callbacks.addProjectPanelCB;
+    this.callbacks = callbacks;
     this.bindListeners();
   }
   bindListeners() {
@@ -18,7 +20,7 @@ class AddProjectPanel {
 
     // handlers
   showOpenButton = () => {
-    document.getElementById('add-project-button').classList.remove("hidden");
+    document.getElementById('add-project-btn').classList.remove("hidden");
   }
 
   hideAddProjectPanelView = () => {

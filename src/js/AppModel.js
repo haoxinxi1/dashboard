@@ -2,7 +2,7 @@ import Repo from './Repo';
 
 class AppModel {
   constructor (callbacks) {
-    this.callbacks = callbacks.appModelCB;
+    this.callbacks = callbacks.appModel;
     this.repo = new Repo();
     this.currentPeriod =  this.getCurrentMonthYear();
     this.data = this.loadFromRepo();
