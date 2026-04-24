@@ -4,7 +4,7 @@ export default class AppModel {
   constructor () {
     this.repo = new Repo();
     this.currentPeriod =  this.getCurrentMonthYear();
-    this.data = {};
+    this.data = this.loadFromRepo();
   }
   loadFromRepo() {
     let arr = this.repo.load();
@@ -37,6 +37,7 @@ export default class AppModel {
   addProject(project) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
     this.data[this.currentPeriod].projects.push(project);
+    this.saveToRepo();
   }
   getEmployees() {
     return this.data[this.currentPeriod]?.employees ?? [];
@@ -44,6 +45,7 @@ export default class AppModel {
   addEmployee(employee) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
     this.data[this.currentPeriod].employees.push(employee);
+    this.saveToRepo();
   }
   getAssignments() {
     return this.data[this.currentPeriod]?.assignments ?? [];
@@ -51,6 +53,7 @@ export default class AppModel {
   addAssignment(assignment) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
     this.data[this.currentPeriod].assignments.push(assignment);
+    this.saveToRepo();
   }
   searchData(id) {
     return this.data[this.currentPeriod]?.projects.find((el) => el.id === id) ||
