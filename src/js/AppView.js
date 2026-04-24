@@ -4,12 +4,15 @@ import SidePanelView from './SidePanelView';
 import AddEmployeePanel from './AddEmployeePanel';
 import AddProjectPanel from './AddProjectPanel';
 import SeedDataPopupView from './SeedDataPopupView';
+import { bindClick } from './utils'
 
 class AppView {
   constructor (callbacks) {
     this.callbacks = callbacks;
     this.staticViews = this.createStaticViews();
+    this.init();
   }
+
   createStaticViews () {
     let staticViews = {};
     staticViews['employeesContentView'] = new EmployeesContentView();
@@ -20,6 +23,20 @@ class AppView {
     staticViews['seedDataPopupView'] =  new SeedDataPopupView();
     return staticViews;
   }
+
+  init() {
+    let openButton = document.getElementById('#open-button')
+    bindClick('#open-button', this.hideOpenButton, this.showSidePanelView);
+  }
+
+  hideOpenButton = () => {
+    document.getElementById('#open-button').classList.add("hidden");
+  }
+
+  showSidePanelView = () => {
+    document.getElementById('#hide-panel').classList.remove("hidden");
+  }
+
 }
 
 export default AppView ;
