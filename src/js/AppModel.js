@@ -47,6 +47,13 @@ class AppModel {
     this.callbacks.onModelChange();
   }
 
+  seedData(chosenPeriod) {
+    this.data[this.currentPeriod] = this.data[chosenPeriod];
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("Periods :", this.data);
+  }
+
   initPeriodData(){
     this.data[this.currentPeriod] = { employees: [], projects: [], assignments: [] };
   }
@@ -84,6 +91,10 @@ class AppModel {
     this.data[this.currentPeriod].assignments.push(assignment);
     this.callbacks.onModelChange();
     this.saveToRepo();
+  }
+
+  getWholeData() {
+    return this.data;
   }
 
   searchData(id) {

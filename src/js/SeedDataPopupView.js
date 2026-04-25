@@ -1,14 +1,17 @@
-import { bindEvent} from './utils'
+import { bindEvent } from './utils'
 import { MONTHS } from './constants.js';
 
 class SeedDataPopupView {
-  constructor() {
+  constructor(callbacks) {
+    this.callbacks = callbacks;
+    this.currentPeriod = null;
     this.bindListeners();
   }
 
   bindListeners() {
     bindEvent('click', '#seed-data-backdrop', this.hideSeedDataPopupView);
     bindEvent('click', '#close-seed-popup-btn', this.hideSeedDataPopupView);
+    bindEvent('click', '#seed-data-table-body', this.handleSeedClick);
   }
 
   // handlers
@@ -17,12 +20,30 @@ class SeedDataPopupView {
     document.getElementById('seed-data-popup').classList.add("hidden");
   }
 
+  handleSeedClick = (e) => {
+    const targetBtn = e.target.closest('.seed-month-btn');
+    if (!targetBtn) return;
+    const periodChosen = targetBtn.dataset.period;
+    const [year, month] = periodChosen.split('-');
+    const [yearCur, monthCur] = this.currentPeriod.split('-');
+    if (confirm(`Copy data from ${MONTHS[Number(month)]} ${year} to ${MONTHS[Number(monthCur)]} ${yearCur}?`)) {
+      this.callbacks.onSeedChosenMonth(periodChosen);
+    }
+  }
+
     // render
   fillContent(content) {
-    const monthIndex = content.currentPeriod.split('-')[1];
-    const year = content.currentPeriod.split('-')[0];
+    this.currentPeriod = content.currentPeriod;
+    const [year, monthIndex] = this.currentPeriod.split('-');
     document.getElementById('current-month-display').textContent = `${MONTHS[monthIndex]} ${year}`;
-    // TODO
+    const tableBody = document.getElementById('seed-data-table-body');
+    while (tableBody.firstChild) {
+      tableBody.removeChild(tableBody.firstChild);
+    }
+    content.monthsData.forEach((data) => {
+      const el = this.createSeedDataRow(data);
+      tableBody.appendChild(el);
+    });
   }
 
     /**
@@ -34,12 +55,13 @@ class SeedDataPopupView {
    * @param {number} data.income
    * @returns {DocumentFragment}
    */
-  createSeedDataRow({ year, month, monthIndex, projects, employees, income }) {
+  createSeedDataRow({ period, projects, employees, income }) {
     const template = document.getElementById('seed-data-row-template');
     const clone = template.content.cloneNode(true);
 
+    const [year, monthIndex] = period.split('-');
     clone.querySelector('.seed-year').textContent = year;
-    clone.querySelector('.seed-month').textContent = month;
+    clone.querySelector('.seed-month').textContent = MONTHS[Number(monthIndex)];
     clone.querySelector('.seed-projects').textContent = projects;
     clone.querySelector('.seed-employees').textContent = employees;
 
@@ -47,7 +69,7 @@ class SeedDataPopupView {
     incomeCell.textContent = `$${income.toFixed(2)}`;
     if (income < 0) incomeCell.classList.add('negative-income');
 
-    clone.querySelector('.seed-month-btn').dataset.period = `${year}-${monthIndex}`;
+    clone.querySelector('.seed-month-btn').dataset.period = period;
 
     return clone;
   }

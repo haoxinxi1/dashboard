@@ -5,44 +5,70 @@ import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
 
 class AppController {
-  constructor () {
+  constructor() {
     this.appModel = new AppModel(this.setAppModelCallbacks());
     this.appView = new AppView(this.setAppViewCallbacks());
-    this.appView.fillContentAll(this.setAppViewContent())
+    this.appView.fillContentAll(this.setAppViewContent());
   }
 
   setAppModelCallbacks() {
     return {
-      'appModel': {
-        'onModelChange': this.onModelChange.bind(this),
-      }
-    }
+      appModel: {
+        onModelChange: this.onModelChange.bind(this),
+      },
+    };
   }
 
   setAppViewCallbacks() {
     return {
-      'appView': {},
-      'sidePanelView': {
-        'onPeriodChangeMonth': this.onPeriodChangeMonth.bind(this),
-        'onPeriodChangeYear': this.onPeriodChangeYear.bind(this),
+      appView: {},
+      sidePanelView: {
+        onPeriodChangeMonth: this.onPeriodChangeMonth.bind(this),
+        onPeriodChangeYear: this.onPeriodChangeYear.bind(this),
       },
-      'addProjectPanel': { 'onCreateProject': this.onCreateProject.bind(this), },
-      'projectsContentView': {},
-      'addEmployeePanel': {'onCreateEmployee': this.onCreateEmployee.bind(this),},
-      'employeesContentView': {},
-      'seedDataPopupView': {}
-    }
+      addProjectPanel: { onCreateProject: this.onCreateProject.bind(this) },
+      projectsContentView: {},
+      addEmployeePanel: { onCreateEmployee: this.onCreateEmployee.bind(this) },
+      employeesContentView: {},
+      seedDataPopupView: {
+        onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
+      },
+    };
   }
 
   setAppViewContent() {
     return {
-      'sidePanelView': {
-        'currentPeriod': this.appModel.getCurrentPeriod(),
+      sidePanelView: {
+        currentPeriod: this.appModel.getCurrentPeriod(),
       },
-      'seedDataPopupView': {
-        'currentPeriod': this.appModel.getCurrentPeriod(),
-      }
-    }
+      seedDataPopupView: {
+        currentPeriod: this.appModel.getCurrentPeriod(),
+        monthsData: this.getDataForSeedPopup(),
+      },
+    };
+  }
+
+  /* Calculation of figures */
+  getDataForSeedPopup() {
+    const data = this.appModel.getWholeData();
+    let monthsData = [];
+    let current = this.appModel.getCurrentPeriod();
+    Object.entries(data)
+      .filter((el) => el[0] !== current)
+      .forEach(([period, periodData]) => {
+        const obj = {
+          period: period,
+          projects: periodData.projects.length,
+          employees: periodData.employees.length,
+          income: this.calculateIncome(),
+        };
+        monthsData.push(obj);
+      });
+    return monthsData;
+  }
+
+  calculateIncome() {
+    return 0; //TODO
   }
 
   /* AppModel  */
@@ -67,6 +93,11 @@ class AppController {
   /* Create new Employee */
   onCreateEmployee(employeeData) {
     this.appModel.addEmployee(new EmployeeModel(employeeData));
+  }
+
+  /* Seed Popup */
+  onSeedChosenMonth(period) {
+    this.appModel.seedData(period);
   }
 }
 

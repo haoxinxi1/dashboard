@@ -25,7 +25,7 @@ class AppView {
     staticViews['sidePanelView'] = new SidePanelView(callbacks.sidePanelView);
     staticViews['addEmployeePanel'] = new AddEmployeePanel(callbacks.addEmployeePanel);
     staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.addProjectPanel);
-    staticViews['seedDataPopupView'] =  new SeedDataPopupView();
+    staticViews['seedDataPopupView'] =  new SeedDataPopupView(callbacks.seedDataPopupView);
     return staticViews;
   }
 
