@@ -87,7 +87,7 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="projects-table-body">
             <!-- Project data will be populated here -->
           </tbody>
         </table>
@@ -341,6 +341,17 @@
         <td class="seed-employees"></td>
         <td class="seed-income"></td>
         <td><button class="seed-month-btn">Seed</button></td>
+      </tr>
+    </template>
+    <template id="project-row-template">
+      <tr>
+        <td id="company-name"></td>
+        <td id="project-name"></td>
+        <td id="budget"></td>
+        <td><span id="rating"></span></td>
+        <td><button id="show-employees-btn" class="show-details-btn" data-project-id="" data-type="employees"></button></td>
+        <td id="income"></td>
+        <td><button id="delete-project-btn" class="delete-btn delete-project" data-project-id="">Delete</button></td>
       </tr>
     </template>
   </body>

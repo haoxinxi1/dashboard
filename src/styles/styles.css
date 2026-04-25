@@ -1495,3 +1495,25 @@ tbody tr:hover {
 .seed-data-popup.hidden {
   display: none;
 }
+
+.show-details-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.delete-btn, .unassign-action-btn {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
