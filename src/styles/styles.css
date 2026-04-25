@@ -1487,3 +1487,11 @@ tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
+
+.hidden {
+  display: none;
+}
+
+.seed-data-popup.hidden {
+  display: none;
+}

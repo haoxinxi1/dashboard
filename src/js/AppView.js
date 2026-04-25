@@ -18,6 +18,7 @@ class AppView {
     callbacks.employeesContentView['showAddEmployeePanelView'] = this.showAddEmployeePanelView;
     staticViews['employeesContentView'] = new EmployeesContentView(callbacks.employeesContentView);
     callbacks.projectsContentView['showAddProjectPanelView'] = this.showAddProjectPanelView;
+    callbacks.projectsContentView['showSeedDataPopupView'] = this.showSeedDataPopupView;
     staticViews['projectsContentView'] = new ProjectsContentView(callbacks.projectsContentView);
     callbacks.sidePanelView['showProjects'] = this.showProjects;
     callbacks.sidePanelView['showEmployees'] = this.showEmployees;
@@ -34,7 +35,8 @@ class AppView {
 
   // render
   fillContentAll(content) {
-    this.staticViews.sidePanelView.fillContent(content.sidePanelViewContent);
+    this.staticViews.sidePanelView.fillContent(content.sidePanelView);
+    this.staticViews.seedDataPopupView.fillContent(content.seedDataPopupView);
   }
 
   // handlers
@@ -64,6 +66,11 @@ class AppView {
   showAddEmployeePanelView = () => {
     this.staticViews.addEmployeePanel.resetForm();
     document.getElementById('add-employee-panel').classList.add("open");
+  }
+
+  showSeedDataPopupView = () => {
+    document.getElementById('seed-data-backdrop').classList.remove("hidden");
+    document.getElementById('seed-data-popup').classList.remove("hidden");
   }
 }
 

@@ -36,8 +36,10 @@ class AppController {
 
   setAppViewContent() {
     return {
-      'appViewContent': {},
-      'sidePanelViewContent': {
+      'sidePanelView': {
+        'currentPeriod': this.appModel.getCurrentPeriod(),
+      },
+      'seedDataPopupView': {
         'currentPeriod': this.appModel.getCurrentPeriod(),
       }
     }
