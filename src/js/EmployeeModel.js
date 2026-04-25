@@ -15,9 +15,21 @@ class EmployeeModel {
     this.name = params.name;
     this.surname = params.surname;
     this.dateOfBirth = params.dateOfBirth;
+    this.age = this.calculateAge();
     this.position = params.position;
     this.salary = params.salary;
     this.vacationDays = {};
+  }
+
+  calculateAge() {
+    const birth = new Date(this.dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
   }
 }
 

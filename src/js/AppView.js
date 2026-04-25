@@ -37,6 +37,8 @@ class AppView {
   fillContentAll(content) {
     this.staticViews.sidePanelView.fillContent(content.sidePanelView);
     this.staticViews.seedDataPopupView.fillContent(content.seedDataPopupView);
+    this.staticViews.projectsContentView.fillContent(content.projectsContentView);
+    this.staticViews.employeesContentView.fillContent(content.employeesContentView);
   }
 
   // handlers

@@ -86,6 +86,14 @@ class AppModel {
     return this.data[this.currentPeriod]?.assignments ?? [];
   }
 
+  getAssignmentsOfProject(projectID) {
+    return this.getAssignments().filter((el) => el.projectID === projectID);
+  }
+
+  getAssignmentsOfEmployee(employeeID) {
+    return this.getAssignments().filter((el) => el.employeeID === employeeID);
+  }
+
   addAssignment(assignment) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
     this.data[this.currentPeriod].assignments.push(assignment);

@@ -36,6 +36,7 @@ class AppController {
     };
   }
 
+  // rendering
   setAppViewContent() {
     return {
       sidePanelView: {
@@ -45,6 +46,8 @@ class AppController {
         currentPeriod: this.appModel.getCurrentPeriod(),
         monthsData: this.getDataForSeedPopup(),
       },
+      projectsContentView:  this.getDataForProjectsTab(),
+      employeesContentView: this.getDataForEmployeesTab(),
     };
   }
 
@@ -60,15 +63,69 @@ class AppController {
           period: period,
           projects: periodData.projects.length,
           employees: periodData.employees.length,
-          income: this.calculateIncome(),
+          income: this.calculateTotalIncome(period),
         };
         monthsData.push(obj);
       });
     return monthsData;
   }
 
-  calculateIncome() {
+  calculateTotalIncome(period) {
     return 0; //TODO
+  }
+
+  calculateIncome(projectID) {
+    return 0; //TODO
+  }
+
+  calculateRating(projectID) {
+    return 0; //TODO
+  }
+
+  calculateMonthlySalary(employeeID) {
+    return 0; //TODO
+  }
+
+  calculateIncomePerEmployee(employeeID) {
+    return 0; //TODO
+  }
+
+  getCapacityUsageString(employeeID) {
+    return '1.0 / 1.0';  // TODO
+  }
+
+
+  getDataForProjectsTab() {
+    const projects = this.appModel.getProjects();
+    return projects.map((project) => {
+      return {
+        projectID: project.id,
+        companyName: project.companyName,
+        projectName: project.projectName,
+        budget: project.budget,
+        rating: this.calculateIncome(project.id),
+        income: this.calculateRating(project.id),
+        numberEmployees: this.appModel.getAssignmentsOfProject().length ?? 0
+      }
+    })
+  }
+
+  getDataForEmployeesTab() {
+    const employees = this.appModel.getEmployees();
+    return employees.map((employee) => {
+      return {
+        employeeID: employee.id,
+        firstName: employee.name,
+        lastName: employee.surname,
+        age: employee.age,
+        position: employee.position,
+        salary: employee.salary,
+        monthlySalary: this.calculateMonthlySalary(employee.id),
+        income: this.calculateIncomePerEmployee(employee.id),
+        numberProjects: this.appModel.getAssignmentsOfEmployee().length ?? 0,
+        capacityUsage: this.getCapacityUsageString(employee.id)
+      }
+    })
   }
 
   /* AppModel  */
