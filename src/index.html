@@ -271,45 +271,44 @@
     </template>
     <template id="project-row-template">
       <tr>
-        <td id="company-name"></td>
-        <td id="project-name"></td>
-        <td id="budget"></td>
-        <td><span id="rating"></span></td>
+        <td class="project-row-company-name"></td>
+        <td class="project-row-project-name"></td>
+        <td class="project-row-budget"></td>
+        <td><span class="project-row-rating"></span></td>
         <td>
-          <button id="show-employees-btn" class="show-details-btn" data-project-id="" data-type="employees"></button>
+          <button class="project-row-show-employees-btn show-details-btn" data-project-id="" data-type="employees"></button>
         </td>
-        <td id="income"></td>
+        <td class="project-row-income"></td>
         <td>
-          <button id="delete-project-btn" class="delete-btn delete-project" data-project-id="">Delete</button>
+          <button class="project-row-delete-btn delete-btn" data-project-id="">Delete</button>
         </td>
       </tr>
     </template>
     <template id="employee-row-template">
       <tr data-employee-id="">
-        <td id="first-name"></td>
-        <td id="last-name"></td>
-        <td id="age"></td>
-        <td id="position" class="editable-position" data-field="position" data-employee-id=""></td>
-        <td id="salary" class="editable-salary" data-field="salary" data-employee-id=""></td>
-        <td id="monthly-salary"></td>
+        <td class="employee-row-first-name"></td>
+        <td class="employee-row-last-name"></td>
+        <td class="employee-row-age"></td>
+        <td class="employee-row-position editable-position" data-field="position" data-employee-id=""></td>
+        <td class="employee-row-salary editable-salary" data-field="salary" data-employee-id=""></td>
+        <td class="employee-row-monthly-salary"></td>
         <td>
-          <button id="show-assignments-btn" class="show-details-btn" data-employee-id="" data-type="assignments">
-            <span id="capacity-indicator" class="capacity-indicator"></span>
+          <button class="employee-row-show-assignments-btn show-details-btn" data-employee-id="" data-type="assignments">
+            <span class="employee-row-capacity-indicator capacity-indicator"></span>
           </button>
         </td>
-        <td id="income"></td>
+        <td class="employee-row-income"></td>
         <td>
           <div class="action-buttons">
             <button
-              id="availability-btn"
-              class="availability-btn"
+              class="employee-row-availability-btn availability-btn"
               data-employee-id=""
               title="View availability calendar"
             >
               Availability
             </button>
-            <button id="assign-btn" class="assign-btn" data-employee-id="" title="Assign to project">Assign</button>
-            <button id="delete-btn" class="delete-btn delete-employee" data-employee-id="">Delete</button>
+            <button class="employee-row-assign-btn assign-btn" data-employee-id="" title="Assign to project">Assign</button>
+            <button class="employee-row-delete-btn delete-btn delete-employee" data-employee-id="">Delete</button>
           </div>
         </td>
       </tr>
