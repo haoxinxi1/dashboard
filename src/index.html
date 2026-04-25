@@ -302,14 +302,13 @@
     </div>
 
     <!-- Seed Data Popup -->
-    <div
-      id="seed-data-backdrop"
-      class="popup-backdrop hidden"
-    ></div>
+    <div id="seed-data-backdrop" class="popup-backdrop hidden"></div>
     <div id="seed-data-popup" class="seed-data-popup hidden">
       <div class="popup-header">
         <h2>Seed Data from Month</h2>
-        <button class="close-popup-btn" id="close-seed-popup-btn">&times;</button>
+        <button class="close-popup-btn" id="close-seed-popup-btn">
+          &times;
+        </button>
       </div>
       <div class="popup-content">
         <p>
@@ -349,9 +348,82 @@
         <td id="project-name"></td>
         <td id="budget"></td>
         <td><span id="rating"></span></td>
-        <td><button id="show-employees-btn" class="show-details-btn" data-project-id="" data-type="employees"></button></td>
+        <td>
+          <button
+            id="show-employees-btn"
+            class="show-details-btn"
+            data-project-id=""
+            data-type="employees"
+          ></button>
+        </td>
         <td id="income"></td>
-        <td><button id="delete-project-btn" class="delete-btn delete-project" data-project-id="">Delete</button></td>
+        <td>
+          <button
+            id="delete-project-btn"
+            class="delete-btn delete-project"
+            data-project-id=""
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    </template>
+    <template id="employee-row-template">
+      <tr data-employee-id="">
+        <td id="first-name"></td>
+        <td id="last-name"></td>
+        <td id="age"></td>
+        <td
+          id="position"
+          class="editable-position"
+          data-field="position"
+          data-employee-id=""
+        ></td>
+        <td
+          id="salary"
+          class="editable-salary"
+          data-field="salary"
+          data-employee-id=""
+        ></td>
+        <td id="monthly-salary"></td>
+        <td>
+          <button
+            id="show-assignments-btn"
+            class="show-details-btn"
+            data-employee-id=""
+            data-type="assignments"
+          >
+            <span id="capacity-indicator" class="capacity-indicator"></span>
+          </button>
+        </td>
+        <td id="income"></td>
+        <td>
+          <div class="action-buttons">
+            <button
+              id="availability-btn"
+              class="availability-btn"
+              data-employee-id=""
+              title="View availability calendar"
+            >
+              Availability
+            </button>
+            <button
+              id="assign-btn"
+              class="assign-btn"
+              data-employee-id=""
+              title="Assign to project"
+            >
+              Assign
+            </button>
+            <button
+              id="delete-btn"
+              class="delete-btn delete-employee"
+              data-employee-id=""
+            >
+              Delete
+            </button>
+          </div>
+        </td>
       </tr>
     </template>
   </body>

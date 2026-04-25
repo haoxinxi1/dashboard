@@ -1517,3 +1517,26 @@ tbody tr:hover {
   font-size: 0.9em;
   transition: background-color 0.2s;
 }
+
+.editable-position, .editable-salary {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.capacity-indicator {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+.assign-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
