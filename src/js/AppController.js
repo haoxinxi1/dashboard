@@ -112,10 +112,13 @@ class AppController {
       }
     })
     const period = this.appModel.getCurrentPeriod();
+    const totalIncome = this.calculateTotalIncome(period);
     return {
       projectsRows: projectsRows,
-      totalIncome: this.calculateTotalIncome(period),
+      totalIncome: totalIncome,
       benchIncome: this.calculateBenchPayments(period),
+      isIncomeNegative: totalIncome < 0,
+      hasProjects: projectsRows.length > 0
     }
   }
 

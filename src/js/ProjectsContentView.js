@@ -42,14 +42,15 @@ class ProjectsContentView {
       tableBody.appendChild(el);
     });
     const resume = document.getElementById('projects-total-income');
-    if (content.projectsRows.length > 0) {
+    if (content.hasProjects) {
       resume.querySelector('.total-amount').textContent = `$${content.totalIncome.toFixed(2)}`;
       resume.querySelector('.bench-payments').textContent = `(Bench payments: $${content.benchIncome.toFixed(2)})`;
       resume.classList.remove('hidden');
-      if (content.totalIncome < 0) {
-        resume.querySelector('.total-amount').classList.add('negative-income');
+      const totalEl = resume.querySelector('.total-amount');
+      if (content.isIncomeNegative) {
+        totalEl.classList.add('negative-income');
       } else {
-        resume.querySelector('.total-amount').classList.remove('negative-income');
+        totalEl.classList.remove('negative-income');
       }
     } else {
       resume.classList.add('hidden');
