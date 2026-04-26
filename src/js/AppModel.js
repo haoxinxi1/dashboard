@@ -48,7 +48,7 @@ class AppModel {
   }
 
   seedData(chosenPeriod) {
-    this.data[this.currentPeriod] = this.data[chosenPeriod];
+    this.data[this.currentPeriod] = structuredClone(this.data[chosenPeriod]);
     this.callbacks.onModelChange();
     this.saveToRepo();
     console.log("Periods :", this.data);

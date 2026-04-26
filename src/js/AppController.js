@@ -74,6 +74,10 @@ class AppController {
     return 0; //TODO
   }
 
+  calculateBenchPayments(period) {
+    return 0; //TODO
+  }
+
   calculateIncome(projectID) {
     return 0; //TODO
   }
@@ -96,18 +100,23 @@ class AppController {
 
 
   getDataForProjectsTab() {
-    const projects = this.appModel.getProjects();
-    return projects.map((project) => {
+    const projectsRows = this.appModel.getProjects().map((project) => {
       return {
         projectID: project.id,
         companyName: project.companyName,
         projectName: project.projectName,
         budget: project.budget,
-        rating: this.calculateIncome(project.id),
-        income: this.calculateRating(project.id),
-        numberEmployees: this.appModel.getAssignmentsOfProject().length ?? 0
+        rating: this.calculateRating(project.id),
+        income: this.calculateIncome(project.id),
+        numberEmployees: this.appModel.getAssignmentsOfProject(project.id).length ?? 0
       }
     })
+    const period = this.appModel.getCurrentPeriod();
+    return {
+      projectsRows: projectsRows,
+      totalIncome: this.calculateTotalIncome(period),
+      benchIncome: this.calculateBenchPayments(period),
+    }
   }
 
   getDataForEmployeesTab() {
@@ -122,7 +131,7 @@ class AppController {
         salary: employee.salary,
         monthlySalary: this.calculateMonthlySalary(employee.id),
         income: this.calculateIncomePerEmployee(employee.id),
-        numberProjects: this.appModel.getAssignmentsOfEmployee().length ?? 0,
+        numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id).length ?? 0,
         capacityUsage: this.getCapacityUsageString(employee.id)
       }
     })

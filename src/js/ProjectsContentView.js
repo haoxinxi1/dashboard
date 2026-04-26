@@ -1,4 +1,4 @@
-import { bindEvent} from './utils';
+import { bindEvent } from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {
@@ -14,8 +14,8 @@ class ProjectsContentView {
 
   // handlers
   hideOpenButton = () => {
-    document.getElementById('add-project-btn').classList.add("hidden");
-  }
+    document.getElementById('add-project-btn').classList.add('hidden');
+  };
 
   handleBtnClick = (e) => {
     let targetBtn = e.target.closest('.project-row-show-employees-btn');
@@ -25,15 +25,11 @@ class ProjectsContentView {
     const action = targetBtn.dataset.action;
     if (action === 'show') this.handleShowAssignments(projectID);
     else if (action === 'delete') this.handleDeleteProject(projectID);
-  }
+  };
 
-  handleShowAssignments = (projectID) => {
+  handleShowAssignments = (projectID) => {};
 
-  }
-
-  handleDeleteProject = (projectID) => {
-
-  }
+  handleDeleteProject = (projectID) => {};
 
   // render
   fillContent(content) {
@@ -41,13 +37,26 @@ class ProjectsContentView {
     while (tableBody.firstChild) {
       tableBody.removeChild(tableBody.firstChild);
     }
-    content.forEach((projectData) => {
-      const el = this.createProjectRow(projectData);
+    content.projectsRows.forEach((row) => {
+      const el = this.createProjectRow(row);
       tableBody.appendChild(el);
     });
+    const resume = document.getElementById('projects-total-income');
+    if (content.projectsRows.length > 0) {
+      resume.querySelector('.total-amount').textContent = `$${content.totalIncome.toFixed(2)}`;
+      resume.querySelector('.bench-payments').textContent = `(Bench payments: $${content.benchIncome.toFixed(2)})`;
+      resume.classList.remove('hidden');
+      if (content.totalIncome < 0) {
+        resume.querySelector('.total-amount').classList.add('negative-income');
+      } else {
+        resume.querySelector('.total-amount').classList.remove('negative-income');
+      }
+    } else {
+      resume.classList.add('hidden');
+    }
   }
-    /**
-   * Creates a project table row from the template.
+  /**
+   * Creates a project table row from the template
    * @param {Object} data
    * @param {string} data.projectID
    * @param {string} data.companyName
