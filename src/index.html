@@ -71,6 +71,11 @@
             <!-- Project data will be populated here -->
           </tbody>
         </table>
+        <div id="projects-total-income" class="total-income-info">
+          <strong>Total Estimated Income:</strong>
+          <span class="total-amount negative-income">$-24140.83</span>
+          <span class="bench-payments">(Bench payments: $20925.00)</span>
+        </div>
       </div>
       <div id="employees-content" class="hidden">
         <div class="content-header">
@@ -276,7 +281,11 @@
         <td class="project-row-budget"></td>
         <td><span class="project-row-rating"></span></td>
         <td>
-          <button class="project-row-show-employees-btn show-details-btn" data-project-id="" data-type="employees"></button>
+          <button
+            class="project-row-show-employees-btn show-details-btn"
+            data-project-id=""
+            data-type="employees"
+          ></button>
         </td>
         <td class="project-row-income"></td>
         <td>
@@ -293,7 +302,11 @@
         <td class="employee-row-salary editable-salary" data-field="salary" data-employee-id=""></td>
         <td class="employee-row-monthly-salary"></td>
         <td>
-          <button class="employee-row-show-assignments-btn show-details-btn" data-employee-id="" data-type="assignments">
+          <button
+            class="employee-row-show-assignments-btn show-details-btn"
+            data-employee-id=""
+            data-type="assignments"
+          >
             <span class="employee-row-capacity-indicator capacity-indicator"></span>
           </button>
         </td>
@@ -307,7 +320,9 @@
             >
               Availability
             </button>
-            <button class="employee-row-assign-btn assign-btn" data-employee-id="" title="Assign to project">Assign</button>
+            <button class="employee-row-assign-btn assign-btn" data-employee-id="" title="Assign to project">
+              Assign
+            </button>
             <button class="employee-row-delete-btn delete-btn delete-employee" data-employee-id="">Delete</button>
           </div>
         </td>

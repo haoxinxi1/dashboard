@@ -1540,3 +1540,12 @@ tbody tr:hover {
   font-size: 0.9em;
   transition: background-color 0.2s;
 }
+
+.total-income-info.hidden {
+  display: none;
+}
+
+.bench-payments {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
