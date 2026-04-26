@@ -43,8 +43,8 @@ class ProjectsContentView {
     });
     const resume = document.getElementById('projects-total-income');
     if (content.hasProjects) {
-      resume.querySelector('.total-amount').textContent = `$${content.totalIncome.toFixed(2)}`;
-      resume.querySelector('.bench-payments').textContent = `(Bench payments: $${content.benchIncome.toFixed(2)})`;
+      resume.querySelector('.total-amount').textContent = `${content.totalIncome}`;
+      resume.querySelector('.bench-payments').textContent = `(Bench payments: ${content.benchIncome})`;
       resume.classList.remove('hidden');
       const totalEl = resume.querySelector('.total-amount');
       if (content.isIncomeNegative) {
@@ -62,10 +62,10 @@ class ProjectsContentView {
    * @param {string} data.projectID
    * @param {string} data.companyName
    * @param {string} data.projectName
-   * @param {number} data.budget
-   * @param {number} data.rating
-   * @param {number} data.income
-   * @param {number} data.numberEmployees;
+   * @param {string} data.budget
+   * @param {string} data.rating
+   * @param {string} data.income
+   * @param {number} data.numberEmployees
    * @returns {DocumentFragment}
    */
   createProjectRow({ projectID, companyName, projectName, budget, rating, income, numberEmployees }) {
@@ -74,9 +74,9 @@ class ProjectsContentView {
 
     clone.querySelector('.project-row-company-name').textContent = companyName;
     clone.querySelector('.project-row-project-name').textContent = projectName;
-    clone.querySelector('.project-row-budget').textContent = `$${budget.toFixed(2)}`;
+    clone.querySelector('.project-row-budget').textContent = budget;
     clone.querySelector('.project-row-rating').textContent = rating;
-    clone.querySelector('.project-row-income').textContent = `$${income.toFixed(2)}`;
+    clone.querySelector('.project-row-income').textContent = income;
 
     const showEmployeesBtn = clone.querySelector('.project-row-show-employees-btn');
     showEmployeesBtn.dataset.id = projectID;

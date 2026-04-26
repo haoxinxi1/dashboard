@@ -57,9 +57,9 @@ class EmployeesContentView {
    * @param {string} data.lastName
    * @param {number} data.age
    * @param {string} data.position
-   * @param {number} data.salary
-   * @param {number} data.monthlySalary
-   * @param {number} data.income
+   * @param {string} data.salary
+   * @param {string} data.monthlySalary
+   * @param {string} data.income
    * @param {number} data.numberProjects;
    * @param {string} data.capacityUsage;
    * @returns {DocumentFragment}
@@ -83,9 +83,9 @@ class EmployeesContentView {
     clone.querySelector('.employee-row-last-name').textContent = lastName;
     clone.querySelector('.employee-row-age').textContent = age;
     clone.querySelector('.employee-row-position').textContent = position;
-    clone.querySelector('.employee-row-salary').textContent = `$${salary.toFixed(2)}`;
-    clone.querySelector('.employee-row-monthly-salary').textContent = `$${monthlySalary.toFixed(2)}`;
-    clone.querySelector('.employee-row-income').textContent = `$${income.toFixed(2)}`;
+    clone.querySelector('.employee-row-salary').textContent = salary;
+    clone.querySelector('.employee-row-monthly-salary').textContent = monthlySalary;
+    clone.querySelector('.employee-row-income').textContent = income;
 
     const showProjectsBtn = clone.querySelector('.employee-row-show-assignments-btn');
     showProjectsBtn.dataset.id = employeeID;

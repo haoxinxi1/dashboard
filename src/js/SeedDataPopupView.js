@@ -35,7 +35,7 @@ class SeedDataPopupView {
   fillContent(content) {
     this.currentPeriod = content.currentPeriod;
     const [year, monthIndex] = this.currentPeriod.split('-');
-    document.getElementById('current-month-display').textContent = `${MONTHS[monthIndex]} ${year}`;
+    document.getElementById('current-month-display').textContent = `${MONTHS[Number(monthIndex)]} ${year}`;
     const tableBody = document.getElementById('seed-data-table-body');
     while (tableBody.firstChild) {
       tableBody.removeChild(tableBody.firstChild);
@@ -52,10 +52,11 @@ class SeedDataPopupView {
    * @param {string} data.period
    * @param {number} data.projects
    * @param {number} data.employees
-   * @param {number} data.income
+   * @param {string} data.income
+   * @param {boolean} data.isNegative
    * @returns {DocumentFragment}
    */
-  createSeedDataRow({ period, projects, employees, income }) {
+  createSeedDataRow({ period, projects, employees, income, isNegative }) {
     const template = document.getElementById('seed-data-row-template');
     const clone = template.content.cloneNode(true);
 
@@ -66,8 +67,8 @@ class SeedDataPopupView {
     clone.querySelector('.seed-employees').textContent = employees;
 
     const incomeCell = clone.querySelector('.seed-income');
-    incomeCell.textContent = `$${income.toFixed(2)}`;
-    if (income < 0) incomeCell.classList.add('negative-income');
+    incomeCell.textContent = income;
+    if (isNegative) incomeCell.classList.add('negative-income');
 
     clone.querySelector('.seed-month-btn').dataset.period = period;
 

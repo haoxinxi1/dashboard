@@ -3,6 +3,7 @@ import AppView from './AppView';
 import ProjectModel from './ProjectModel';
 import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
+import Formatter from './Formatter'
 
 class AppController {
   constructor() {
@@ -59,11 +60,13 @@ class AppController {
     Object.entries(data)
       .filter((el) => el[0] !== current)
       .forEach(([period, periodData]) => {
+        const income = this.calculateTotalIncome(period);
         const obj = {
           period: period,
           projects: periodData.projects.length,
           employees: periodData.employees.length,
-          income: this.calculateTotalIncome(period),
+          income: Formatter.currency(income),
+          isNegative: income < 0,
         };
         monthsData.push(obj);
       });
@@ -82,10 +85,6 @@ class AppController {
     return 0; //TODO
   }
 
-  calculateRating(projectID) {
-    return 0; //TODO
-  }
-
   calculateMonthlySalary(employeeID) {
     return 0; //TODO
   }
@@ -94,29 +93,35 @@ class AppController {
     return 0; //TODO
   }
 
+  getCapacityUsageStringProject(projectID) {
+    return '1.0 / 1';  // TODO
+  }
+
   getCapacityUsageString(employeeID) {
     return '1.0 / 1.0';  // TODO
   }
 
-
   getDataForProjectsTab() {
     const projectsRows = this.appModel.getProjects().map((project) => {
+      const rating = this.getCapacityUsageStringProject(project.id);
+      const income = this.calculateIncome(project.id);
       return {
         projectID: project.id,
         companyName: project.companyName,
         projectName: project.projectName,
-        budget: project.budget,
-        rating: this.calculateRating(project.id),
-        income: this.calculateIncome(project.id),
-        numberEmployees: this.appModel.getAssignmentsOfProject(project.id).length ?? 0
+        budget: Formatter.currency(project.budget),
+        rating: rating,
+        income: Formatter.currency(income),
+        numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0
       }
     })
     const period = this.appModel.getCurrentPeriod();
     const totalIncome = this.calculateTotalIncome(period);
+    const benchIncome = this.calculateBenchPayments(period);
     return {
       projectsRows: projectsRows,
-      totalIncome: totalIncome,
-      benchIncome: this.calculateBenchPayments(period),
+      totalIncome: Formatter.currency(totalIncome),
+      benchIncome: Formatter.currency(benchIncome),
       isIncomeNegative: totalIncome < 0,
       hasProjects: projectsRows.length > 0
     }
@@ -125,16 +130,18 @@ class AppController {
   getDataForEmployeesTab() {
     const employees = this.appModel.getEmployees();
     return employees.map((employee) => {
+      const monthlySalary = this.calculateMonthlySalary(employee.id);
+      const income = this.calculateIncomePerEmployee(employee.id);
       return {
         employeeID: employee.id,
         firstName: employee.name,
         lastName: employee.surname,
         age: employee.age,
         position: employee.position,
-        salary: employee.salary,
-        monthlySalary: this.calculateMonthlySalary(employee.id),
-        income: this.calculateIncomePerEmployee(employee.id),
-        numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id).length ?? 0,
+        salary: Formatter.currency(employee.salary),
+        monthlySalary: Formatter.currency(monthlySalary),
+        income: Formatter.currency(income),
+        numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id)?.length ?? 0,
         capacityUsage: this.getCapacityUsageString(employee.id)
       }
     })
