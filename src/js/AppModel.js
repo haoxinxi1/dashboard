@@ -99,6 +99,7 @@ class AppModel {
     this.data[this.currentPeriod].assignments.push(assignment);
     this.callbacks.onModelChange();
     this.saveToRepo();
+    console.log("Assignments :", this.getAssignments());
   }
 
   getWholeData() {

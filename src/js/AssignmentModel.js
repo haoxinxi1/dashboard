@@ -3,7 +3,7 @@
  * @param {string} params.projectID
  * @param {string} params.employeeID
  * @param {number} params.capacity
- * @param {Object} params.projectFit
+ * @param {number} params.projectFit
  */
 
 

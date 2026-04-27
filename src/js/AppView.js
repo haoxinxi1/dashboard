@@ -5,6 +5,7 @@ import AddEmployeePanel from './AddEmployeePanel';
 import AddProjectPanel from './AddProjectPanel';
 import SeedDataPopupView from './SeedDataPopupView';
 import AssignmentsPopupView from './AssignmentsPopupView';
+import AddAssignmentPopup from './AddAssignmentPopup'
 import { bindEvent} from './utils'
 
 class AppView {
@@ -30,8 +31,11 @@ class AppView {
     staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.addProjectPanel);
     staticViews['seedDataPopupView'] =  new SeedDataPopupView(callbacks.seedDataPopupView);
     staticViews['assignmentsPopupView'] = new AssignmentsPopupView(callbacks.assignmentsPopupView);
+    staticViews['addAssignmentPopup'] = new AddAssignmentPopup(callbacks.addAssignmentPopup);
     return staticViews;
   }
+
+
 
   bindListeners() {
     bindEvent('click', '#open-button', this.hideOpenButton, this.showSidePanelView);
@@ -84,6 +88,14 @@ class AppView {
     document.getElementById('details-data-backdrop').classList.remove("hidden");
     document.getElementById('details-popup').classList.remove("hidden");
   };
+
+  showAddAssignPopup(content, button) {
+    this.staticViews.addAssignmentPopup.createPopup(content, button);
+  }
+
+  showProjectInfoAssignPopup(content) {
+    this.staticViews.addAssignmentPopup.renderProjectInfo(content);
+  }
 }
 
 export default AppView ;

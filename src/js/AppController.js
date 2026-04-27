@@ -4,7 +4,6 @@ import ProjectModel from './ProjectModel';
 import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
 import Formatter from './Formatter';
-import AssignmentsPopupView from './AssignmentsPopupView';
 
 class AppController {
   constructor() {
@@ -30,14 +29,21 @@ class AppController {
         onPeriodChangeYear: this.onPeriodChangeYear.bind(this),
       },
       addProjectPanel: { onCreateProject: this.onCreateProject.bind(this) },
-      projectsContentView: {getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this)},
+      projectsContentView: { getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this) },
       addEmployeePanel: { onCreateEmployee: this.onCreateEmployee.bind(this) },
-      employeesContentView: {getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this)},
+      employeesContentView: {
+        getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this),
+        onAssignEmployee: this.onAssignEmployee.bind(this),
+      },
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
       },
       assignmentsPopupView: {
-        onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this)
+        onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this),
+      },
+      addAssignmentPopup: {
+        onCreateNewAssignment: this.onCreateNewAssignment.bind(this),
+        onChooseProject: this.onChooseProject.bind(this),
       },
     };
   }
@@ -157,11 +163,10 @@ class AppController {
 
     content.data = assignments.map((assignment) => {
       let firstColLinkText;
-      if (type === 'employee'){
+      if (type === 'employee') {
         project = this.appModel.getProjects().find((el) => el.id === assignment.projectID);
         firstColLinkText = project.projectName;
-      }
-      else if (type === 'project') {
+      } else if (type === 'project') {
         employee = this.appModel.getEmployees().find((el) => el.id === assignment.employeeID);
         firstColLinkText = `${employee.name} ${employee.surname}`;
       }
@@ -188,7 +193,59 @@ class AppController {
     return content;
   }
 
+  getDataForShowingAddAssingPopup(employeeID) {
+    const data = {};
+    data.projects = this.appModel.getProjects().map((project) => {
+      const available = this.calculateProjectAvailable(project);
+      return {
+        id: project.id,
+        name: project.projectName,
+        available: Formatter.decimal1(available),
+      };
+    });
+    const employee = this.appModel.searchData(employeeID);
+    const currentCapacity = this.calculateCurrentCapacity(employee);
+    const maxCapacity = this.calculateMaxCapacity(employee);
+    const availableCapacity = maxCapacity - currentCapacity;
+
+    data.employeeID = employeeID;
+    data.employeeName = `${employee.name} ${employee.surname}`;
+    data.currentCapacity = Formatter.decimal1(currentCapacity);
+    data.maxCapacity = Formatter.decimal1(maxCapacity);
+    data.availableCapacity = Formatter.decimal1(availableCapacity);
+
+    return data;
+  }
+
+  getProjectInfoForAssignPopup(projectID) { // TODO
+    const capacityActual = 0;
+    const capacityTotal = 0;
+    const capacityEffective = 0;
+    const capacityActualAfter = 0;
+    const capacityTotalAfter = 0;
+
+    return {
+      capacityActual: Formatter.decimal1(capacityActual),
+      capacityTotal: capacityTotal,
+      capacityEffective:  Formatter.decimal1(capacityEffective) ,
+      capacityActualAfter:  Formatter.decimal1(capacityActualAfter),
+      capacityTotalAfter: capacityTotalAfter,
+    };
+  }
+
   /* Calculation of figures */
+
+  calculateCurrentCapacity(employee) {
+    return 1.0;
+  }
+
+  calculateMaxCapacity(employee) {
+    return 1.0;
+  }
+
+  calculateProjectAvailable(project) {
+    return 1;
+  }
 
   getVacationInfo() {
     return ' '; //TODO
@@ -258,10 +315,29 @@ class AppController {
     this.appModel.addEmployee(new EmployeeModel(employeeData));
   }
 
+  /* Create new Assignment */
+  onCreateNewAssignment(data) {
+    this.appModel.addAssignment(new AssignmentModel(data));
+    return 1;
+  }
+
   /* Seed Popup */
   onSeedChosenMonth(period) {
     this.appModel.seedData(period);
   }
+
+  /* Employee Tab */
+  onAssignEmployee(button, employeeID) {
+    const content = this.getDataForShowingAddAssingPopup(employeeID);
+    this.appView.showAddAssignPopup(content, button);
+  }
+
+  /* Assign Popup */
+  onChooseProject(projectID) {
+    const content = this.getProjectInfoForAssignPopup(projectID);
+    this.appView.showProjectInfoAssignPopup(content);
+  }
+
 }
 
 export default AppController;

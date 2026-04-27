@@ -26,7 +26,7 @@ class EmployeesContentView {
     const action = targetBtn.dataset.action;
     if (action === 'show') this.handleShowAssignments(employeeID);
     else if (action === 'check-schedule') this.handleCheckSchedule(employeeID);
-    else if (action === 'assign') this.onAssign(employeeID);
+    else if (action === 'assign') this.callbacks.onAssignEmployee(targetBtn, employeeID);
     else if (action === 'delete') this.handleDeleteEmployee(employeeID);
   };
 
@@ -36,8 +36,6 @@ class EmployeesContentView {
   };
 
   handleCheckSchedule = (employeeID) => {};
-
-  onAssign = (employeeID) => {};
 
   handleDeleteEmployee = (employeeID) => {};
 

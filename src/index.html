@@ -362,8 +362,7 @@
     <template id="details-row-template">
       <tr>
         <td>
-          <a href="#" class="details-action-link">
-          </a>
+          <a href="#" class="details-action-link"> </a>
         </td>
         <td class="detail-capacity"></td>
         <td class="detail-fit"></td>
@@ -377,6 +376,49 @@
           <button class="unassign-action-btn">Unassign</button>
         </td>
       </tr>
+    </template>
+    <template id="assignment-popup-template">
+      <div class="assignment-popup">
+        <div class="assignment-popup-content">
+          <h3 class="popup-title">Assign</h3>
+          <div class="capacity-status">
+            <strong>Current Capacity:</strong> <span class="current-capacity"></span> /
+            <span class="max-capacity"></span><br />
+            <strong>Available:</strong> <span class="available-capacity"></span>
+          </div>
+          <label>Select Project:</label>
+          <select class="project-select">
+            <option value="">Select a project</option>
+          </select>
+          <div class="capacity-input-section" style="display: none">
+            <label>Capacity Allocation: <span class="capacity-value">1.0</span></label>
+            <input type="range" class="capacity-input" min="0" max="1.5" step="0.1" value="1.0" />
+            <span class="capacity-hint">Adjust capacity (0.0 - 1.5)</span>
+            <label style="margin-top: 10px">Project Fit: <span class="fit-value">1.0</span></label>
+            <input type="range" class="fit-input" min="0" max="1" step="0.1" value="1.0" />
+            <span class="capacity-hint">Project fit coefficient (0.0-1.0). Effective capacity = capacity × fit</span>
+          </div>
+          <div class="project-info" style="display: none">
+            <div class="info-row">
+              <span class="info-label">Project Capacity:</span>
+              <span class="info-value"><span class="used-capacity"></span> / <span class="total-capacity"></span></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Effective Capacity:</span>
+              <span class="info-value effective-capacity"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">After Assignment:</span>
+              <span class="info-value target-capacity"></span>
+            </div>
+          </div>
+          <div class="validation-message" style="display: none"></div>
+          <div class="popup-buttons">
+            <button class="apply-assignment">Assign</button>
+            <button class="cancel-assignment">Cancel</button>
+          </div>
+        </div>
+      </div>
     </template>
   </body>
 </html>
