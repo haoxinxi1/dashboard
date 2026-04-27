@@ -133,6 +133,15 @@ class AppModel {
   isDuplicate(collection, criteria) {
     return collection.some((item) => Object.entries(criteria).every(([key, value]) => item[key] === value));
   }
+
+  deleteAssignment(id) {
+    let array = this.getAssignments();
+    const index = array.findIndex(item => item.id === id);
+    if (index !== -1) array.splice(index, 1);
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("Assignments: ", array);
+  }
 }
 
 export default AppModel;

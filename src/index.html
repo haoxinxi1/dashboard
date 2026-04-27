@@ -421,22 +421,80 @@
       </div>
     </template>
     <template id="edit-assignment-template">
-      <div class="assignment-popup" style="display: none;">
+      <div class="assignment-popup" style="display: none">
         <div class="popup-content">
           <h3>Edit Assignment</h3>
           <p><strong></strong> on <strong></strong></p>
           <div class="form-group">
             <label for="edit-capacity">Capacity (0.0 - 1.50): <span class="edit-capacity-value">1.00</span></label>
-            <input type="range" id="edit-capacity" class="edit-capacity-input" min="0" max="1.50" step="0.1" value="1.00">
+            <input
+              type="range"
+              id="edit-capacity"
+              class="edit-capacity-input"
+              min="0"
+              max="1.50"
+              step="0.1"
+              value="1.00"
+            />
           </div>
           <div class="form-group">
             <label for="edit-fit">Project Fit (0.0-1.0): <span class="edit-fit-value">1.00</span></label>
-            <input type="range" id="edit-fit" class="edit-fit-input" min="0" max="1" step="0.1" value="1.00">
+            <input type="range" id="edit-fit" class="edit-fit-input" min="0" max="1" step="0.1" value="1.00" />
           </div>
-          <div class="validation-message" style="display: none;"></div>
+          <div class="validation-message" style="display: none"></div>
           <div class="popup-actions">
             <button class="popup-btn popup-cancel-edit">Cancel</button>
             <button class="popup-btn popup-save-edit">Save</button>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template id="unassignment-popup-template">
+      <div class="unassignment-popup-overlay">
+        <div class="unassignment-popup-content">
+          <h3>Unassign Confirmation</h3>
+          <p class="unassign-message">
+            You want to unassign <strong class="employee-name"></strong> (<span class="employee-capacity"></span>
+            capacity) from <strong class="project-name"></strong>?
+          </p>
+          <div class="unassignment-info">
+            <div class="info-row">
+              <span class="info-label">Assigned Capacity:</span>
+              <span class="info-value assigned-capacity"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Employee Salary Share:</span>
+              <span class="info-value salary-share"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Budget Share:</span>
+              <span class="info-value budget-share"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Employee Estimated Income:</span>
+              <span class="info-value estimated-income"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Current Project Capacity:</span>
+              <span class="info-value current-capacity"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Capacity After Unassignment:</span>
+              <span class="info-value after-capacity"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Project Income Now:</span>
+              <span class="info-value income-now"></span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Project Income After:</span>
+              <span class="info-value income-after"></span>
+            </div>
+          </div>
+          <div class="popup-actions">
+            <button class="popup-btn popup-cancel">Cancel</button>
+            <button class="popup-btn popup-confirm-unassign">Unassign</button>
           </div>
         </div>
       </div>

@@ -41,6 +41,7 @@ class AppController {
       assignmentsPopupView: {
         onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this),
         onStartEditAssignment: this.onStartEditAssignment.bind(this),
+        handleStartDeleteAssignment: this.handleStartDeleteAssignment.bind(this),
       },
       addAssignmentPopup: {
         onCreateNewAssignment: this.onCreateNewAssignment.bind(this),
@@ -49,6 +50,9 @@ class AppController {
       editAssignmentPopup: {
         onFinishEditAssignment: this.onFinishEditAssignment.bind(this),
       },
+      deleteAssignmentPopup: {
+        onDeleteAssignment: this.onDeleteAssignment.bind(this),
+      }
     };
   }
 
@@ -252,6 +256,35 @@ class AppController {
     }
   }
 
+  getInfoForDeleteAssignPopup(assignmentID) {
+    const assignment = this.appModel.searchData(assignmentID);
+    const employee = this.appModel.searchData(assignment.employeeID);
+    const employeeName = `${employee.name} ${employee.surname}`;
+    const projectName = this.appModel.searchData(assignment.projectID).projectName;
+    // TODO
+    const incomeNow = 0;
+    const incomeAfter = 0;
+    const estimatedIncome = 0;
+
+    return {
+      assignmentID: assignmentID,
+      employeeName: employeeName,
+      employeeCapacity: Formatter.decimal1(0),
+      projectName: projectName,
+      assignedCapacity: Formatter.decimal1(0),
+      salaryShare: 0,
+      budgetShare: 0,
+      estimatedIncome: Formatter.currency(incomeNow),
+      currentCapacity: Formatter.decimal1(0),
+      afterCapacity: Formatter.decimal1(0),
+      incomeNow: Formatter.currency(incomeNow),
+      incomeAfter: Formatter.currency(incomeAfter),
+      isNegativeEstimated: estimatedIncome < 0,
+      isNegativeNow: incomeNow < 0,
+      isNegativeAfter: incomeAfter < 0,
+    }
+  }
+
   /* Calculation of figures */
 
   calculateCurrentCapacity(employee) {
@@ -357,6 +390,10 @@ class AppController {
     this.appView.showEditAssignPopup(content, button);
   }
 
+  handleStartDeleteAssignment(id) {
+    const content = this.getInfoForDeleteAssignPopup(id);
+    this.appView.showDeleteAssignPopup(content);
+  }
 
   /* Assign Employee Popup */
   onChooseProject(projectID) {
@@ -367,6 +404,12 @@ class AppController {
   /* Edit assignment Popup */
   onFinishEditAssignment(data) {
     this.appModel.editAssignment(data.assignmentID, data.capacity, data.projectFit);
+    return 1;
+  }
+
+  /* Delete assignment Popup */
+  onDeleteAssignment(assignmentID) {
+    this.appModel.deleteAssignment(assignmentID);
     return 1;
   }
 

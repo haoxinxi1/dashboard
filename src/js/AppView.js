@@ -7,6 +7,7 @@ import SeedDataPopupView from './SeedDataPopupView';
 import AssignmentsPopupView from './AssignmentsPopupView';
 import AddAssignmentPopup from './AddAssignmentPopup';
 import EditAssignmentPopup from './EditAssignmentPopup';
+import DeleteAssignmentPopup from './DeleteAssignmentPopup';
 import { bindEvent} from './utils';
 
 class AppView {
@@ -34,10 +35,9 @@ class AppView {
     staticViews['assignmentsPopupView'] = new AssignmentsPopupView(callbacks.assignmentsPopupView);
     staticViews['addAssignmentPopup'] = new AddAssignmentPopup(callbacks.addAssignmentPopup);
     staticViews['editAssignmentPopup'] = new EditAssignmentPopup(callbacks.editAssignmentPopup);
+    staticViews['deleteAssignmentPopup'] = new DeleteAssignmentPopup(callbacks.deleteAssignmentPopup);
     return staticViews;
   }
-
-
 
   bindListeners() {
     bindEvent('click', '#open-button', this.hideOpenButton, this.showSidePanelView);
@@ -101,6 +101,10 @@ class AppView {
 
   showEditAssignPopup(content, button) {
     this.staticViews.editAssignmentPopup.createPopup(content, button);
+  }
+
+  showDeleteAssignPopup(content) {
+    this.staticViews.deleteAssignmentPopup.createPopup(content);
   }
 }
 
