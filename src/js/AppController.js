@@ -3,10 +3,12 @@ import AppView from './AppView';
 import ProjectModel from './ProjectModel';
 import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
-import Formatter from './Formatter'
+import Formatter from './Formatter';
+import AssignmentsPopupView from './AssignmentsPopupView';
 
 class AppController {
   constructor() {
+    this.assignmentViewTypeId = [];
     this.appModel = new AppModel(this.setAppModelCallbacks());
     this.appView = new AppView(this.setAppViewCallbacks());
     this.appView.fillContentAll(this.setAppViewContent());
@@ -28,11 +30,14 @@ class AppController {
         onPeriodChangeYear: this.onPeriodChangeYear.bind(this),
       },
       addProjectPanel: { onCreateProject: this.onCreateProject.bind(this) },
-      projectsContentView: {},
+      projectsContentView: {getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this)},
       addEmployeePanel: { onCreateEmployee: this.onCreateEmployee.bind(this) },
-      employeesContentView: {},
+      employeesContentView: {getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this)},
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
+      },
+      assignmentsPopupView: {
+        onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this)
       },
     };
   }
@@ -47,12 +52,69 @@ class AppController {
         currentPeriod: this.appModel.getCurrentPeriod(),
         monthsData: this.getDataForSeedPopup(),
       },
-      projectsContentView:  this.getDataForProjectsTab(),
+      projectsContentView: this.getDataForProjectsTab(),
       employeesContentView: this.getDataForEmployeesTab(),
+      assignmentsPopupView: this.getDataForAssignmentsPopup(...this.assignmentViewTypeId),
     };
   }
 
-  /* Calculation of figures */
+  // assignment popup cb
+  getContentAssignmentsPopup(type, id) {
+    this.assignmentViewTypeId = [type, id];
+    this.onModelChange();
+  }
+
+  onCloseAssignmentsPopup() {
+    this.assignmentViewTypeId = [];
+  }
+
+  //getting data for content
+  getDataForProjectsTab() {
+    const projectsRows = this.appModel.getProjects().map((project) => {
+      const rating = this.getCapacityUsageStringProject(project.id);
+      const income = this.calculateIncome(project.id);
+      return {
+        projectID: project.id,
+        companyName: project.companyName,
+        projectName: project.projectName,
+        budget: Formatter.currency(project.budget),
+        rating: rating,
+        income: Formatter.currency(income),
+        numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0,
+      };
+    });
+    const period = this.appModel.getCurrentPeriod();
+    const totalIncome = this.calculateTotalIncome(period);
+    const benchIncome = this.calculateBenchPayments(period);
+    return {
+      projectsRows: projectsRows,
+      totalIncome: Formatter.currency(totalIncome),
+      benchIncome: Formatter.currency(benchIncome),
+      isIncomeNegative: totalIncome < 0,
+      hasProjects: projectsRows.length > 0,
+    };
+  }
+
+  getDataForEmployeesTab() {
+    const employees = this.appModel.getEmployees();
+    return employees.map((employee) => {
+      const monthlySalary = this.calculateMonthlySalary(employee.id);
+      const income = this.calculateIncomePerEmployee(employee.id);
+      return {
+        employeeID: employee.id,
+        firstName: employee.name,
+        lastName: employee.surname,
+        age: employee.age,
+        position: employee.position,
+        salary: Formatter.currency(employee.salary),
+        monthlySalary: Formatter.currency(monthlySalary),
+        income: Formatter.currency(income),
+        numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id)?.length ?? 0,
+        capacityUsage: this.getCapacityUsageString(employee.id),
+      };
+    });
+  }
+
   getDataForSeedPopup() {
     const data = this.appModel.getWholeData();
     let monthsData = [];
@@ -71,6 +133,77 @@ class AppController {
         monthsData.push(obj);
       });
     return monthsData;
+  }
+
+  getDataForAssignmentsPopup(type, id) {
+    let assignments = [];
+    let employee;
+    let project;
+    const content = {};
+
+    if (type === undefined || id === undefined) return {};
+
+    if (type === 'employee') {
+      assignments = this.appModel.getAssignmentsOfEmployee(id);
+      employee = this.appModel.searchData(id);
+      content.header = `Assignments for ${employee.name} ${employee.surname}`;
+      content.firstColHeader = 'Project';
+    } else if (type === 'project') {
+      assignments = this.appModel.getAssignmentsOfProject(id);
+      project = this.appModel.searchData(id);
+      content.header = `Employees on ${project.projectName}`;
+      content.firstColHeader = 'Employee';
+    }
+
+    content.data = assignments.map((assignment) => {
+      let firstColLinkText;
+      if (type === 'employee'){
+        project = this.appModel.getProjects().find((el) => el.id === assignment.projectID);
+        firstColLinkText = project.projectName;
+      }
+      else if (type === 'project') {
+        employee = this.appModel.getEmployees().find((el) => el.id === assignment.employeeID);
+        firstColLinkText = `${employee.name} ${employee.surname}`;
+      }
+      const vacation = this.getVacationInfo();
+      const effective = this.calculateEffective();
+      const revenue = this.calculateRevenue();
+      const cost = this.calculateCosts();
+      const profit = revenue - cost;
+
+      return {
+        assignmentID: assignment.id,
+        linkText: firstColLinkText,
+        linkHref: '',
+        capacity: assignment.capacity,
+        fit: assignment.projectFit,
+        vacation: vacation,
+        effective: effective,
+        revenue: Formatter.currency(revenue),
+        cost: Formatter.currency(cost),
+        profit: Formatter.currency(profit),
+        isLoss: profit < 0,
+      };
+    });
+    return content;
+  }
+
+  /* Calculation of figures */
+
+  getVacationInfo() {
+    return ' '; //TODO
+  }
+
+  calculateEffective() {
+    return ' '; //TODO
+  }
+
+  calculateRevenue() {
+    return 0; //TODO
+  }
+
+  calculateCosts() {
+    return 0; //TODO
   }
 
   calculateTotalIncome(period) {
@@ -94,57 +227,11 @@ class AppController {
   }
 
   getCapacityUsageStringProject(projectID) {
-    return '1.0 / 1';  // TODO
+    return '1.0 / 1'; // TODO
   }
 
   getCapacityUsageString(employeeID) {
-    return '1.0 / 1.0';  // TODO
-  }
-
-  getDataForProjectsTab() {
-    const projectsRows = this.appModel.getProjects().map((project) => {
-      const rating = this.getCapacityUsageStringProject(project.id);
-      const income = this.calculateIncome(project.id);
-      return {
-        projectID: project.id,
-        companyName: project.companyName,
-        projectName: project.projectName,
-        budget: Formatter.currency(project.budget),
-        rating: rating,
-        income: Formatter.currency(income),
-        numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0
-      }
-    })
-    const period = this.appModel.getCurrentPeriod();
-    const totalIncome = this.calculateTotalIncome(period);
-    const benchIncome = this.calculateBenchPayments(period);
-    return {
-      projectsRows: projectsRows,
-      totalIncome: Formatter.currency(totalIncome),
-      benchIncome: Formatter.currency(benchIncome),
-      isIncomeNegative: totalIncome < 0,
-      hasProjects: projectsRows.length > 0
-    }
-  }
-
-  getDataForEmployeesTab() {
-    const employees = this.appModel.getEmployees();
-    return employees.map((employee) => {
-      const monthlySalary = this.calculateMonthlySalary(employee.id);
-      const income = this.calculateIncomePerEmployee(employee.id);
-      return {
-        employeeID: employee.id,
-        firstName: employee.name,
-        lastName: employee.surname,
-        age: employee.age,
-        position: employee.position,
-        salary: Formatter.currency(employee.salary),
-        monthlySalary: Formatter.currency(monthlySalary),
-        income: Formatter.currency(income),
-        numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id)?.length ?? 0,
-        capacityUsage: this.getCapacityUsageString(employee.id)
-      }
-    })
+    return '1.0 / 1.0'; // TODO
   }
 
   /* AppModel  */

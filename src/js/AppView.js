@@ -4,6 +4,7 @@ import SidePanelView from './SidePanelView';
 import AddEmployeePanel from './AddEmployeePanel';
 import AddProjectPanel from './AddProjectPanel';
 import SeedDataPopupView from './SeedDataPopupView';
+import AssignmentsPopupView from './AssignmentsPopupView';
 import { bindEvent} from './utils'
 
 class AppView {
@@ -16,9 +17,11 @@ class AppView {
   createStaticViews (callbacks) {
     let staticViews = {};
     callbacks.employeesContentView['showAddEmployeePanelView'] = this.showAddEmployeePanelView;
+    callbacks.employeesContentView['showAssignmentsPopupView'] = this.showAssignmentsPopupView;
     staticViews['employeesContentView'] = new EmployeesContentView(callbacks.employeesContentView);
     callbacks.projectsContentView['showAddProjectPanelView'] = this.showAddProjectPanelView;
     callbacks.projectsContentView['showSeedDataPopupView'] = this.showSeedDataPopupView;
+    callbacks.projectsContentView['showAssignmentsPopupView'] = this.showAssignmentsPopupView;
     staticViews['projectsContentView'] = new ProjectsContentView(callbacks.projectsContentView);
     callbacks.sidePanelView['showProjects'] = this.showProjects;
     callbacks.sidePanelView['showEmployees'] = this.showEmployees;
@@ -26,6 +29,7 @@ class AppView {
     staticViews['addEmployeePanel'] = new AddEmployeePanel(callbacks.addEmployeePanel);
     staticViews['addProjectPanel'] = new AddProjectPanel(callbacks.addProjectPanel);
     staticViews['seedDataPopupView'] =  new SeedDataPopupView(callbacks.seedDataPopupView);
+    staticViews['assignmentsPopupView'] = new AssignmentsPopupView(callbacks.assignmentsPopupView);
     return staticViews;
   }
 
@@ -39,6 +43,7 @@ class AppView {
     this.staticViews.seedDataPopupView.fillContent(content.seedDataPopupView);
     this.staticViews.projectsContentView.fillContent(content.projectsContentView);
     this.staticViews.employeesContentView.fillContent(content.employeesContentView);
+    this.staticViews.assignmentsPopupView.fillContent(content.assignmentsPopupView);
   }
 
   // handlers
@@ -74,6 +79,11 @@ class AppView {
     document.getElementById('seed-data-backdrop').classList.remove("hidden");
     document.getElementById('seed-data-popup').classList.remove("hidden");
   }
+
+  showAssignmentsPopupView = () => {
+    document.getElementById('details-data-backdrop').classList.remove("hidden");
+    document.getElementById('details-popup').classList.remove("hidden");
+  };
 }
 
 export default AppView ;

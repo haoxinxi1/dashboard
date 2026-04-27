@@ -30,7 +30,10 @@ class EmployeesContentView {
     else if (action === 'delete') this.handleDeleteEmployee(employeeID);
   };
 
-  handleShowAssignments = (employeeID) => {};
+  handleShowAssignments = (employeeID) => {
+    this.callbacks.showAssignmentsPopupView();
+    this.callbacks.getContentAssignmentsPopup('employee', employeeID);
+  };
 
   handleCheckSchedule = (employeeID) => {};
 

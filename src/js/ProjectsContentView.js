@@ -27,7 +27,10 @@ class ProjectsContentView {
     else if (action === 'delete') this.handleDeleteProject(projectID);
   };
 
-  handleShowAssignments = (projectID) => {};
+  handleShowAssignments = (projectID) => {
+    this.callbacks.showAssignmentsPopupView();    // appView cb
+    this.callbacks.getContentAssignmentsPopup('project', projectID);  // controller cb
+  };
 
   handleDeleteProject = (projectID) => {};
 

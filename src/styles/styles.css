@@ -1549,3 +1549,7 @@ tbody tr:hover {
   color: #7f8c8d;
   font-size: 0.9em;
 }
+
+.details-popup.hidden {
+  display: none;
+}
