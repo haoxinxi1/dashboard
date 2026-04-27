@@ -1,10 +1,10 @@
 import Repo from './Repo';
 
 class AppModel {
-  constructor (callbacks) {
+  constructor(callbacks) {
     this.callbacks = callbacks.appModel;
     this.repo = new Repo();
-    this.currentPeriod =  this.getCurrentMonthYear();
+    this.currentPeriod = this.getCurrentMonthYear();
     this.data = this.loadFromRepo();
   }
 
@@ -16,11 +16,13 @@ class AppModel {
       let value = Object.values(current)[0];
       acc[key] = value;
       return acc;
-    }, {})
+    }, {});
   }
 
   saveToRepo() {
-    let arr = Object.entries(this.data).map(([key, value]) => {return {[key] : value}});
+    let arr = Object.entries(this.data).map(([key, value]) => {
+      return { [key]: value };
+    });
     this.repo.save(arr);
   }
 
@@ -51,10 +53,10 @@ class AppModel {
     this.data[this.currentPeriod] = structuredClone(this.data[chosenPeriod]);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Periods :", this.data);
+    console.log('Periods :', this.data);
   }
 
-  initPeriodData(){
+  initPeriodData() {
     this.data[this.currentPeriod] = { employees: [], projects: [], assignments: [] };
   }
 
@@ -64,10 +66,11 @@ class AppModel {
 
   addProject(project) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
+    if (this.isDuplicate(this.getProjects(), { projectName: project.projectName })) return false;
     this.data[this.currentPeriod].projects.push(project);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Projects :", this.getProjects());
+    console.log('Projects :', this.getProjects());
   }
 
   getEmployees() {
@@ -76,10 +79,11 @@ class AppModel {
 
   addEmployee(employee) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
+    if (this.isDuplicate(this.getEmployees(), { name: employee.name, surname: employee.surname })) return false;
     this.data[this.currentPeriod].employees.push(employee);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Employees :", this.getEmployees());
+    console.log('Employees :', this.getEmployees());
   }
 
   getAssignments() {
@@ -96,10 +100,12 @@ class AppModel {
 
   addAssignment(assignment) {
     if (!this.data[this.currentPeriod]) this.initPeriodData();
+    if (this.isDuplicate(this.getAssignments(), { projectID: assignment.projectID, employeeID: assignment.employeeID }))
+      return false;
     this.data[this.currentPeriod].assignments.push(assignment);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Assignments :", this.getAssignments());
+    console.log('Assignments :', this.getAssignments());
   }
 
   getWholeData() {
@@ -107,9 +113,15 @@ class AppModel {
   }
 
   searchData(id) {
-    return this.data[this.currentPeriod]?.projects.find((el) => el.id === id) ||
-           this.data[this.currentPeriod]?.employees.find((el) => el.id === id) ||
-           this.data[this.currentPeriod]?.assignments.find((el) => el.id === id);
+    return (
+      this.data[this.currentPeriod]?.projects.find((el) => el.id === id) ||
+      this.data[this.currentPeriod]?.employees.find((el) => el.id === id) ||
+      this.data[this.currentPeriod]?.assignments.find((el) => el.id === id)
+    );
+  }
+
+  isDuplicate(collection, criteria) {
+    return collection.some((item) => Object.entries(criteria).every(([key, value]) => item[key] === value));
   }
 }
 
