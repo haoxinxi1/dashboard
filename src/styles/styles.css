@@ -1553,3 +1553,25 @@ tbody tr:hover {
 .details-popup.hidden {
   display: none;
 }
+ /* update assignment popup */
+ .form-group {
+  margin-bottom: 15px;
+}
+
+.popup-cancel-edit {
+  background-color: rgb(149, 165, 166);
+  color: rgb(255, 255, 255);
+}
+
+.popup-cancel-edit:hover {
+  background-color: rgb(127, 140, 141);
+}
+
+.popup-save-edit {
+  background-color: rgb(39, 174, 96);
+  color: rgb(255, 255, 255);
+}
+
+.popup-save-edit:hover {
+  background-color: rgb(34, 153, 84);
+}

@@ -108,6 +108,16 @@ class AppModel {
     console.log('Assignments :', this.getAssignments());
   }
 
+  editAssignment(assignmentID, capacity, projectFit) {
+    const assignment = this.searchData(assignmentID);
+    if (!assignment) return;
+    assignment.capacity = capacity;
+    assignment.projectFit = projectFit;
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("Changed assignment: ", assignment);
+  }
+
   getWholeData() {
     return this.data;
   }

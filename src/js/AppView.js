@@ -5,8 +5,9 @@ import AddEmployeePanel from './AddEmployeePanel';
 import AddProjectPanel from './AddProjectPanel';
 import SeedDataPopupView from './SeedDataPopupView';
 import AssignmentsPopupView from './AssignmentsPopupView';
-import AddAssignmentPopup from './AddAssignmentPopup'
-import { bindEvent} from './utils'
+import AddAssignmentPopup from './AddAssignmentPopup';
+import EditAssignmentPopup from './EditAssignmentPopup';
+import { bindEvent} from './utils';
 
 class AppView {
   constructor (callbacks) {
@@ -32,6 +33,7 @@ class AppView {
     staticViews['seedDataPopupView'] =  new SeedDataPopupView(callbacks.seedDataPopupView);
     staticViews['assignmentsPopupView'] = new AssignmentsPopupView(callbacks.assignmentsPopupView);
     staticViews['addAssignmentPopup'] = new AddAssignmentPopup(callbacks.addAssignmentPopup);
+    staticViews['editAssignmentPopup'] = new EditAssignmentPopup(callbacks.editAssignmentPopup);
     return staticViews;
   }
 
@@ -95,6 +97,10 @@ class AppView {
 
   showProjectInfoAssignPopup(content) {
     this.staticViews.addAssignmentPopup.renderProjectInfo(content);
+  }
+
+  showEditAssignPopup(content, button) {
+    this.staticViews.editAssignmentPopup.createPopup(content, button);
   }
 }
 

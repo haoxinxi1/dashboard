@@ -26,11 +26,9 @@ class AssignmentsPopupView {
     if (!targetBtn) return;
     const id = targetBtn.dataset.id;
     const action = targetBtn.dataset.action;
-    if (action === 'edit') this.handleEditAssignments(id);
+    if (action === 'edit') this.callbacks.onStartEditAssignment(targetBtn, id);
     else if (action === 'unassign') this.handleDeleteAssignment(id);
   };
-
-  handleEditAssignments(id) {}
 
   handleDeleteAssignment(id) {}
 

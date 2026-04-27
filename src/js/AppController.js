@@ -40,10 +40,14 @@ class AppController {
       },
       assignmentsPopupView: {
         onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this),
+        onStartEditAssignment: this.onStartEditAssignment.bind(this),
       },
       addAssignmentPopup: {
         onCreateNewAssignment: this.onCreateNewAssignment.bind(this),
         onChooseProject: this.onChooseProject.bind(this),
+      },
+      editAssignmentPopup: {
+        onFinishEditAssignment: this.onFinishEditAssignment.bind(this),
       },
     };
   }
@@ -233,6 +237,21 @@ class AppController {
     };
   }
 
+  getDataForEditAssigmentPopup(assignmentID) {
+    const assignment = this.appModel.searchData(assignmentID);
+    const employee = this.appModel.searchData(assignment.employeeID);
+    const employeeName = `${employee.name} ${employee.surname}`;
+    const projectName = this.appModel.searchData(assignment.projectID).projectName;
+
+    return {
+      assignmentID: assignmentID,
+      employeeName: employeeName,
+      projectName: projectName,
+      capacity: Formatter.decimal2(assignment.capacity),
+      projectFit: Formatter.decimal2(assignment.projectFit),
+    }
+  }
+
   /* Calculation of figures */
 
   calculateCurrentCapacity(employee) {
@@ -332,10 +351,23 @@ class AppController {
     this.appView.showAddAssignPopup(content, button);
   }
 
-  /* Assign Popup */
+  /* Assignments Popup */
+  onStartEditAssignment(button, assignmentID) {
+    const content = this.getDataForEditAssigmentPopup(assignmentID);
+    this.appView.showEditAssignPopup(content, button);
+  }
+
+
+  /* Assign Employee Popup */
   onChooseProject(projectID) {
     const content = this.getProjectInfoForAssignPopup(projectID);
     this.appView.showProjectInfoAssignPopup(content);
+  }
+
+  /* Edit assignment Popup */
+  onFinishEditAssignment(data) {
+    this.appModel.editAssignment(data.assignmentID, data.capacity, data.projectFit);
+    return 1;
   }
 
 }
