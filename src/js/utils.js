@@ -8,7 +8,9 @@
  */
 
 export function bindEvent(event, selector, ...handlers) {
-  document.querySelector(selector).addEventListener(event, (e) => {
+  const listener = (e) => {
     handlers.forEach(fn => fn(e));
-  });
+  };
+  document.querySelector(selector).addEventListener(event, listener);
+  return listener;
 }
