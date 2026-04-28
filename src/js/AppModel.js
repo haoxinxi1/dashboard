@@ -1,4 +1,7 @@
 import Repo from './Repo';
+import EmployeeModel from './EmployeeModel';
+import ProjectModel from './ProjectModel';
+import AssignmentModel from './AssignmentModel';
 
 class AppModel {
   constructor(callbacks) {
@@ -8,12 +11,26 @@ class AppModel {
     this.data = this.loadFromRepo();
   }
 
+  // loadFromRepo() {
+  //   let arr = this.repo.load();
+  //   if (!arr) return {};
+  //   return arr.reduce((acc, current) => {
+  //     let key = Object.keys(current)[0];
+  //     let value = Object.values(current)[0];
+  //     acc[key] = value;
+  //     return acc;
+  //   }, {});
+  // }
+
   loadFromRepo() {
     let arr = this.repo.load();
     if (!arr) return {};
     return arr.reduce((acc, current) => {
       let key = Object.keys(current)[0];
       let value = Object.values(current)[0];
+      value.employees = value.employees.map(e => Object.assign(new EmployeeModel(e), e));
+      value.projects = value.projects.map(p => Object.assign(new ProjectModel(p), p));
+      value.assignments = value.assignments.map(a => Object.assign(new AssignmentModel(a), a));
       acc[key] = value;
       return acc;
     }, {});
@@ -49,11 +66,21 @@ class AppModel {
     this.callbacks.onModelChange();
   }
 
+  // seedData(chosenPeriod) {
+  //   this.data[this.currentPeriod] = structuredClone(this.data[chosenPeriod]);
+  //   this.callbacks.onModelChange();
+  //   this.saveToRepo();
+  //   console.log('Periods :', this.data);
+  // }
+
   seedData(chosenPeriod) {
-    this.data[this.currentPeriod] = structuredClone(this.data[chosenPeriod]);
+    const cloned = structuredClone(this.data[chosenPeriod]);
+    cloned.employees = cloned.employees.map(e => Object.assign(new EmployeeModel(e), e));
+    cloned.projects = cloned.projects.map(p => Object.assign(new ProjectModel(p), p));
+    cloned.assignments = cloned.assignments.map(a => Object.assign(new AssignmentModel(a), a));
+    this.data[this.currentPeriod] = cloned;
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log('Periods :', this.data);
   }
 
   initPeriodData() {
