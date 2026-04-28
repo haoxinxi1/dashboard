@@ -167,6 +167,14 @@ class AppModel {
     this.saveToRepo();
     console.log("Projects: ", array);
   }
+
+  updateVacationDays(employeeID, vacationDays) {
+    const employee = this.searchData(employeeID);
+    employee.setVacationDays(this.currentPeriod, vacationDays);
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("Vacation days: ", employee.vacationDays[this.currentPeriod]);
+  }
 }
 
 export default AppModel;

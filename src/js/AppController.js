@@ -38,6 +38,7 @@ class AppController {
         getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this),
         onAssignEmployee: this.onAssignEmployee.bind(this),
         onDeleteEmployee: this.onDeleteEmployee.bind(this),
+        handleCheckSchedule: this.handleCheckSchedule.bind(this),
       },
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
@@ -56,6 +57,9 @@ class AppController {
       },
       deleteAssignmentPopup: {
         onDeleteAssignment: this.onDeleteAssignment.bind(this),
+      },
+      calendarPopup: {
+        onSetVacation: this.onSetVacation.bind(this),
       }
     };
   }
@@ -289,6 +293,22 @@ class AppController {
     }
   }
 
+  getContentForCalendarPopup(id) {
+    const employee = this.appModel.searchData(id);
+    const currentPeriod = this.appModel.getCurrentPeriod();
+    const workingDaysTotal = this.calculateWorkingDays();
+    const workingDaysAbsent = 0;  // TO DO
+
+    return {
+      employeeID: id,
+      employeeName: `${employee.name} ${employee.surname}`,
+      currentPeriod: currentPeriod,
+      vacationDays: employee.getVacationDays(currentPeriod),
+      workingDaysTotal: workingDaysTotal,
+      workingDaysAbsent: workingDaysAbsent,
+    };
+  }
+
   /* Calculation of figures */
 
   calculateCurrentCapacity(employee) {
@@ -347,6 +367,21 @@ class AppController {
     return '1.0 / 1.0'; // TODO
   }
 
+  calculateWorkingDays() {
+    const [year, month] = this.appModel.getCurrentPeriod().split('-').map(Number);
+    const totalDays = this.calculateDaysInMonth(year, month);
+    let workingDays = 0;
+    for (let d = 1; d <= totalDays; d++) {
+      const day = new Date(year, month, d).getDay();
+      if (day !== 0 && day !== 6) workingDays++;
+    }
+    return workingDays;
+  }
+
+  calculateDaysInMonth(year, month) {
+    return new Date(year, month + 1, 0).getDate();
+  }
+
   /* AppModel  */
   onModelChange() {
     this.appView.fillContentAll(this.setAppViewContent());
@@ -382,10 +417,15 @@ class AppController {
     this.appModel.seedData(period);
   }
 
-  /* Employee Tab */
+  /* Employee Table */
   onAssignEmployee(button, employeeID) {
     const content = this.getDataForShowingAddAssingPopup(employeeID);
     this.appView.showAddAssignPopup(content, button);
+  }
+
+  handleCheckSchedule(employeeID) {
+    const content = this.getContentForCalendarPopup(employeeID);
+    this.appView.showCalendarPopup(content);
   }
 
   onDeleteEmployee(employeeID) {
@@ -425,6 +465,12 @@ class AppController {
   /* Projects Table */
   onDeleteProject(projectID) {
     this.appModel.deleteProject(projectID);
+    return 1;
+  }
+
+  /* Calendar Popup*/
+  onSetVacation(employeeID, vacationDays) {
+    this.appModel.updateVacationDays(employeeID, vacationDays);
     return 1;
   }
 

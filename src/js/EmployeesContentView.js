@@ -25,7 +25,7 @@ class EmployeesContentView {
     const employeeID = targetBtn.dataset.id;
     const action = targetBtn.dataset.action;
     if (action === 'show') this.handleShowAssignments(employeeID);
-    else if (action === 'check-schedule') this.handleCheckSchedule(employeeID);
+    else if (action === 'check-schedule') this.callbacks.handleCheckSchedule(employeeID);
     else if (action === 'assign') this.callbacks.onAssignEmployee(targetBtn, employeeID);
     else if (action === 'delete') this.handleDeleteEmployee(employeeID, targetBtn.dataset.name);
   };
@@ -34,8 +34,6 @@ class EmployeesContentView {
     this.callbacks.showAssignmentsPopupView();
     this.callbacks.getContentAssignmentsPopup('employee', employeeID);
   };
-
-  handleCheckSchedule = (employeeID) => {};
 
   handleDeleteEmployee = (employeeID, employeeName) => {
     if (confirm(`Are you sure you want to delete ${employeeName}?`)) {

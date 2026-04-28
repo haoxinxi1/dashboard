@@ -266,6 +266,7 @@
         </table>
       </div>
     </div>
+
     <!-- Assignments Popup -->
     <div id="details-data-backdrop" class="popup-backdrop hidden"></div>
     <div id="details-popup" class="details-popup hidden">
@@ -499,5 +500,38 @@
         </div>
       </div>
     </template>
+    <template id="calendar-popup-template">
+      <div class="popup-backdrop"></div>
+      <div class="calendar-popup" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%)">
+        <div class="calendar-header">
+          <h3 class="calendar-name"></h3>
+          <h4 class="calendar-month"></h4>
+          <button class="close-calendar-btn">&times;</button>
+        </div>
+        <div class="calendar-grid">
+          <div class="calendar-day-header">Sun</div>
+          <div class="calendar-day-header">Mon</div>
+          <div class="calendar-day-header">Tue</div>
+          <div class="calendar-day-header">Wed</div>
+          <div class="calendar-day-header">Thu</div>
+          <div class="calendar-day-header">Fri</div>
+          <div class="calendar-day-header">Sat</div>
+        </div>
+        <div class="calendar-info">
+          <div class="working-days-info">
+            <strong>Working Days:</strong> <span class="working-days-count"></span>
+          </div>
+          <div class="chosen-days-section">
+            <span class="chosen-days-label">Vacation Days:</span>
+            <span class="chosen-days-display"></span>
+            <button class="set-vacation-btn">Set Vacation</button>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template id="calendar-day-template">
+      <div class="calendar-day" data-day=""></div>
+    </template>
+
   </body>
 </html>

@@ -8,6 +8,7 @@ import AssignmentsPopupView from './AssignmentsPopupView';
 import AddAssignmentPopup from './AddAssignmentPopup';
 import EditAssignmentPopup from './EditAssignmentPopup';
 import DeleteAssignmentPopup from './DeleteAssignmentPopup';
+import CalendarPopup from './CalendarPopup';
 import { bindEvent} from './utils';
 
 class AppView {
@@ -36,6 +37,7 @@ class AppView {
     staticViews['addAssignmentPopup'] = new AddAssignmentPopup(callbacks.addAssignmentPopup);
     staticViews['editAssignmentPopup'] = new EditAssignmentPopup(callbacks.editAssignmentPopup);
     staticViews['deleteAssignmentPopup'] = new DeleteAssignmentPopup(callbacks.deleteAssignmentPopup);
+    staticViews['calendarPopup'] = new CalendarPopup(callbacks.calendarPopup);
     return staticViews;
   }
 
@@ -105,6 +107,10 @@ class AppView {
 
   showDeleteAssignPopup(content) {
     this.staticViews.deleteAssignmentPopup.createPopup(content);
+  }
+
+  showCalendarPopup(content) {
+    this.staticViews.calendarPopup.createPopup(content);
   }
 }
 

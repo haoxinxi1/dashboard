@@ -31,6 +31,14 @@ class EmployeeModel {
     }
     return age;
   }
+
+  getVacationDays(period) {
+    return this.vacationDays[period] ?? [];
+  }
+
+  setVacationDays(period, days) {
+    this.vacationDays[period] = days;
+  }
 }
 
 export default EmployeeModel;
