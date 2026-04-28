@@ -24,7 +24,7 @@ class ProjectsContentView {
     const projectID = targetBtn.dataset.id;
     const action = targetBtn.dataset.action;
     if (action === 'show') this.handleShowAssignments(projectID);
-    else if (action === 'delete') this.handleDeleteProject(projectID);
+    else if (action === 'delete') this.handleDeleteProject(projectID, targetBtn.dataset.name);
   };
 
   handleShowAssignments = (projectID) => {
@@ -32,7 +32,11 @@ class ProjectsContentView {
     this.callbacks.getContentAssignmentsPopup('project', projectID);  // controller cb
   };
 
-  handleDeleteProject = (projectID) => {};
+  handleDeleteProject = (projectID, projectName) => {
+    if (confirm(`Are you sure you want to delete project "${projectName}"? All employees will be unassigned.`)) {
+      this.callbacks.onDeleteProject(projectID);
+    }
+  };
 
   // render
   fillContent(content) {
@@ -89,6 +93,7 @@ class ProjectsContentView {
     const deleteProjectBtn = clone.querySelector('.project-row-delete-btn');
     deleteProjectBtn.dataset.id = projectID;
     deleteProjectBtn.dataset.action = 'delete';
+    deleteProjectBtn.dataset.name = projectName;
 
     return clone;
   }

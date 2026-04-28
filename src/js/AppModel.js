@@ -134,13 +134,38 @@ class AppModel {
     return collection.some((item) => Object.entries(criteria).every(([key, value]) => item[key] === value));
   }
 
-  deleteAssignment(id) {
-    let array = this.getAssignments();
+  deleteAssignment(id, skipSave = false) {
+    const array = this.getAssignments();
+    const index = array.findIndex(item => item.id === id);
+    if (index !== -1) array.splice(index, 1);
+    if (!skipSave)
+    {
+      this.callbacks.onModelChange();
+      this.saveToRepo();
+      console.log("Assignments: ", array);
+    }
+  }
+
+  deleteEmployee(id) {
+    const array = this.getEmployees();
+    const assignments = this.getAssignmentsOfEmployee(id);
+    assignments.forEach((el) => this.deleteAssignment(el.id, true));
     const index = array.findIndex(item => item.id === id);
     if (index !== -1) array.splice(index, 1);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Assignments: ", array);
+    console.log("Employees: ", array);
+  }
+
+  deleteProject(id) {
+    const array = this.getProjects();
+    const assignments = this.getAssignmentsOfProject(id);
+    assignments.forEach((el) => this.deleteAssignment(el.id, true));
+    const index = array.findIndex(item => item.id === id);
+    if (index !== -1) array.splice(index, 1);
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("Projects: ", array);
   }
 }
 

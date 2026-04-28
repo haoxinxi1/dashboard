@@ -29,11 +29,15 @@ class AppController {
         onPeriodChangeYear: this.onPeriodChangeYear.bind(this),
       },
       addProjectPanel: { onCreateProject: this.onCreateProject.bind(this) },
-      projectsContentView: { getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this) },
+      projectsContentView: {
+        getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this),
+        onDeleteProject: this.onDeleteProject.bind(this)
+       },
       addEmployeePanel: { onCreateEmployee: this.onCreateEmployee.bind(this) },
       employeesContentView: {
         getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this),
         onAssignEmployee: this.onAssignEmployee.bind(this),
+        onDeleteEmployee: this.onDeleteEmployee.bind(this),
       },
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
@@ -384,6 +388,11 @@ class AppController {
     this.appView.showAddAssignPopup(content, button);
   }
 
+  onDeleteEmployee(employeeID) {
+    this.appModel.deleteEmployee(employeeID);
+    return 1;
+  }
+
   /* Assignments Popup */
   onStartEditAssignment(button, assignmentID) {
     const content = this.getDataForEditAssigmentPopup(assignmentID);
@@ -410,6 +419,12 @@ class AppController {
   /* Delete assignment Popup */
   onDeleteAssignment(assignmentID) {
     this.appModel.deleteAssignment(assignmentID);
+    return 1;
+  }
+
+  /* Projects Table */
+  onDeleteProject(projectID) {
+    this.appModel.deleteProject(projectID);
     return 1;
   }
 

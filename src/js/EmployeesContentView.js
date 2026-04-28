@@ -27,7 +27,7 @@ class EmployeesContentView {
     if (action === 'show') this.handleShowAssignments(employeeID);
     else if (action === 'check-schedule') this.handleCheckSchedule(employeeID);
     else if (action === 'assign') this.callbacks.onAssignEmployee(targetBtn, employeeID);
-    else if (action === 'delete') this.handleDeleteEmployee(employeeID);
+    else if (action === 'delete') this.handleDeleteEmployee(employeeID, targetBtn.dataset.name);
   };
 
   handleShowAssignments = (employeeID) => {
@@ -37,7 +37,11 @@ class EmployeesContentView {
 
   handleCheckSchedule = (employeeID) => {};
 
-  handleDeleteEmployee = (employeeID) => {};
+  handleDeleteEmployee = (employeeID, employeeName) => {
+    if (confirm(`Are you sure you want to delete ${employeeName}?`)) {
+      this.callbacks.onDeleteEmployee(employeeID);
+    }
+  };
 
   // render
   fillContent(content) {
@@ -99,8 +103,10 @@ class EmployeesContentView {
     clone.querySelector('.employee-row-assign-btn').dataset.id = employeeID;
     clone.querySelector('.employee-row-assign-btn').dataset.action = 'assign';
 
-    clone.querySelector('.employee-row-delete-btn').dataset.id = employeeID;
-    clone.querySelector('.employee-row-delete-btn').dataset.action = 'delete';
+    const deleteBtn = clone.querySelector('.employee-row-delete-btn');
+    deleteBtn.dataset.id = employeeID;
+    deleteBtn.dataset.action = 'delete';
+    deleteBtn.dataset.name = `${firstName} ${lastName}`;
 
     return clone;
   }
