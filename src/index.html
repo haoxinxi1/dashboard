@@ -529,9 +529,18 @@
       <div class="calendar-day" data-day=""></div>
     </template>
 
-    <template>
-      <div class="filter-popup" style="left: 285.783px; top: 289.933px;">
-        <input type="text" placeholder="Filter by Name..." autofocus="">
+    <template id="filter-popup-template">
+      <div class="filter-popup">
+        <input class="filter-popup-input" type="text" placeholder="Filter..." autofocus="">
+        <select class="filter-popup-select" style="display: none;">
+          <option value="">Select position</option>
+          <option value="Junior">Junior</option>
+          <option value="Middle">Middle</option>
+          <option value="Senior">Senior</option>
+          <option value="Lead">Lead</option>
+          <option value="Architect">Architect</option>
+          <option value="BO">BO</option>
+        </select>
         <div>
           <button class="accept-filter">Apply</button>
           <button class="cancel-filter">Cancel</button>
@@ -539,10 +548,17 @@
       </div>
     </template>
 
-    <template>
+    <template id="filter-chip-template">
       <div class="filter-chip">
-        <span class="chip-label">Company Name: hh</span>
-        <span class="chip-remove" data-column="companyName">×</span>
+        <span class="chip-label"></span>
+        <span class="chip-remove" data-column="">×</span>
+      </div>
+    </template>
+
+    <template id="filter-clear-chip-template">
+      <div class="filter-chip clear-all-chip">
+        <span class="chip-label">Clear Filters</span>
+        <span class="chip-remove">×</span>
       </div>
     </template>
 

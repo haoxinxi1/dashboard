@@ -1,17 +1,22 @@
+import FilterSortViewManager from './FilterSortViewManager';
 import { bindEvent } from './utils';
 
 class EmployeesContentView {
   constructor(callbacks) {
     this.callbacks = callbacks;
+    this.chipContainerId = 'employee-filters-container';
+    this.filterSortManager = new FilterSortViewManager('employees', this.chipContainerId, {
+      onSort: callbacks.onSort,
+      onFilter: callbacks.onFilter,
+    });
     this.bindListeners();
-    this.sortColumn;
-    this.isAscendingOrder = false;
   }
 
   bindListeners() {
     bindEvent('click', '#add-employee-btn', this.hideOpenButton, this.callbacks.showAddEmployeePanelView);
     bindEvent('click', '#employees-table-head', this.handleBtnClickHead);
     bindEvent('click', '#employees-table-body', this.handleBtnClickRow);
+    bindEvent('click', `#${this.chipContainerId}`, this.filterSortManager.handleChipClick);
   }
 
   // handlers
@@ -22,33 +27,14 @@ class EmployeesContentView {
   handleBtnClickHead = (e) => {
     let targetBtn = e.target.closest('.filter-icon');
     if (targetBtn) {
-      this.handleFilterBtnClick(targetBtn);
+      this.filterSortManager.handleFilterBtnClick(targetBtn);
       return;
     }
     targetBtn = e.target.closest('.sort-icon');
     if (targetBtn) {
-      this.handleSortBtnClick(targetBtn);
+      this.filterSortManager.handleSortBtnClick(targetBtn);
     }
   };
-
-  handleSortBtnClick(targetBtn) {
-    const column = targetBtn.closest('th').dataset.sort;
-    this.sortColumn = column;
-    this.isAscendingOrder = !this.isAscendingOrder;
-    const criteria = {
-      tab: 'employees',
-      column: column,
-      ascending: this.isAscendingOrder,
-    }
-    this.callbacks.onSort(criteria);
-    if (this.isAscendingOrder) targetBtn.textContent = '↑';
-    else targetBtn.textContent = '↓';
-  }
-
-  handleFilterBtnClick(targetBtn) {
-
-  }
-
 
   handleBtnClickRow = (e) => {
     let targetBtn = e.target.closest('.employee-row-show-assignments-btn');

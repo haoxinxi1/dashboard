@@ -1,11 +1,15 @@
+import FilterSortViewManager from './FilterSortViewManager';
 import { bindEvent } from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {
     this.callbacks = callbacks;
+    this.chipContainerId = 'project-filters-container';
+    this.filterSortManager = new FilterSortViewManager('projects', this.chipContainerId, {
+      onSort: callbacks.onSort,
+      onFilter: callbacks.onFilter,
+    });
     this.bindListeners();
-    this.sortColumn;
-    this.isAscendingOrder = false;
   }
 
   bindListeners() {
@@ -13,6 +17,7 @@ class ProjectsContentView {
     bindEvent('click', '#seed-data-btn', this.callbacks.showSeedDataPopupView);
     bindEvent('click', '#projects-table-head', this.handleBtnClickHead);
     bindEvent('click', '#projects-table-body', this.handleBtnClickRow);
+    bindEvent('click', `#${this.chipContainerId}`, this.filterSortManager.handleChipClick);
   }
 
   // handlers
@@ -23,32 +28,14 @@ class ProjectsContentView {
   handleBtnClickHead = (e) => {
     let targetBtn = e.target.closest('.filter-icon');
     if (targetBtn) {
-      this.handleFilterBtnClick(targetBtn);
+      this.filterSortManager.handleFilterBtnClick(targetBtn);
       return;
     }
     targetBtn = e.target.closest('.sort-icon');
     if (targetBtn) {
-      this.handleSortBtnClick(targetBtn);
+      this.filterSortManager.handleSortBtnClick(targetBtn);
     }
   };
-
-  handleSortBtnClick(targetBtn) {
-    const column = targetBtn.closest('th').dataset.sort;
-    this.sortColumn = column;
-    this.isAscendingOrder = !this.isAscendingOrder;
-    const criteria = {
-      tab: 'projects',
-      column: column,
-      ascending: this.isAscendingOrder,
-    }
-    this.callbacks.onSort(criteria);
-    if (this.isAscendingOrder) targetBtn.textContent = '↑';
-    else targetBtn.textContent = '↓';
-  }
-
-  handleFilterBtnClick(targetBtn) {
-    
-  }
 
   handleBtnClickRow = (e) => {
     let targetBtn = e.target.closest('.project-row-show-employees-btn');
@@ -61,8 +48,8 @@ class ProjectsContentView {
   };
 
   handleShowAssignments = (projectID) => {
-    this.callbacks.showAssignmentsPopupView();    // appView cb
-    this.callbacks.getContentAssignmentsPopup('project', projectID);  // controller cb
+    this.callbacks.showAssignmentsPopupView(); // appView cb
+    this.callbacks.getContentAssignmentsPopup('project', projectID); // controller cb
   };
 
   handleDeleteProject = (projectID, projectName) => {
