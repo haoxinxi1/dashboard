@@ -4,12 +4,15 @@ class ProjectsContentView {
   constructor(callbacks) {
     this.callbacks = callbacks;
     this.bindListeners();
+    this.sortColumn;
+    this.isAscendingOrder = false;
   }
 
   bindListeners() {
     bindEvent('click', '#add-project-btn', this.hideOpenButton, this.callbacks.showAddProjectPanelView);
     bindEvent('click', '#seed-data-btn', this.callbacks.showSeedDataPopupView);
-    bindEvent('click', '#projects-table-body', this.handleBtnClick);
+    bindEvent('click', '#projects-table-head', this.handleBtnClickHead);
+    bindEvent('click', '#projects-table-body', this.handleBtnClickRow);
   }
 
   // handlers
@@ -17,7 +20,37 @@ class ProjectsContentView {
     document.getElementById('add-project-btn').classList.add('hidden');
   };
 
-  handleBtnClick = (e) => {
+  handleBtnClickHead = (e) => {
+    let targetBtn = e.target.closest('.filter-icon');
+    if (targetBtn) {
+      this.handleFilterBtnClick(targetBtn);
+      return;
+    }
+    targetBtn = e.target.closest('.sort-icon');
+    if (targetBtn) {
+      this.handleSortBtnClick(targetBtn);
+    }
+  };
+
+  handleSortBtnClick(targetBtn) {
+    const column = targetBtn.closest('th').dataset.sort;
+    this.sortColumn = column;
+    this.isAscendingOrder = !this.isAscendingOrder;
+    const criteria = {
+      tab: 'projects',
+      column: column,
+      ascending: this.isAscendingOrder,
+    }
+    this.callbacks.onSort(criteria);
+    if (this.isAscendingOrder) targetBtn.textContent = '↑';
+    else targetBtn.textContent = '↓';
+  }
+
+  handleFilterBtnClick(targetBtn) {
+    
+  }
+
+  handleBtnClickRow = (e) => {
     let targetBtn = e.target.closest('.project-row-show-employees-btn');
     if (!targetBtn) targetBtn = e.target.closest('.project-row-delete-btn');
     if (!targetBtn) return;
@@ -70,19 +103,19 @@ class ProjectsContentView {
    * @param {string} data.companyName
    * @param {string} data.projectName
    * @param {string} data.budget
-   * @param {string} data.rating
+   * @param {string} data.employeeCapacity
    * @param {string} data.income
    * @param {number} data.numberEmployees
    * @returns {DocumentFragment}
    */
-  createProjectRow({ projectID, companyName, projectName, budget, rating, income, numberEmployees }) {
+  createProjectRow({ projectID, companyName, projectName, budget, employeeCapacity, income, numberEmployees }) {
     const template = document.getElementById('project-row-template');
     const clone = template.content.cloneNode(true);
 
     clone.querySelector('.project-row-company-name').textContent = companyName;
     clone.querySelector('.project-row-project-name').textContent = projectName;
     clone.querySelector('.project-row-budget').textContent = budget;
-    clone.querySelector('.project-row-rating').textContent = rating;
+    clone.querySelector('.project-row-rating').textContent = employeeCapacity;
     clone.querySelector('.project-row-income').textContent = income;
 
     const showEmployeesBtn = clone.querySelector('.project-row-show-employees-btn');

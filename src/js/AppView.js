@@ -45,13 +45,19 @@ class AppView {
     bindEvent('click', '#open-button', this.hideOpenButton, this.showSidePanelView);
   }
 
-  // render
+  // render full
   fillContentAll(content) {
     this.staticViews.sidePanelView.fillContent(content.sidePanelView);
     this.staticViews.seedDataPopupView.fillContent(content.seedDataPopupView);
     this.staticViews.projectsContentView.fillContent(content.projectsContentView);
     this.staticViews.employeesContentView.fillContent(content.employeesContentView);
     this.staticViews.assignmentsPopupView.fillContent(content.assignmentsPopupView);
+  }
+
+    // render tabs - filter, sorting
+  fillContentFilterSort(updatedContent) {
+    this.staticViews.projectsContentView.fillContent(updatedContent.projectsContentView);
+    this.staticViews.employeesContentView.fillContent(updatedContent.employeesContentView);
   }
 
   // handlers

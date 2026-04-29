@@ -4,13 +4,16 @@ import ProjectModel from './ProjectModel';
 import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
 import Formatter from './Formatter';
+import FilterSortService from './FilterSortService';
 
 class AppController {
   constructor() {
     this.assignmentViewTypeId = [];
     this.appModel = new AppModel(this.setAppModelCallbacks());
     this.appView = new AppView(this.setAppViewCallbacks());
-    this.appView.fillContentAll(this.setAppViewContent());
+    this.filterSortService = new FilterSortService();
+    const content = this.filterSortService.cache(this.setAppViewContent());
+    this.appView.fillContentAll(content);
   }
 
   setAppModelCallbacks() {
@@ -31,7 +34,9 @@ class AppController {
       addProjectPanel: { onCreateProject: this.onCreateProject.bind(this) },
       projectsContentView: {
         getContentAssignmentsPopup: this.getContentAssignmentsPopup.bind(this),
-        onDeleteProject: this.onDeleteProject.bind(this)
+        onDeleteProject: this.onDeleteProject.bind(this),
+        onFilter: this.onFilter.bind(this),
+        onSort: this.onSort.bind(this),
        },
       addEmployeePanel: { onCreateEmployee: this.onCreateEmployee.bind(this) },
       employeesContentView: {
@@ -39,6 +44,8 @@ class AppController {
         onAssignEmployee: this.onAssignEmployee.bind(this),
         onDeleteEmployee: this.onDeleteEmployee.bind(this),
         handleCheckSchedule: this.handleCheckSchedule.bind(this),
+        onFilter: this.onFilter.bind(this),
+        onSort: this.onSort.bind(this),
       },
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
@@ -80,6 +87,23 @@ class AppController {
     };
   }
 
+    /* Re render  */
+  onModelChange() {
+    const content = this.filterSortService.cache(this.setAppViewContent());
+    this.appView.fillContentAll(content);
+  }
+
+  /* Filer and sort */
+  onFilter(criteria) {
+    const filtered = this.filterSortService.filter(criteria);
+    this.appView.fillContentFilterSort(filtered);
+  }
+
+  onSort(criteria) {
+    const sorted = this.filterSortService.sort(criteria);
+    this.appView.fillContentFilterSort(sorted);
+  }
+
   // assignment popup cb
   getContentAssignmentsPopup(type, id) {
     this.assignmentViewTypeId = [type, id];
@@ -93,15 +117,19 @@ class AppController {
   //getting data for content
   getDataForProjectsTab() {
     const projectsRows = this.appModel.getProjects().map((project) => {
-      const rating = this.getCapacityUsageStringProject(project.id);
+      const employeeCapacityRaw = this.getCapacityUsageTotalProject(project.id);
+      const employeeCapacity = this.getCapacityUsageStringProject(project.id);
       const income = this.calculateIncome(project.id);
       return {
         projectID: project.id,
         companyName: project.companyName,
         projectName: project.projectName,
         budget: Formatter.currency(project.budget),
-        rating: rating,
+        budgetRaw: project.budget,
+        employeeCapacity: employeeCapacity,
+        employeeCapacityRaw: employeeCapacityRaw,
         income: Formatter.currency(income),
+        incomeRaw: income,
         numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0,
       };
     });
@@ -124,13 +152,16 @@ class AppController {
       const income = this.calculateIncomePerEmployee(employee.id);
       return {
         employeeID: employee.id,
-        firstName: employee.name,
-        lastName: employee.surname,
+        name: employee.name,
+        surname: employee.surname,
         age: employee.age,
         position: employee.position,
         salary: Formatter.currency(employee.salary),
-        monthlySalary: Formatter.currency(monthlySalary),
-        income: Formatter.currency(income),
+        salaryRaw: employee.salary,
+        estimatedPayment: Formatter.currency(monthlySalary),
+        estimatedPaymentRaw: monthlySalary,
+        projectedIncome: Formatter.currency(income),
+        projectedIncomeRaw: income,
         numberProjects: this.appModel.getAssignmentsOfEmployee(employee.id)?.length ?? 0,
         capacityUsage: this.getCapacityUsageString(employee.id),
       };
@@ -363,6 +394,10 @@ class AppController {
     return '1.0 / 1'; // TODO
   }
 
+  getCapacityUsageTotalProject(projectID) {
+    return 1; // TODO
+  }
+
   getCapacityUsageString(employeeID) {
     return '1.0 / 1.0'; // TODO
   }
@@ -380,11 +415,6 @@ class AppController {
 
   calculateDaysInMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
-  }
-
-  /* AppModel  */
-  onModelChange() {
-    this.appView.fillContentAll(this.setAppViewContent());
   }
 
   /* SidePanelView  */
