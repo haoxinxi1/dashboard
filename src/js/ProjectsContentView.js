@@ -1,6 +1,6 @@
 import FilterSortViewManager from './FilterSortViewManager';
 import Formatter from './Formatter';
-import { bindEvent, toggleNoEntries, applyFinancialStyle } from './utils';
+import { bindEvent, toggleNoEntries, applyFinancialStyle, applyOverCapacityStyle } from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {
@@ -112,6 +112,7 @@ class ProjectsContentView {
     clone.querySelector('.project-row-project-name').textContent = projectName;
     clone.querySelector('.project-row-budget').textContent = Formatter.currency(budget);
     clone.querySelector('.project-row-rating').textContent = employeeCapText;
+    applyOverCapacityStyle(clone.querySelector('.project-row-rating'), employeeCapacityUsed, employeeCapacityFull);
     clone.querySelector('.project-row-income').textContent = Formatter.currency(income);
     applyFinancialStyle(clone.querySelector('.project-row-income'), income);
 

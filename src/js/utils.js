@@ -51,3 +51,12 @@ export function applyFinancialStyle(element, value) {
   }
 }
 
+export function applyOverCapacityStyle(element, used, total) {
+  if (used > total) {
+    element.classList.add('negative-income');
+    element.classList.remove('positive-income');
+  } else {
+    element.classList.remove('negative-income');
+  }
+}
+
