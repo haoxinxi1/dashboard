@@ -1,7 +1,6 @@
 import FilterSortViewManager from './FilterSortViewManager';
 import Formatter from './Formatter';
-import { bindEvent } from './utils';
-import { POSITIONS } from './constants';
+import { bindEvent, populatePositionSelect } from './utils';
 
 class EmployeesContentView {
   constructor(callbacks) {
@@ -151,13 +150,7 @@ class EmployeesContentView {
     clone.querySelector('.employee-row-position .display-text').textContent = position;
 
     const positionSelect = clone.querySelector('.inline-edit-select');
-    POSITIONS.forEach((pos) => {
-      const option = document.createElement('option');
-      option.value = pos;
-      option.textContent = pos;
-      positionSelect.appendChild(option);
-    });
-    positionSelect.value = position;
+    populatePositionSelect(positionSelect, position);
     clone.querySelector('.editable-position').dataset.employeeId = employeeID;
 
     clone.querySelector('.employee-row-salary .display-text').textContent = Formatter.currency(salary);

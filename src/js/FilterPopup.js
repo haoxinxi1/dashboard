@@ -1,4 +1,4 @@
-import { bindEvent } from './utils';
+import { bindEvent, populatePositionSelect } from './utils';
 
 class FilterPopup {
   constructor(callbacks) {
@@ -50,6 +50,7 @@ class FilterPopup {
     popup.querySelector('.filter-popup-input').style.display = isPosition ? 'none' : '';
     popup.querySelector('.filter-popup-select').style.display = isPosition ? '' : 'none';
     popup.style.display = 'block';
+    populatePositionSelect(popup.querySelector('.filter-popup-select'));
     return popup;
   }
 

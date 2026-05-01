@@ -1,3 +1,5 @@
+import { POSITIONS } from './constants';
+
 /**
  * Binds a click event listener to an element that calls
  * the provided handlers in sequence.
@@ -13,4 +15,16 @@ export function bindEvent(event, selector, ...handlers) {
   };
   document.querySelector(selector).addEventListener(event, listener);
   return listener;
+}
+
+export function populatePositionSelect(selectElement, currentValue = '') {
+  POSITIONS.forEach((pos) => {
+    const option = document.createElement('option');
+    option.value = pos;
+    option.textContent = pos;
+    selectElement.appendChild(option);
+  });
+  if (currentValue) {
+    selectElement.value = currentValue;
+  }
 }

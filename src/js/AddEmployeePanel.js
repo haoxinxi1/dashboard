@@ -1,4 +1,4 @@
-import { bindEvent} from './utils'
+import { bindEvent, populatePositionSelect} from './utils';
 
 class AddEmployeePanel {
   constructor(callbacks){
@@ -7,7 +7,7 @@ class AddEmployeePanel {
     this.fields = document.querySelectorAll('#add-employee-form input, #add-employee-form select');
     this.bindListeners();
     this.bindValidation();
-
+    this.renderPositions();
   }
   bindListeners() {
     bindEvent('click', '#cancel-btn-form', this.showOpenButton, this.hideAddEmployeePanelView);
@@ -41,6 +41,11 @@ class AddEmployeePanel {
       document.getElementById(`${field.id}-error`).style.display = 'none';
     });
     document.getElementById('add-btn-form').disabled = true;
+  }
+
+  // render positions
+  renderPositions() {
+    populatePositionSelect(document.getElementById('position'));
   }
 
   // validation
