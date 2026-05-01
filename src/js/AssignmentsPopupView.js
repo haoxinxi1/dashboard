@@ -1,4 +1,4 @@
-import { bindEvent } from './utils';
+import { bindEvent, toggleNoEntries } from './utils';
 
 class AssignmentsPopupView {
   constructor(callbacks) {
@@ -45,6 +45,7 @@ class AssignmentsPopupView {
       const el = this.createAssignmentDataRow(row);
       tableBody.appendChild(el);
     });
+    toggleNoEntries('assignments-table-body', content.data.length);
   }
 
   /**

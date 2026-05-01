@@ -1575,3 +1575,12 @@ tbody tr:hover {
 .popup-save-edit:hover {
   background-color: rgb(34, 153, 84);
 }
+
+/* no items message*/
+
+.no-entries-msg {
+  color: rgb(149, 165, 166);
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+}

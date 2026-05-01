@@ -370,6 +370,7 @@ class AppController {
 
   /* Create new Employee */
   onCreateEmployee(employeeData) {
+    employeeData.period = this.appModel.getCurrentPeriod();
     this.appModel.addEmployee(new EmployeeModel(employeeData));
   }
 

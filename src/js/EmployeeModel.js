@@ -18,6 +18,13 @@ class EmployeeModel {
     this.vacationDays = {};
     this.vacationWorkingDays = {};
     this.assignments = {};
+    if (params.period) this.initPeriod(params.period);
+  }
+
+  initPeriod(period) {
+    this.assignments[period] ??= [];
+    this.vacationDays[period] ??= [];
+    this.vacationWorkingDays[period] ??= 0;
   }
 
   getVacationDays(period) {

@@ -1,6 +1,6 @@
 import FilterSortViewManager from './FilterSortViewManager';
 import Formatter from './Formatter';
-import { bindEvent, populatePositionSelect } from './utils';
+import { bindEvent, populatePositionSelect, toggleNoEntries } from './utils';
 
 class EmployeesContentView {
   constructor(callbacks) {
@@ -113,6 +113,7 @@ class EmployeesContentView {
       const el = this.createEmployeeRow(employeeData);
       tableBody.appendChild(el);
     });
+    toggleNoEntries('employees-table-body', content.length);
   }
   /**
    * Creates an employee table row from the template.

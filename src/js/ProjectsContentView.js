@@ -1,5 +1,5 @@
 import FilterSortViewManager from './FilterSortViewManager';
-import { bindEvent } from './utils';
+import { bindEvent, toggleNoEntries } from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {
@@ -68,6 +68,7 @@ class ProjectsContentView {
       const el = this.createProjectRow(row);
       tableBody.appendChild(el);
     });
+    toggleNoEntries('projects-table-body', content.projectsRows.length);
     const resume = document.getElementById('projects-total-income');
     if (content.hasProjects) {
       resume.querySelector('.total-amount').textContent = `${content.totalIncome}`;

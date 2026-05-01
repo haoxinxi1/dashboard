@@ -1,25 +1,49 @@
 const employee1 = {
-  id: "100",
-  name: "John",
-  surname: "Smith",
-  dateOfBirth: "1990-05-15",
-  age: 35,
-  position: "Senior",
-  salary: 4500,
-  projectAssignments: [],
-  vacationDays: {}
+    id: "100",
+    name: "John",
+    surname: "Smith",
+    dateOfBirth: "1990-05-15",
+    position: "Senior",
+    salary: 4500,
+    assignments: {
+        '2026-0': ["300"],
+        '2026-1': ["300"],
+        '2026-2': ["300"]
+    },
+    vacationDays: {
+        '2026-0': [],
+        '2026-1': [],
+        '2026-2': []
+    },
+    vacationWorkingDays: {
+        '2026-0': 0,
+        '2026-1': 0,
+        '2026-2': 0
+    }
 };
 
 const employee2 = {
-  id: "101",
-  name: "Anna",
-  surname: "Johnson",
-  dateOfBirth: "1995-08-22",
-  age: 30,
-  position: "Middle",
-  salary: 3200,
-  projectAssignments: [],
-  vacationDays: {}
+    id: "101",
+    name: "Anna",
+    surname: "Johnson",
+    dateOfBirth: "1995-08-22",
+    position: "Middle",
+    salary: 3200,
+    assignments: {
+        '2026-0': ["301"],
+        '2026-1': ["301"],
+        '2026-2': ["301"]
+    },
+    vacationDays: {
+        '2026-0': [],
+        '2026-1': [],
+        '2026-2': []
+    },
+    vacationWorkingDays: {
+        '2026-0': 0,
+        '2026-1': 0,
+        '2026-2': 0
+    }
 };
 
 const project1 = {

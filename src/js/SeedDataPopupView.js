@@ -1,4 +1,4 @@
-import { bindEvent } from './utils'
+import { bindEvent, toggleNoEntries } from './utils'
 import { MONTHS } from './constants.js';
 
 class SeedDataPopupView {
@@ -44,6 +44,7 @@ class SeedDataPopupView {
       const el = this.createSeedDataRow(data);
       tableBody.appendChild(el);
     });
+    toggleNoEntries('seed-data-table-body', content.monthsData.length);
   }
 
     /**

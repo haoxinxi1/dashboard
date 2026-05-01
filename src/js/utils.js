@@ -28,3 +28,15 @@ export function populatePositionSelect(selectElement, currentValue = '') {
     selectElement.value = currentValue;
   }
 }
+
+export function toggleNoEntries(containerId, length) {
+  const container = document.getElementById(containerId);
+  let msg = container.querySelector('.no-entries-msg');
+  if (!msg) {
+    msg = document.createElement('p');
+    msg.textContent = 'No entries to show';
+    msg.classList.add('no-entries-msg');
+    container.appendChild(msg);
+  }
+  msg.classList.toggle('hidden', length > 0);
+}
