@@ -321,13 +321,20 @@
         </td>
       </tr>
     </template>
+
     <template id="employee-row-template">
       <tr data-employee-id="">
         <td class="employee-row-first-name"></td>
         <td class="employee-row-last-name"></td>
         <td class="employee-row-age"></td>
-        <td class="employee-row-position editable-position" data-field="position" data-employee-id=""></td>
-        <td class="employee-row-salary editable-salary" data-field="salary" data-employee-id=""></td>
+        <td class="employee-row-position editable-position" data-field="position" data-employee-id="">
+          <span class="display-text"></span>
+          <select class="inline-edit-select hidden"></select>
+        </td>
+        <td class="employee-row-salary editable-salary" data-field="salary" data-employee-id="">
+          <span class="display-text"></span>
+          <input type="number" class="inline-edit-input hidden" min="0">
+        </td>
         <td class="employee-row-monthly-salary"></td>
         <td>
           <button
@@ -356,6 +363,7 @@
         </td>
       </tr>
     </template>
+
     <template id="details-row-template">
       <tr>
         <td>

@@ -49,6 +49,8 @@ class AppController {
         handleCheckSchedule: this.handleCheckSchedule.bind(this),
         onFilter: this.onFilter.bind(this),
         onSort: this.onSort.bind(this),
+        onUpdateSalary: this.onUpdateSalary.bind(this),
+        onUpdatePosition: this.onUpdatePosition.bind(this),
       },
       seedDataPopupView: {
         onSeedChosenMonth: this.onSeedChosenMonth.bind(this),
@@ -161,7 +163,7 @@ class AppController {
         surname: employee.surname,
         age: age,
         position: employee.position,
-        salary: Formatter.currency(employee.salary),
+        salary: employee.salary,
         salaryRaw: employee.salary,
         estimatedPayment: Formatter.currency(monthlySalary),
         estimatedPaymentRaw: monthlySalary,
@@ -439,6 +441,16 @@ class AppController {
     this.appModel.updateVacationDays(employeeID, vacationDays, vacationWorkingDays);
     return 1;
   }
+
+  /* Inline editing in employees tab */
+  onUpdateSalary(employeeID, value) {
+    this.appModel.updateEmployeeSalary(employeeID, value)
+  }
+
+  onUpdatePosition(employeeID, value) {
+    this.appModel.updateEmployeePosition(employeeID, value)
+  }
+
 }
 
 export default AppController;

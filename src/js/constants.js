@@ -3,3 +3,5 @@ export const MONTHS = [
   'May', 'June', 'July', 'August',
   'September', 'October', 'November', 'December'
 ];
+
+export const POSITIONS = ['Junior', 'Middle', 'Senior', 'Lead', 'Architect', 'BO'];

@@ -1,5 +1,7 @@
 import FilterSortViewManager from './FilterSortViewManager';
+import Formatter from './Formatter';
 import { bindEvent } from './utils';
+import { POSITIONS } from './constants';
 
 class EmployeesContentView {
   constructor(callbacks) {
@@ -16,6 +18,9 @@ class EmployeesContentView {
     bindEvent('click', '#add-employee-btn', this.hideOpenButton, this.callbacks.showAddEmployeePanelView);
     bindEvent('click', '#employees-table-head', this.handleBtnClickHead);
     bindEvent('click', '#employees-table-body', this.handleBtnClickRow);
+    bindEvent('change', '#employees-table-body', this.handleSelectChange);
+    bindEvent('keydown', '#employees-table-body', this.handleInlineKeydown);
+    bindEvent('focusout', 'body', this.handleInlineEdit);
     bindEvent('click', `#${this.chipContainerId}`, this.filterSortManager.handleChipClick);
   }
 
@@ -37,6 +42,12 @@ class EmployeesContentView {
   };
 
   handleBtnClickRow = (e) => {
+    const editableCell = e.target.closest('.editable-position') || e.target.closest('.editable-salary');
+    if (editableCell) {
+      this.activateInlineEdit(editableCell);
+      return;
+    }
+
     let targetBtn = e.target.closest('.employee-row-show-assignments-btn');
     if (!targetBtn) targetBtn = e.target.closest('.employee-row-availability-btn');
     if (!targetBtn) targetBtn = e.target.closest('.employee-row-assign-btn');
@@ -50,6 +61,16 @@ class EmployeesContentView {
     else if (action === 'delete') this.handleDeleteEmployee(employeeID, targetBtn.dataset.name);
   };
 
+  activateInlineEdit = (cell) => {
+    const isPosition = cell.classList.contains('editable-position');
+    const editElement = cell.querySelector(isPosition ? '.inline-edit-select' : '.inline-edit-input');
+    if (!editElement.classList.contains('hidden')) return;
+    const span = cell.querySelector('.display-text');
+    span.classList.add('hidden');
+    editElement.classList.remove('hidden');
+    editElement.focus();
+  };
+
   handleShowAssignments = (employeeID) => {
     this.callbacks.showAssignmentsPopupView();
     this.callbacks.getContentAssignmentsPopup('employee', employeeID);
@@ -59,6 +80,28 @@ class EmployeesContentView {
     if (confirm(`Are you sure you want to delete ${employeeName}?`)) {
       this.callbacks.onDeleteEmployee(employeeID);
     }
+  };
+
+  handleInlineEdit = (e) => {
+    const target = e.target;
+    if (target.classList.contains('inline-edit-input')) {
+      const employeeID = target.closest('.editable-salary').dataset.employeeId;
+      this.callbacks.onUpdateSalary(employeeID, target.value);
+    }
+  };
+
+  handleSelectChange = (e) => {
+    const target = e.target;
+    if (!target.classList.contains('inline-edit-select')) return;
+    const employeeID = target.closest('.editable-position').dataset.employeeId;
+    this.callbacks.onUpdatePosition(employeeID, target.value);
+  };
+
+  handleInlineKeydown = (e) => {
+    if (e.key !== 'Enter') return;
+    const target = e.target;
+    if (!target.classList.contains('inline-edit-input')) return;
+    target.blur(); // triggers focusout → handleInlineEdit saves the value
   };
 
   // render
@@ -105,8 +148,22 @@ class EmployeesContentView {
     clone.querySelector('.employee-row-first-name').textContent = name;
     clone.querySelector('.employee-row-last-name').textContent = surname;
     clone.querySelector('.employee-row-age').textContent = age;
-    clone.querySelector('.employee-row-position').textContent = position;
-    clone.querySelector('.employee-row-salary').textContent = salary;
+    clone.querySelector('.employee-row-position .display-text').textContent = position;
+
+    const positionSelect = clone.querySelector('.inline-edit-select');
+    POSITIONS.forEach((pos) => {
+      const option = document.createElement('option');
+      option.value = pos;
+      option.textContent = pos;
+      positionSelect.appendChild(option);
+    });
+    positionSelect.value = position;
+    clone.querySelector('.editable-position').dataset.employeeId = employeeID;
+
+    clone.querySelector('.employee-row-salary .display-text').textContent = Formatter.currency(salary);
+    clone.querySelector('.inline-edit-input').value = salary;
+    clone.querySelector('.editable-salary').dataset.employeeId = employeeID;
+
     clone.querySelector('.employee-row-monthly-salary').textContent = estimatedPayment;
     clone.querySelector('.employee-row-income').textContent = projectedIncome;
 

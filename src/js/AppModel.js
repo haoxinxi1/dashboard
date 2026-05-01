@@ -211,6 +211,22 @@ class AppModel {
     this.saveToRepo();
     console.log("Vacation days: ", employee.vacationDays[this.currentPeriod]);
   }
+
+  updateEmployeeSalary(employeeID, value) {
+    const employee = this.searchData(employeeID);
+    employee.setSalary(value);
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("New salary: ", employee.salary);
+  }
+
+  updateEmployeePosition(employeeID, value) {
+    const employee = this.searchData(employeeID);
+    employee.setPosition(value);
+    this.callbacks.onModelChange();
+    this.saveToRepo();
+    console.log("New position: ", employee.position);
+  }
 }
 
 export default AppModel;

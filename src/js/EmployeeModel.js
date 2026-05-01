@@ -39,6 +39,16 @@ class EmployeeModel {
   getNumberAssignments(period) {
     return this.assignments[period]?.length ?? 0;
   }
+
+  setSalary(value) {
+    const numericSalary = parseFloat(value);
+    if (isNaN(numericSalary) || numericSalary <= 0) return;
+    this.salary = numericSalary;
+  }
+
+  setPosition(value) {
+    this.position = value;
+  }
 }
 
 export default EmployeeModel;
