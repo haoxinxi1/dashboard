@@ -1,4 +1,5 @@
 import { bindEvent } from './utils';
+import Formatter from './Formatter';
 
 class DeleteAssignmentPopup {
   constructor(callbacks) {
@@ -36,16 +37,16 @@ class DeleteAssignmentPopup {
    * @param {Object} data
    * @param {string} data.assignmentID
    * @param {string} data.employeeName
-   * @param {string} data.employeeCapacity
+   * @param {number} data.employeeCapacity
    * @param {string} data.projectName
-   * @param {string} data.assignedCapacity
-   * @param {string} data.salaryShare
-   * @param {string} data.budgetShare
-   * @param {string} data.estimatedIncome
-   * @param {string} data.currentCapacity
-   * @param {string} data.afterCapacity
-   * @param {string} data.incomeNow
-   * @param {string} data.incomeAfter
+   * @param {number} data.assignedCapacity
+   * @param {number} data.salaryShare
+   * @param {number} data.budgetShare
+   * @param {number} data.estimatedIncome
+   * @param {number} data.currentCapacity
+   * @param {number} data.afterCapacity
+   * @param {number} data.incomeNow
+   * @param {number} data.incomeAfter
    */
   render({
     assignmentID,
@@ -60,9 +61,6 @@ class DeleteAssignmentPopup {
     afterCapacity,
     incomeNow,
     incomeAfter,
-    isNegativeEstimated,
-    isNegativeNow,
-    isNegativeAfter
   }) {
     const template = document.getElementById('unassignment-popup-template');
     const clone = template.content.cloneNode(true);
@@ -70,20 +68,20 @@ class DeleteAssignmentPopup {
     popup.dataset.assignmentID = assignmentID;
 
     clone.querySelector('.employee-name').textContent = employeeName;
-    clone.querySelector('.employee-capacity').textContent = employeeCapacity;
+    clone.querySelector('.employee-capacity').textContent = Formatter.decimal1(employeeCapacity);
     clone.querySelector('.project-name').textContent = projectName;
-    clone.querySelector('.assigned-capacity').textContent = assignedCapacity;
+    clone.querySelector('.assigned-capacity').textContent = Formatter.decimal1(assignedCapacity);
     clone.querySelector('.salary-share').textContent = salaryShare;
     clone.querySelector('.budget-share').textContent = budgetShare;
-    clone.querySelector('.estimated-income').textContent = estimatedIncome;
-    clone.querySelector('.current-capacity').textContent = currentCapacity;
-    clone.querySelector('.after-capacity').textContent = afterCapacity;
-    clone.querySelector('.income-now').textContent = incomeNow;
-    clone.querySelector('.income-after').textContent = incomeAfter;
+    clone.querySelector('.estimated-income').textContent = Formatter.currency(estimatedIncome);
+    clone.querySelector('.current-capacity').textContent = Formatter.decimal1(currentCapacity);
+    clone.querySelector('.after-capacity').textContent = Formatter.decimal1(afterCapacity);
+    clone.querySelector('.income-now').textContent = Formatter.currency(incomeNow);
+    clone.querySelector('.income-after').textContent = Formatter.currency(incomeAfter);
 
-    clone.querySelector('.estimated-income').classList.toggle('negative-income', isNegativeEstimated);
-    clone.querySelector('.income-now').classList.toggle('negative-income', isNegativeNow);
-    clone.querySelector('.income-after').classList.toggle('negative-income', isNegativeAfter);
+    applyFinancialStyle(clone.querySelector('.estimated-income'), estimatedIncome);
+    applyFinancialStyle(clone.querySelector('.income-now'), incomeNow);
+    applyFinancialStyle(clone.querySelector('.income-after'), incomeAfter);
 
     popup.style.display = 'flex';
     return popup;

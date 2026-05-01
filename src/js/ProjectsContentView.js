@@ -1,4 +1,5 @@
 import FilterSortViewManager from './FilterSortViewManager';
+import Formatter from './Formatter';
 import { bindEvent, toggleNoEntries, applyFinancialStyle } from './utils';
 
 class ProjectsContentView {
@@ -71,15 +72,11 @@ class ProjectsContentView {
     toggleNoEntries('projects-table-body', content.projectsRows.length);
     const resume = document.getElementById('projects-total-income');
     if (content.hasProjects) {
-      resume.querySelector('.total-amount').textContent = `${content.totalIncome}`;
-      resume.querySelector('.bench-payments').textContent = `(Bench payments: ${content.benchIncome})`;
+      resume.querySelector('.total-amount').textContent = `${Formatter.currency(content.totalIncome)}`;
+      resume.querySelector('.bench-payments').textContent =
+        `(Bench payments: ${Formatter.currency(content.benchIncome)})`;
       resume.classList.remove('hidden');
-      const totalEl = resume.querySelector('.total-amount');
-      if (content.isIncomeNegative) {
-        totalEl.classList.add('negative-income');
-      } else {
-        totalEl.classList.remove('negative-income');
-      }
+      applyFinancialStyle(resume.querySelector('.total-amount'), content.totalIncome);
     } else {
       resume.classList.add('hidden');
     }
@@ -91,20 +88,32 @@ class ProjectsContentView {
    * @param {string} data.companyName
    * @param {string} data.projectName
    * @param {string} data.budget
-   * @param {string} data.employeeCapacity
+   * @param {string} data.employeeCapacityUsed
+   * @param {string} data.employeeCapacityFull
    * @param {string} data.income
    * @param {number} data.numberEmployees
    * @returns {DocumentFragment}
    */
-  createProjectRow({ projectID, companyName, projectName, budget, employeeCapacity, income, numberEmployees }) {
+  createProjectRow({
+    projectID,
+    companyName,
+    projectName,
+    budget,
+    employeeCapacityUsed,
+    employeeCapacityFull,
+    income,
+    numberEmployees,
+  }) {
     const template = document.getElementById('project-row-template');
     const clone = template.content.cloneNode(true);
+    const employeeCapText = `${Formatter.decimal2(employeeCapacityUsed)}/${Formatter.decimal0(employeeCapacityFull)}`;
 
     clone.querySelector('.project-row-company-name').textContent = companyName;
     clone.querySelector('.project-row-project-name').textContent = projectName;
-    clone.querySelector('.project-row-budget').textContent = budget;
-    clone.querySelector('.project-row-rating').textContent = employeeCapacity;
-    clone.querySelector('.project-row-income').textContent = income;
+    clone.querySelector('.project-row-budget').textContent = Formatter.currency(budget);
+    clone.querySelector('.project-row-rating').textContent = employeeCapText;
+    clone.querySelector('.project-row-income').textContent = Formatter.currency(income);
+    applyFinancialStyle(clone.querySelector('.project-row-income'), income);
 
     const showEmployeesBtn = clone.querySelector('.project-row-show-employees-btn');
     showEmployeesBtn.dataset.id = projectID;

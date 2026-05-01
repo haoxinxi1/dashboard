@@ -1,4 +1,5 @@
 import { bindEvent } from './utils';
+import Formatter from './Formatter';
 
 class EditAssignmentPopup {
   constructor(callbacks) {
@@ -32,10 +33,10 @@ class EditAssignmentPopup {
     bindEvent('click', '.popup-cancel-edit', this.deletePopup);
     bindEvent('click', '.popup-save-edit', this.handleEditClick);
     bindEvent('input', '.edit-capacity-input', (e) => {
-      this.popup.querySelector('.edit-capacity-value').textContent = e.target.value;
+      this.popup.querySelector('.edit-capacity-value').textContent = Formatter.decimal2(e.target.value);
     });
     bindEvent('input', '.edit-fit-input', (e) => {
-      this.popup.querySelector('.edit-fit-value').textContent = e.target.value;
+      this.popup.querySelector('.edit-fit-value').textContent = Formatter.decimal2(e.target.value);
     });
   }
 
@@ -53,8 +54,8 @@ class EditAssignmentPopup {
    * @param {string} data.assignmentID
    * @param {string} data.employeeName
    * @param {string} data.projectName
-   * @param {string} data.capacity
-   * @param {string} data.projectFit
+   * @param {number} data.capacity
+   * @param {number} data.projectFit
     */
   render({ assignmentID, employeeName, projectName, capacity, projectFit }) {
     const template = document.getElementById('edit-assignment-template');
@@ -68,11 +69,11 @@ class EditAssignmentPopup {
     strongs[1].textContent = projectName;
 
     clone.querySelector('.edit-capacity-input').value = capacity;
-    clone.querySelector('.edit-capacity-value').textContent = capacity;
+    clone.querySelector('.edit-capacity-value').textContent = Formatter.decimal2(capacity);
 
     clone.querySelector('.edit-fit-input').value = projectFit;
-    clone.querySelector('.edit-fit-value').textContent = projectFit;
-    
+    clone.querySelector('.edit-fit-value').textContent = Formatter.decimal2(projectFit);
+
     popup.style.display = 'block';
     return popup;
   }

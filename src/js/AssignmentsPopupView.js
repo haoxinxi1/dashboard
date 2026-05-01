@@ -1,4 +1,5 @@
 import { bindEvent, toggleNoEntries } from './utils';
+import Formatter from './Formatter';
 
 class AssignmentsPopupView {
   constructor(callbacks) {
@@ -57,11 +58,10 @@ class AssignmentsPopupView {
    * @param {string} data.capacity
    * @param {string} data.fit
    * @param {string} data.vacation
-   * @param {string} data.effective
-   * @param {string} data.revenue
-   * @param {string} data.cost
-   * @param {string} data.profit
-   * @param {boolean} data.isLoss
+   * @param {number} data.effective
+   * @param {number} data.revenue
+   * @param {number} data.cost
+   * @param {number} data.profit
    * @returns {DocumentFragment}
    */
   createAssignmentDataRow({
@@ -75,7 +75,6 @@ class AssignmentsPopupView {
     revenue,
     cost,
     profit,
-    isLoss,
   }) {
     const template = document.getElementById('details-row-template');
     const clone = template.content.cloneNode(true);
@@ -87,14 +86,13 @@ class AssignmentsPopupView {
     clone.querySelector('.detail-capacity').textContent = capacity;
     clone.querySelector('.detail-fit').textContent = fit;
     clone.querySelector('.detail-vacation').textContent = vacation;
-    clone.querySelector('.detail-effective').textContent = effective;
-    clone.querySelector('.detail-revenue').textContent = revenue;
-    clone.querySelector('.detail-cost').textContent = cost;
+    clone.querySelector('.detail-effective').textContent = Formatter.decimal3(effective);
+    clone.querySelector('.detail-revenue').textContent = Formatter.currency(revenue);
+    clone.querySelector('.detail-cost').textContent = Formatter.currency(cost);
 
     const profitCell = clone.querySelector('.detail-profit');
-    profitCell.textContent = profit;
-    if (isLoss) profitCell.classList.add('negative-income');
-    else profitCell.classList.remove('negative-income');
+    profitCell.textContent = Formatter.currency(profit);
+    applyFinancialStyle(profitCell, profit);
 
     const editBtn = clone.querySelector('.edit-assignment-btn');
     editBtn.dataset.id = assignmentID;

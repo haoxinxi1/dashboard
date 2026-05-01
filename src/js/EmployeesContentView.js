@@ -158,8 +158,9 @@ class EmployeesContentView {
     clone.querySelector('.inline-edit-input').value = salary;
     clone.querySelector('.editable-salary').dataset.employeeId = employeeID;
 
-    clone.querySelector('.employee-row-monthly-salary').textContent = estimatedPayment;
-    clone.querySelector('.employee-row-income').textContent = projectedIncome;
+    clone.querySelector('.employee-row-monthly-salary').textContent = Formatter.currency(estimatedPayment);
+    clone.querySelector('.employee-row-income').textContent = Formatter.currency(projectedIncome);
+    applyFinancialStyle(clone.querySelector('.employee-row-income'), projectedIncome);
 
     const showProjectsBtn = clone.querySelector('.employee-row-show-assignments-btn');
     showProjectsBtn.dataset.id = employeeID;

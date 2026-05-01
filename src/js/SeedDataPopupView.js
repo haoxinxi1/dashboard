@@ -1,4 +1,5 @@
 import { bindEvent, toggleNoEntries } from './utils'
+import Formatter from './Formatter';
 import { MONTHS } from './constants.js';
 
 class SeedDataPopupView {
@@ -54,10 +55,9 @@ class SeedDataPopupView {
    * @param {number} data.projects
    * @param {number} data.employees
    * @param {string} data.income
-   * @param {boolean} data.isNegative
    * @returns {DocumentFragment}
    */
-  createSeedDataRow({ period, projects, employees, income, isNegative }) {
+  createSeedDataRow({ period, projects, employees, income}) {
     const template = document.getElementById('seed-data-row-template');
     const clone = template.content.cloneNode(true);
 
@@ -68,8 +68,8 @@ class SeedDataPopupView {
     clone.querySelector('.seed-employees').textContent = employees;
 
     const incomeCell = clone.querySelector('.seed-income');
-    incomeCell.textContent = income;
-    if (isNegative) incomeCell.classList.add('negative-income');
+    incomeCell.textContent = Formatter.currency(income);
+    applyFinancialStyle(clone.querySelector('.seed-income'), income);
 
     clone.querySelector('.seed-month-btn').dataset.period = period;
 

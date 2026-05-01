@@ -82,9 +82,9 @@ class AddAssignmentPopup {
    * @param {Object} data
    * @param {string} data.employeeID
    * @param {string} data.employeeName
-   * @param {string} data.currentCapacity
-   * @param {string} data.maxCapacity
-   * @param {string} data.availableCapacity
+   * @param {number} data.currentCapacity
+   * @param {number} data.maxCapacity
+   * @param {number} data.availableCapacity
    * @param {Array<{id: string, name: string, available: number}>} data.projects
    */
   render({ employeeID, employeeName, currentCapacity, maxCapacity, availableCapacity, projects }) {
@@ -92,18 +92,17 @@ class AddAssignmentPopup {
     const clone = template.content.cloneNode(true);
 
     clone.querySelector('.popup-title').textContent = `Assign ${employeeName}`;
-    clone.querySelector('.current-capacity').textContent = currentCapacity;
-    clone.querySelector('.max-capacity').textContent = maxCapacity;
-    clone.querySelector('.available-capacity').textContent = availableCapacity;
+    clone.querySelector('.current-capacity').textContent = Formatter.decimal1(currentCapacity);
+    clone.querySelector('.max-capacity').textContent = Formatter.decimal1(maxCapacity);
+    clone.querySelector('.available-capacity').textContent = Formatter.decimal1(availableCapacity);
 
     const select = clone.querySelector('.project-select');
     projects.forEach(({ id, name, available }) => {
       const option = document.createElement('option');
       option.value = id;
-      option.textContent = `${name} - Available: ${available}`;
+      option.textContent = `${name} - Available: ${Formatter.decimal1(available)}`;
       select.appendChild(option);
     });
-    // clone.querySelector('.capacity-input').max = maxCapacity;
     const assignBtn = clone.querySelector('.apply-assignment');
     assignBtn.dataset.employeeID = employeeID;
 

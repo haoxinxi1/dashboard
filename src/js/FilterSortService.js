@@ -98,13 +98,6 @@ class FilterSortService {
     }
   }
 
-  /**
-   * @typedef {Object} SortCriteria
-   * @property {'projects'|'employees'} tab
-   * @property {string} [column]
-   * @property {boolean} [ascending]
-   */
-
   applySort(tab, updated) {
     const criteria = tab === 'projects' ? this.projectsCriteriaSort : this.employeesCriteriaSort;
     if (tab === 'projects') {
@@ -126,16 +119,7 @@ class FilterSortService {
     }
   }
 
-  sortArray(array, column, ascending) {
-    const RAW_COLUMNS = {
-      budget: 'budgetRaw',
-      income: 'incomeRaw',
-      salary: 'salaryRaw',
-      estimatedPayment: 'estimatedPaymentRaw',
-      employeeCapacity: 'employeeCapacityRaw',
-      projectedIncome: 'projectedIncomeRaw',
-    };
-    const sortKey = RAW_COLUMNS[column] || column;
+  sortArray(array, sortKey, ascending) {
     return [...array].sort((a, b) => {
       const result =
         typeof a[sortKey] === 'number' && typeof b[sortKey] === 'number'

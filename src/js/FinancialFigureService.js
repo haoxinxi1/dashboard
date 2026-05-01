@@ -152,16 +152,7 @@ class FinancialFigureService {
 
   /* Getters */
 
-  //projects tab
-  getCapacityUsageStringProject(projectID) {
-    const effective = this.projectsResultsMap.get(projectID).usedEffectiveCapacity;
-    const total = this.projectsMap.get(projectID).employeeCapacity;
-    return `${Formatter.decimal1(effective)} / ${total}`;
-  }
-
-  getCapacityUsageTotalProject(projectID) {
-    return this.projectsMap.get(projectID).employeeCapacity;
-  }
+  // projects tab
 
   getProjectEstIncome(projectID) {
     return this.projectsResultsMap.get(projectID).estimatedIncome;

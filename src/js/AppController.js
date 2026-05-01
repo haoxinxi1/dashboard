@@ -3,9 +3,9 @@ import AppView from './AppView';
 import ProjectModel from './ProjectModel';
 import EmployeeModel from './EmployeeModel';
 import AssignmentModel from './AssignmentModel';
-import Formatter from './Formatter';
 import FilterSortService from './FilterSortService';
 import FinancialFigureService from './FinancialFigureService';
+import { MAX_CAP_FOR_EMPLOYEE } from './constants';
 
 class AppController {
   constructor() {
@@ -120,33 +120,25 @@ class AppController {
     this.assignmentViewTypeId = [];
   }
 
-  //getting data for content
+  // getting content for Views
+
   getDataForProjectsTab() {
     const projectsRows = this.appModel.getProjects().map((project) => {
-      const employeeCapacityRaw = this.finService.getCapacityUsageTotalProject(project.id);
-      const employeeCapacity = this.finService.getCapacityUsageStringProject(project.id);
-      const income = this.finService.getProjectEstIncome(project.id);
       return {
         projectID: project.id,
         companyName: project.companyName,
         projectName: project.projectName,
-        budget: Formatter.currency(project.budget),
-        budgetRaw: project.budget,
-        employeeCapacity: employeeCapacity,
-        employeeCapacityRaw: employeeCapacityRaw,
-        income: Formatter.currency(income),
-        incomeRaw: income,
+        budget: project.budget,
+        employeeCapacityUsed: this.finService.getProjectEffectiveCapacityUsed(project.id),
+        employeeCapacityFull: this.finService.getProjectCapacityNominal(project.id),
+        income: this.finService.getProjectEstIncome(project.id),
         numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0,
       };
     });
-    const period = this.appModel.getCurrentPeriod();
-    const totalIncome = this.finService.getTotalEstIncomeAllProjects();
-    const benchIncome = this.finService.getBenchPayments();
     return {
       projectsRows: projectsRows,
-      totalIncome: Formatter.currency(totalIncome),
-      benchIncome: Formatter.currency(benchIncome),
-      isIncomeNegative: totalIncome < 0,
+      totalIncome: this.finService.getTotalEstIncomeAllProjects(),
+      benchIncome: this.finService.getBenchPayments(),
       hasProjects: projectsRows.length > 0,
     };
   }
@@ -154,36 +146,19 @@ class AppController {
   getDataForEmployeesTab() {
     const employees = this.appModel.getEmployees();
     return employees.map((employee) => {
-      const monthlySalary = this.finService.getMonthlySalaryPayment(employee.id);
-      const income = this.finService.getIncomePerEmployee(employee.id);
-      const age = this.calculateAge(employee.dateOfBirth);
       return {
         employeeID: employee.id,
         name: employee.name,
         surname: employee.surname,
-        age: age,
+        age: this.calculateAge(employee.dateOfBirth),
         position: employee.position,
         salary: employee.salary,
-        salaryRaw: employee.salary,
-        estimatedPayment: Formatter.currency(monthlySalary),
-        estimatedPaymentRaw: monthlySalary,
-        projectedIncome: Formatter.currency(income),
-        projectedIncomeRaw: income,
+        estimatedPayment: this.finService.getMonthlySalaryPayment(employee.id),
+        projectedIncome: this.finService.getIncomePerEmployee(employee.id),
         numberProjects: this.finService.getNumberProjectsForEmployee(employee.id),
         capacityUsage: this.finService.getCapacityUsageString(employee.id),
       };
     });
-  }
-
-  calculateAge(dateOfBirth) {
-    const birth = new Date(dateOfBirth);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
   }
 
   getDataForSeedPopup() {
@@ -200,8 +175,7 @@ class AppController {
           period: period,
           projects: periodData.projects.length,
           employees: periodData.employees.length,
-          income: Formatter.currency(income),
-          isNegative: income < 0,
+          income: income,
         };
         monthsData.push(obj);
       });
@@ -246,11 +220,10 @@ class AppController {
         capacity: assignment.capacity,
         fit: assignment.projectFit,
         vacation: vacation,
-        effective: Formatter.decimal3(effective),
-        revenue: Formatter.currency(revenue),
-        cost: Formatter.currency(cost),
-        profit: Formatter.currency(profit),
-        isLoss: profit < 0,
+        effective: effective,
+        revenue: revenue,
+        cost: cost,
+        profit: profit,
       };
     });
     return content;
@@ -259,49 +232,40 @@ class AppController {
   getDataForShowingAddAssingPopup(employeeID) {
     const data = {};
     data.projects = this.appModel.getProjects().map((project) => {
-      const available = this.finService.getProjectAvailableCapacity(project.id);
       return {
         id: project.id,
         name: project.projectName,
-        available: Formatter.decimal1(available),
+        available: this.finService.getProjectAvailableCapacity(project.id),
       };
     });
     const employee = this.appModel.searchData(employeeID);
     const currentCapacity = this.finService.getEmployeeEffectiveCapacity(employeeID);
-    const maxCapacity = 1.5;
-    const availableCapacity = maxCapacity - currentCapacity;
 
     data.employeeID = employeeID;
     data.employeeName = `${employee.name} ${employee.surname}`;
-    data.currentCapacity = Formatter.decimal1(currentCapacity);
-    data.maxCapacity = Formatter.decimal1(maxCapacity);
-    data.availableCapacity = Formatter.decimal1(availableCapacity);
+    data.currentCapacity = currentCapacity;
+    data.maxCapacity = MAX_CAP_FOR_EMPLOYEE;
+    data.availableCapacity = MAX_CAP_FOR_EMPLOYEE - currentCapacity;
 
     return data;
   }
 
   getProjectInfoForAssignPopup(projectID) {
-    const capacityActual = this.finService.getProjectEffectiveCapacityUsed(projectID);
-    const capacityTotal = this.finService.getProjectCapacityNominal(projectID);
-
     return {
-      capacityActual: capacityActual,
-      capacityTotal: capacityTotal,
+      capacityActual: this.finService.getProjectEffectiveCapacityUsed(projectID),
+      capacityTotal: this.finService.getProjectCapacityNominal(projectID),
     };
   }
 
   getDataForEditAssigmentPopup(assignmentID) {
     const assignment = this.appModel.searchData(assignmentID);
     const employee = this.appModel.searchData(assignment.employeeID);
-    const employeeName = `${employee.name} ${employee.surname}`;
-    const projectName = this.appModel.searchData(assignment.projectID).projectName;
-
     return {
       assignmentID: assignmentID,
-      employeeName: employeeName,
-      projectName: projectName,
-      capacity: Formatter.decimal2(assignment.capacity),
-      projectFit: Formatter.decimal2(assignment.projectFit),
+      employeeName: `${employee.name} ${employee.surname}`,
+      projectName: this.appModel.searchData(assignment.projectID).projectName,
+      capacity: assignment.capacity,
+      projectFit: assignment.projectFit,
     }
   }
 
@@ -309,32 +273,25 @@ class AppController {
     const assignment = this.appModel.searchData(assignmentID);
     const projectID = assignment.projectID;
     const employee = this.appModel.searchData(assignment.employeeID);
-    const employeeName = `${employee.name} ${employee.surname}`;
-    const projectName = this.appModel.searchData(assignment.projectID).projectName;
-    const assignedCapacity = assignment.capacity;
     const salaryShare = this.finService.getSalaryShare(assignmentID);
-    const budgetShare = this.finService.getBudgetShare(assignmentID);
-    const employeeEstIncome = this.finService.getEstIncome(assignmentID);
     const projectIncomeBefore = this.finService.getProjectProfit(projectID);
-    const projectCapacityBefore = this.finService.getProjectCapacityNominal(projectID);
-    const projectCapacityAfter = projectCapacityBefore - assignedCapacity;
     const projectIncomeAfter = projectIncomeBefore + salaryShare;
+    const projectCapacityBefore = this.finService.getProjectCapacityNominal(projectID);
+    const projectCapacityAfter = projectCapacityBefore - assignment.capacity;
+
     return {
       assignmentID: assignmentID,
-      employeeName: employeeName,
-      employeeCapacity: Formatter.decimal1(assignedCapacity),
-      projectName: projectName,
-      assignedCapacity: Formatter.decimal1(assignedCapacity),
-      salaryShare: salaryShare,
-      budgetShare: budgetShare,
-      estimatedIncome: Formatter.currency(employeeEstIncome),
-      currentCapacity: Formatter.decimal1(projectCapacityBefore),
-      afterCapacity: Formatter.decimal1(projectCapacityAfter),
-      incomeNow: Formatter.currency(projectIncomeBefore),
-      incomeAfter: Formatter.currency(projectIncomeAfter),
-      isNegativeEstimated: employeeEstIncome < 0,
-      isNegativeNow: projectIncomeBefore < 0,
-      isNegativeAfter: projectIncomeAfter < 0,
+      employeeName: `${employee.name} ${employee.surname}`,
+      employeeCapacity: assignment.capacity,
+      projectName: this.appModel.searchData(assignment.projectID).projectName,
+      assignedCapacity: assignment.capacity,
+      salaryShare,
+      budgetShare: this.finService.getBudgetShare(assignmentID),
+      estimatedIncome: this.finService.getEstIncome(assignmentID),
+      currentCapacity: projectCapacityBefore,
+      afterCapacity: projectCapacityAfter,
+      incomeNow: projectIncomeBefore,
+      incomeAfter: projectIncomeAfter,
     }
   }
 
@@ -450,6 +407,17 @@ class AppController {
 
   onUpdatePosition(employeeID, value) {
     this.appModel.updateEmployeePosition(employeeID, value)
+  }
+
+  calculateAge(dateOfBirth) {
+    const birth = new Date(dateOfBirth);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+      age--;
+    }
+    return age;
   }
 
 }
