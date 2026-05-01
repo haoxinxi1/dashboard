@@ -40,3 +40,13 @@ export function toggleNoEntries(containerId, length) {
   }
   msg.classList.toggle('hidden', length > 0);
 }
+
+function applyFinancialStyle(element, value) {
+  if (value < 0) {
+    element.classList.add('negative-income');
+    element.classList.remove('positive-income');
+  } else {
+    element.classList.add('positive-income');
+    element.classList.remove('negative-income');
+  }
+}

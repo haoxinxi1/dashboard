@@ -1,5 +1,5 @@
 import FilterSortViewManager from './FilterSortViewManager';
-import { bindEvent, toggleNoEntries } from './utils';
+import { bindEvent, toggleNoEntries, applyFinancialStyle } from './utils';
 
 class ProjectsContentView {
   constructor(callbacks) {
