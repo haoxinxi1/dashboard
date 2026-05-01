@@ -1,10 +1,14 @@
 import { bindEvent } from './utils';
+import Formatter from './Formatter';
 
 class AddAssignmentPopup {
   constructor(callbacks) {
     this.callbacks = callbacks;
     this.formTouched = false;
     this.popup = null;
+    this.fitInput = 0;
+    this.capacityInput = 0;
+    this.added = 0;
   }
 
   createPopup(content, button) {
@@ -36,10 +40,22 @@ class AddAssignmentPopup {
     bindEvent('click', '.apply-assignment', this.handleAssignClick);
     bindEvent('change', '.project-select', this.showInputs, (e) => this.callbacks.onChooseProject(e.target.value));
     bindEvent('input', '.capacity-input', (e) => {
-      this.popup.querySelector('.capacity-value').textContent = e.target.value;
+      this.capacityInput = e.target.value;
+      this.popup.querySelector('.capacity-value').textContent = this.capacityInput;
+      this.added = this.capacityInput * this.fitInput;
+      this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
+      const used = parseFloat(this.popup.querySelector('.used-capacity').textContent) || 0;
+      this.popup.querySelector('.target-capacity').textContent =
+        `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
     });
     bindEvent('input', '.fit-input', (e) => {
-      this.popup.querySelector('.fit-value').textContent = e.target.value;
+      this.fitInput = e.target.value;
+      this.popup.querySelector('.fit-value').textContent = this.fitInput;
+      this.added = this.capacityInput * this.fitInput;
+      this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
+      const used = parseFloat(this.popup.querySelector('.used-capacity').textContent) || 0;
+      this.popup.querySelector('.target-capacity').textContent =
+        `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
     });
   }
 
@@ -95,11 +111,13 @@ class AddAssignmentPopup {
   }
 
   renderProjectInfo(projectInfo) {
-    this.popup.querySelector('.used-capacity').textContent = projectInfo.capacityActual;
+    this.popup.querySelector('.used-capacity').textContent = Formatter.decimal1(projectInfo.capacityActual);
     this.popup.querySelector('.total-capacity').textContent = projectInfo.capacityTotal;
-    this.popup.querySelector('.effective-capacity').textContent = projectInfo.capacityEffective;
+    if (!projectInfo.capacityTotal) return;
+    this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
+    const capacityActualAfter = projectInfo.capacityActual + this.added;
     this.popup.querySelector('.target-capacity').textContent =
-      `${projectInfo.capacityActualAfter} / ${projectInfo.capacityTotalAfter}`;
+      `${Formatter.decimal2(capacityActualAfter)} / ${projectInfo.capacityTotal}`;
   }
 
   positionPopup(button) {

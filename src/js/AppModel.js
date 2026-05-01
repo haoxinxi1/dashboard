@@ -130,6 +130,8 @@ class AppModel {
     if (this.isDuplicate(this.getAssignments(), { projectID: assignment.projectID, employeeID: assignment.employeeID }))
       return false;
     this.data[this.currentPeriod].assignments.push(assignment);
+    const employee = this.data[this.currentPeriod].employees.find((el) => el.id === assignment.employeeID);
+    (employee.assignments[this.currentPeriod] ??= []).push(assignment.id);
     this.callbacks.onModelChange();
     this.saveToRepo();
     console.log('Assignments :', this.getAssignments());
@@ -164,7 +166,13 @@ class AppModel {
   deleteAssignment(id, skipSave = false) {
     const array = this.getAssignments();
     const index = array.findIndex(item => item.id === id);
-    if (index !== -1) array.splice(index, 1);
+    if (index === -1) return;
+    const toDelete = array[index];
+    const employee = this.data[this.currentPeriod].employees.find((el) => el.id === toDelete.employeeID);
+    const arrayInEmployee = employee.assignments[this.currentPeriod];
+    const indexInEmployee = arrayInEmployee.findIndex(item => item === toDelete.id);
+    array.splice(index, 1);
+    if (indexInEmployee !== -1) arrayInEmployee.splice(indexInEmployee, 1);
     if (!skipSave)
     {
       this.callbacks.onModelChange();
@@ -195,9 +203,10 @@ class AppModel {
     console.log("Projects: ", array);
   }
 
-  updateVacationDays(employeeID, vacationDays) {
+  updateVacationDays(employeeID, vacationDays, vacationWorkingDays) {
     const employee = this.searchData(employeeID);
     employee.setVacationDays(this.currentPeriod, vacationDays);
+    employee.setVacationWorkingDays(this.currentPeriod, vacationWorkingDays);
     this.callbacks.onModelChange();
     this.saveToRepo();
     console.log("Vacation days: ", employee.vacationDays[this.currentPeriod]);

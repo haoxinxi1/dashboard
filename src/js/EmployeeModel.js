@@ -5,9 +5,7 @@
  * @param {string} params.dateOfBirth
  * @param {string} params.position
  * @param {number} params.salary
- * @param {Object} params.vacationDays
  */
-
 
 class EmployeeModel {
   constructor (params) {
@@ -15,29 +13,31 @@ class EmployeeModel {
     this.name = params.name;
     this.surname = params.surname;
     this.dateOfBirth = params.dateOfBirth;
-    this.age = this.calculateAge();
     this.position = params.position;
     this.salary = params.salary;
     this.vacationDays = {};
-  }
-
-  calculateAge() {
-    const birth = new Date(this.dateOfBirth);
-    const today = new Date();
-    let age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
-    }
-    return age;
+    this.vacationWorkingDays = {};
+    this.assignments = {};
   }
 
   getVacationDays(period) {
     return this.vacationDays[period] ?? [];
   }
 
-  setVacationDays(period, days) {
-    this.vacationDays[period] = days;
+  setVacationDays(period, daysArray) {
+    this.vacationDays[period] = daysArray;
+  }
+
+  getVacationWorkingDays(period) {
+    return this.vacationWorkingDays[period] ?? 0;
+  }
+
+  setVacationWorkingDays(period, daysAmount) {
+    this.vacationWorkingDays[period] = daysAmount;
+  }
+
+  getNumberAssignments(period) {
+    return this.assignments[period]?.length ?? 0;
   }
 }
 

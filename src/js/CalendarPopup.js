@@ -78,7 +78,7 @@ class CalendarPopup {
   }
 
   handleSetVacation = () => {
-    if (this.callbacks.onSetVacation(this.employeeID, this.selected)) this.deletePopup();
+    if (this.callbacks.onSetVacation(this.employeeID, this.selected, this.workingDaysAbsent)) this.deletePopup();
   };
 
   /**

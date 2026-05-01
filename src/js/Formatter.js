@@ -21,6 +21,14 @@ const Formatter = {
    */
   decimal2(value) {
     return value.toFixed(2);
+  },
+
+    /**
+   * @param {number} value
+   * @returns {string}
+   */
+  decimal3(value) {
+    return value.toFixed(3);
   }
 };
 
