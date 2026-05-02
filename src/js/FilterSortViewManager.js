@@ -9,10 +9,17 @@ class FilterSortViewManager {
     this.isAscendingOrder = false;
     this.filters = [];
     this.chipContainerId = chipContainerId;
+    this.sortedIcon = null;
   }
 
   handleSortBtnClick(targetBtn) {
     const column = targetBtn.closest('th').dataset.sort;
+
+    if (this.sortedIcon && this.sortedIcon !== targetBtn) {
+      this.sortedIcon.textContent = '⇅';
+      this.isAscendingOrder = false;
+    }
+
     this.sortColumn = column;
     this.isAscendingOrder = !this.isAscendingOrder;
     const criteria = {
@@ -23,6 +30,8 @@ class FilterSortViewManager {
     this.callbacks.onSort(criteria);
     if (this.isAscendingOrder) targetBtn.textContent = '↑';
     else targetBtn.textContent = '↓';
+    
+    this.sortedIcon = targetBtn;
   }
 
   handleFilterBtnClick(targetBtn) {

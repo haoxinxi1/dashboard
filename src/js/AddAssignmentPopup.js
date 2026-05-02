@@ -1,28 +1,36 @@
-import { bindEvent } from './utils';
+import { bindEvent,  positionPopup, validateEmployeeCapacity } from './utils';
 import Formatter from './Formatter';
+import { MAX_CAP_FOR_EMPLOYEE } from './constants'
 
 class AddAssignmentPopup {
   constructor(callbacks) {
     this.callbacks = callbacks;
     this.formTouched = false;
     this.popup = null;
-    this.fitInput = 0;
-    this.capacityInput = 0;
+    this.fitInput = 1.0;
+    this.capacityInput = 1.0;
     this.added = 0;
+    this.employeeCurrentCapacity = 0;
+    this.triggerButton = null;
   }
 
   createPopup(content, button) {
     if (this.popup) return;
+    this.triggerButton = button;
     this.popup = this.render(content);
     document.body.appendChild(this.popup);
-    this.positionPopup(button);
+    positionPopup(button, this.popup);
     this.bindListeners();
-    this.bindValidation();
+    this._onScrollResize = () => positionPopup(this.triggerButton, this.popup);
+    window.addEventListener('scroll', this._onScrollResize, true);
+    window.addEventListener('resize', this._onScrollResize);
   }
 
   deletePopup = () => {
     if (!this.popup) return;
     document.body.removeEventListener('click', this._onBodyClickListener);
+    window.removeEventListener('scroll', this._onScrollResize, true);
+    window.removeEventListener('resize', this._onScrollResize);
     this.popup.remove();
     this.popup = null;
     this.formTouched = false;
@@ -42,20 +50,13 @@ class AddAssignmentPopup {
     bindEvent('input', '.capacity-input', (e) => {
       this.capacityInput = e.target.value;
       this.popup.querySelector('.capacity-value').textContent = this.capacityInput;
-      this.added = this.capacityInput * this.fitInput;
-      this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
-      const used = parseFloat(this.popup.querySelector('.used-capacity').textContent) || 0;
-      this.popup.querySelector('.target-capacity').textContent =
-        `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
+      this.updateCapacityDisplay();
     });
+
     bindEvent('input', '.fit-input', (e) => {
       this.fitInput = e.target.value;
       this.popup.querySelector('.fit-value').textContent = this.fitInput;
-      this.added = this.capacityInput * this.fitInput;
-      this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
-      const used = parseFloat(this.popup.querySelector('.used-capacity').textContent) || 0;
-      this.popup.querySelector('.target-capacity').textContent =
-        `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
+      this.updateCapacityDisplay();
     });
   }
 
@@ -75,8 +76,29 @@ class AddAssignmentPopup {
     this.popup.querySelector('.project-info').style.display = hasProject ? 'block' : 'none';
   };
 
-  bindValidation() {} // TODO
+  updateCapacityDisplay() {
+    this.added = this.capacityInput * this.fitInput;
+    this.popup.querySelector('.effective-capacity').textContent = Formatter.decimal2(this.added);
+    const used = parseFloat(this.popup.querySelector('.used-capacity').textContent) || 0;
+    const total = parseFloat(this.popup.querySelector('.total-capacity').textContent) || 0;
+    this.popup.querySelector('.target-capacity').textContent =
+      `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
+    validateEmployeeCapacity(this.popup, this.employeeCurrentCapacity, parseFloat(this.capacityInput), MAX_CAP_FOR_EMPLOYEE);
+    this.validateProjectCapacity(used, this.added, total);
+  }
 
+  validateProjectCapacity(usedCapacity, effectiveToAdd, totalCapacity) {
+    const msg = this.popup.querySelector('.validation-message-project');
+    const target = usedCapacity + effectiveToAdd;
+    if (target > totalCapacity) {
+      msg.textContent =
+        `Project effective capacity would exceed ${Formatter.decimal1(totalCapacity)} ` +
+        `(current: ${Formatter.decimal1(usedCapacity)}, target: ${Formatter.decimal1(target)})`;
+      msg.style.display = 'block';
+    } else {
+      msg.style.display = 'none';
+    }
+  }
   /**
    * Creates and appends the assignment popup from the template.
    * @param {Object} data
@@ -88,6 +110,8 @@ class AddAssignmentPopup {
    * @param {Array<{id: string, name: string, available: number}>} data.projects
    */
   render({ employeeID, employeeName, currentCapacity, maxCapacity, availableCapacity, projects }) {
+    this.employeeCurrentCapacity = currentCapacity;
+
     const template = document.getElementById('assignment-popup-template');
     const clone = template.content.cloneNode(true);
 
@@ -118,22 +142,5 @@ class AddAssignmentPopup {
     this.popup.querySelector('.target-capacity').textContent =
       `${Formatter.decimal2(capacityActualAfter)} / ${projectInfo.capacityTotal}`;
   }
-
-  positionPopup(button) {
-    const rect = button.getBoundingClientRect();
-    const popupHeight = this.popup.offsetHeight;
-    const margin = 8;
-
-    let top;
-    if (rect.bottom + popupHeight + margin < window.innerHeight) {
-      top = rect.bottom + margin;
-    } else {
-      top = margin;
-    }
-
-    this.popup.style.top = `${top}px`;
-    this.popup.style.right = `${margin}px`;
-  }
 }
-
 export default AddAssignmentPopup;

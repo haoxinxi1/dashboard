@@ -12,7 +12,7 @@ class FilterPopup {
     this.column = button.closest('th').dataset.filter;
     this.popup = this.render();
     document.body.appendChild(this.popup);
-    this.positionPopup(button);
+    this.positionFilterPopup(button);
     this.bindListeners();
   }
 
@@ -33,6 +33,10 @@ class FilterPopup {
     }, 0);
     bindEvent('click', '.cancel-filter', this.deletePopup);
     bindEvent('click', '.accept-filter', this.handleAcceptClick);
+    bindEvent('change', '.filter-popup-select', this.handleAcceptClick);
+    bindEvent('keydown', '.filter-popup-input', (e) => {
+      if (e.key === 'Enter') this.handleAcceptClick();
+    });
   }
 
   handleAcceptClick = () => {
@@ -54,12 +58,26 @@ class FilterPopup {
     return popup;
   }
 
-  positionPopup(button) {
+  positionFilterPopup(button) {
     const th = button.closest('th');
     const rect = th.getBoundingClientRect();
     const gap = 10;
-    this.popup.style.left = `${rect.left}px`;
-    this.popup.style.top = `${rect.bottom + gap}px`;
+    let left = rect.left;
+    let top = rect.bottom + gap;
+
+    const popupRect = this.popup.getBoundingClientRect();
+
+    if (left + popupRect.width > window.innerWidth) {
+      left = window.innerWidth - popupRect.width - gap;
+    }
+    if (top + popupRect.height > window.innerHeight) {
+      top = window.innerHeight - popupRect.height - gap;
+    }
+    if (left < gap) left = gap;
+    if (top < gap) top = gap;
+
+    this.popup.style.left = `${left}px`;
+    this.popup.style.top = `${top}px`;
   }
 }
 

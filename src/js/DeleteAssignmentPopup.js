@@ -1,4 +1,4 @@
-import { bindEvent } from './utils';
+import { bindEvent, applyFinancialStyle } from './utils';
 import Formatter from './Formatter';
 
 class DeleteAssignmentPopup {

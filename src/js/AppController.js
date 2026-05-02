@@ -239,7 +239,7 @@ class AppController {
       };
     });
     const employee = this.appModel.searchData(employeeID);
-    const currentCapacity = this.finService.getEmployeeEffectiveCapacity(employeeID);
+    const currentCapacity = this.finService.getEmployeeNominalCapacity(employeeID);
 
     data.employeeID = employeeID;
     data.employeeName = `${employee.name} ${employee.surname}`;
@@ -266,6 +266,7 @@ class AppController {
       projectName: this.appModel.searchData(assignment.projectID).projectName,
       capacity: assignment.capacity,
       projectFit: assignment.projectFit,
+      employeeCurrentCapacity: this.finService.getEmployeeNominalCapacity(employee.id),
     }
   }
 

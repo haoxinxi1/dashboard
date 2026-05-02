@@ -1,6 +1,7 @@
 import FilterSortViewManager from './FilterSortViewManager';
 import Formatter from './Formatter';
-import { bindEvent, populatePositionSelect, toggleNoEntries } from './utils';
+import { bindEvent, populatePositionSelect, toggleNoEntries, applyFinancialStyle } from './utils';
+import { MAX_CAP_FOR_EMPLOYEE } from './constants';
 
 class EmployeesContentView {
   constructor(callbacks) {
@@ -97,10 +98,15 @@ class EmployeesContentView {
   };
 
   handleInlineKeydown = (e) => {
-    if (e.key !== 'Enter') return;
     const target = e.target;
     if (!target.classList.contains('inline-edit-input')) return;
-    target.blur(); // triggers focusout → handleInlineEdit saves the value
+    if (e.key === 'Enter') {
+      target.blur(); // triggers focusout → handleInlineEdit saves the value
+    } else if (e.key === 'Escape') {
+      const displayText = target.closest('.editable-salary').querySelector('.display-text').textContent;
+      target.value = displayText.replace(/[^0-9.]/g, '');
+      target.blur();
+    }
   };
 
   // render
@@ -165,7 +171,8 @@ class EmployeesContentView {
     const showProjectsBtn = clone.querySelector('.employee-row-show-assignments-btn');
     showProjectsBtn.dataset.id = employeeID;
     showProjectsBtn.dataset.action = 'show';
-    showProjectsBtn.textContent = `Show Assignments (${numberProjects}) ${capacityUsage}`;
+    showProjectsBtn.querySelector('.assignments-label').textContent = `Show Assignments (${numberProjects}) `;
+    showProjectsBtn.querySelector('.capacity-indicator').textContent = capacityUsage;
 
     clone.querySelector('.employee-row-availability-btn').dataset.id = employeeID;
     clone.querySelector('.employee-row-availability-btn').dataset.action = 'check-schedule';
@@ -178,7 +185,16 @@ class EmployeesContentView {
     deleteBtn.dataset.action = 'delete';
     deleteBtn.dataset.name = `${name} ${surname}`;
 
+    this.disableAssignBtnIfNeeded(clone, capacityUsage);
+
     return clone;
+  }
+
+  disableAssignBtnIfNeeded(clone, capacityUsage) {
+    const currentCapacity = parseFloat(capacityUsage);
+    if (currentCapacity >= MAX_CAP_FOR_EMPLOYEE) {
+      clone.querySelector('.employee-row-assign-btn').disabled = true;
+    }
   }
 }
 

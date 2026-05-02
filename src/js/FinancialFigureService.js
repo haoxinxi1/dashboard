@@ -199,6 +199,10 @@ class FinancialFigureService {
     return nominal - used;
   }
 
+  getEmployeeNominalCapacity(employeeID) {
+    return this.getAggregatedValue('employeeID', employeeID, 'capacity');
+  }
+
   getEmployeeEffectiveCapacity(employeeID) {
     return this.employeesResultsMap.get(employeeID).effectiveCap;
   }

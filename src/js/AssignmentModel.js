@@ -1,3 +1,6 @@
+import { MAX_CAP_FOR_EMPLOYEE, MAX_FIT_FOR_EMPLOYEE } from './constants';
+
+
 /**
  * @param {Object} params
  * @param {string} params.projectID
@@ -14,6 +17,20 @@ class AssignmentModel {
     this.employeeID = params.employeeID;
     this.capacity = params.capacity;
     this.projectFit = params.projectFit;
+  }
+
+  setCapacity(value) {
+    if (value === undefined || value === null) return;
+    const number = Number(value);
+    if (Number.isNaN(number) || number < 0 || number > MAX_CAP_FOR_EMPLOYEE) return;
+    this.capacity = number;
+  }
+
+  setProjectFit(value) {
+    if (value === undefined || value === null) return;
+    const number = Number(value);
+    if (Number.isNaN(number) || number < 0 || number > MAX_FIT_FOR_EMPLOYEE) return;
+    this.projectFit = number;
   }
 }
 

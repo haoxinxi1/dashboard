@@ -1,4 +1,5 @@
 import { POSITIONS } from './constants';
+import Formatter from './Formatter';
 
 /**
  * Binds a click event listener to an element that calls
@@ -11,7 +12,7 @@ import { POSITIONS } from './constants';
 
 export function bindEvent(event, selector, ...handlers) {
   const listener = (e) => {
-    handlers.forEach(fn => fn(e));
+    handlers.forEach((fn) => fn(e));
   };
   document.querySelector(selector).addEventListener(event, listener);
   return listener;
@@ -60,3 +61,33 @@ export function applyOverCapacityStyle(element, used, total) {
   }
 }
 
+export function positionPopup(button, popup) {
+  const rect = button.getBoundingClientRect();
+  const popupHeight = popup.offsetHeight;
+  const margin = 8;
+
+  let top;
+  if (rect.bottom + popupHeight + margin < window.innerHeight) {
+    top = rect.bottom + margin;
+  } else {
+    top = margin;
+    popup.style.maxHeight = `${window.innerHeight - 2 * margin}px`;
+    popup.style.overflowY = 'auto';
+  }
+
+  popup.style.top = `${top}px`;
+  popup.style.right = `${margin}px`;
+}
+
+export function validateEmployeeCapacity(popup, currentCapacity, capacityToAdd, maxCapacity) {
+  const msg = popup.querySelector('.validation-message-employee');
+  const target = currentCapacity + capacityToAdd;
+  if (target > maxCapacity) {
+    msg.textContent =
+      `Employee capacity would exceed ${Formatter.decimal1(maxCapacity)} ` +
+      `(current: ${Formatter.decimal1(currentCapacity)}, target: ${Formatter.decimal1(target)})`;
+    msg.style.display = 'block';
+  } else {
+    msg.style.display = 'none';
+  }
+}

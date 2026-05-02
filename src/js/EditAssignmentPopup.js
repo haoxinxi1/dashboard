@@ -1,23 +1,33 @@
-import { bindEvent } from './utils';
+import { bindEvent, positionPopup, validateEmployeeCapacity } from './utils';
 import Formatter from './Formatter';
+import { MAX_CAP_FOR_EMPLOYEE } from './constants';
 
 class EditAssignmentPopup {
   constructor(callbacks) {
     this.callbacks = callbacks;
     this.popup = null;
+    this.assignmentCapBefore = 0;
+    this.employeeCurrentCapacity = 0;
+    this.triggerButton = null;
   }
 
   createPopup(content, button) {
     if (this.popup) return;
+    this.triggerButton = button;
     this.popup = this.render(content);
     document.body.appendChild(this.popup);
-    this.positionPopup(button);
+    positionPopup(button, this.popup);
     this.bindListeners();
+    this._onScrollResize = () => positionPopup(this.triggerButton, this.popup);
+    window.addEventListener('scroll', this._onScrollResize, true);
+    window.addEventListener('resize', this._onScrollResize);
   }
 
   deletePopup = () => {
     if (!this.popup) return;
     document.body.removeEventListener('click', this._onBodyClickListener);
+    window.removeEventListener('scroll', this._onScrollResize, true);
+    window.removeEventListener('resize', this._onScrollResize);
     this.popup.remove();
     this.popup = null;
   };
@@ -34,6 +44,8 @@ class EditAssignmentPopup {
     bindEvent('click', '.popup-save-edit', this.handleEditClick);
     bindEvent('input', '.edit-capacity-input', (e) => {
       this.popup.querySelector('.edit-capacity-value').textContent = Formatter.decimal2(e.target.value);
+      const delta = parseFloat(e.target.value) - this.assignmentCapBefore;
+      validateEmployeeCapacity(this.popup, this.employeeCurrentCapacity, delta, MAX_CAP_FOR_EMPLOYEE);
     });
     bindEvent('input', '.edit-fit-input', (e) => {
       this.popup.querySelector('.edit-fit-value').textContent = Formatter.decimal2(e.target.value);
@@ -57,7 +69,10 @@ class EditAssignmentPopup {
    * @param {number} data.capacity
    * @param {number} data.projectFit
     */
-  render({ assignmentID, employeeName, projectName, capacity, projectFit }) {
+  render({ assignmentID, employeeName, projectName, capacity, projectFit, employeeCurrentCapacity }) {
+    this.assignmentCapBefore = capacity;
+    this.employeeCurrentCapacity = employeeCurrentCapacity;
+
     const template = document.getElementById('edit-assignment-template');
     const clone = template.content.cloneNode(true);
 
@@ -76,22 +91,6 @@ class EditAssignmentPopup {
 
     popup.style.display = 'block';
     return popup;
-  }
-
-  positionPopup(button) {
-    const rect = button.getBoundingClientRect();
-    const popupHeight = this.popup.offsetHeight;
-    const margin = 8;
-
-    let top;
-    if (rect.bottom + popupHeight + margin < window.innerHeight) {
-      top = rect.bottom + margin;
-    } else {
-      top = margin;
-    }
-
-    this.popup.style.top = `${top}px`;
-    this.popup.style.right = `${margin}px`;
   }
 }
 

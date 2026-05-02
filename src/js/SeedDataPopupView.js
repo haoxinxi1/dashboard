@@ -1,4 +1,4 @@
-import { bindEvent, toggleNoEntries } from './utils'
+import { bindEvent, toggleNoEntries, applyFinancialStyle } from './utils'
 import Formatter from './Formatter';
 import { MONTHS } from './constants.js';
 

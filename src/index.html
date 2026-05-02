@@ -61,7 +61,7 @@
                 <span class="filter-icon" title="Filter">⌕</span>
               </th>
               <th class="sortable" data-sort="budget">Budget <span class="sort-icon">⇅</span></th>
-              <th class="sortable" data-sort="employeeCapacity">Employee Capacity <span class="sort-icon">⇅</span></th>
+              <th class="sortable" data-sort="employeeCapacityFull">Employee Capacity <span class="sort-icon">⇅</span></th>
               <th>Employees</th>
               <th class="sortable" data-sort="income">Estimated Income <span class="sort-icon">⇅</span></th>
               <th>Actions</th>
@@ -336,6 +336,7 @@
             data-employee-id=""
             data-type="assignments"
           >
+            <span class="assignments-label"></span>
             <span class="employee-row-capacity-indicator capacity-indicator"></span>
           </button>
         </td>
@@ -411,7 +412,12 @@
               <span class="info-value target-capacity"></span>
             </div>
           </div>
-          <div class="validation-message" style="display: none"></div>
+          <div class="validation-message warning validation-message-project" style="display: none">
+            Project effective capacity would exceed 2 (current: 1.9, target: 2.35)
+          </div>
+          <div class="validation-message error validation-message-employee" style="display: none">
+            Employee capacity would exceed 1.5 (current: 1.0, target: 2.0)
+          </div>
           <div class="popup-buttons">
             <button class="apply-assignment">Assign</button>
             <button class="cancel-assignment">Cancel</button>
@@ -440,7 +446,7 @@
             <label for="edit-fit">Project Fit (0.0-1.0): <span class="edit-fit-value">1.00</span></label>
             <input type="range" id="edit-fit" class="edit-fit-input" min="0" max="1" step="0.1" value="1.00" />
           </div>
-          <div class="validation-message" style="display: none"></div>
+          <div class="validation-message-employee" style="display: none"></div>
           <div class="popup-actions">
             <button class="popup-btn popup-cancel-edit">Cancel</button>
             <button class="popup-btn popup-save-edit">Save</button>

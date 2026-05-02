@@ -64,9 +64,10 @@ class CalendarPopup {
   };
 
   updateVacationDays() {
-    const month = String(Number(this.currentPeriod.split('-')[1]) + 1).padStart(2, '0');
+    const [ year, month ] = this.currentPeriod.split('-');
+    const monthFormatted = String(Number(month) + 1).padStart(2, '0');
     this.popup.querySelector('.chosen-days-display').textContent =
-      this.formatVacationDays(this.selected, month);
+      this.formatVacationDays(this.selected, monthFormatted, Number(year));
   }
 
   updateWorkingDaysAttended(change, isWeekend) {
@@ -98,7 +99,8 @@ class CalendarPopup {
     clone.querySelector('.calendar-name').textContent = `${employeeName} - Availability`;
     clone.querySelector('.calendar-month').textContent = `${MONTHS[month]} `;
     clone.querySelector('.working-days-count').textContent = `${workingDaysCont}/${totalDaysCont} days`;
-    clone.querySelector('.chosen-days-display').textContent = this.formatVacationDays(this.selected, monthFormatted);
+    clone.querySelector('.chosen-days-display').textContent =
+      this.formatVacationDays(this.selected, monthFormatted, Number(year));
 
     const popup = clone.querySelector('.calendar-popup');
     const container = clone.querySelector('.calendar-grid');
@@ -165,16 +167,26 @@ class CalendarPopup {
     }
   }
 
-  formatVacationDays(days, month) {
+  formatVacationDays(days, month, year) {
     const sorted = days.map(Number).sort((a, b) => a - b);
     if (sorted.length === 0) return '';
+
+    const isGapAllWeekends = (fromDay, toDay) => {
+      for (let d = fromDay; d <= toDay; d++) {
+        const dow = new Date(year, Number(month) - 1, d).getDay();
+        if (dow !== 0 && dow !== 6) return false;
+      }
+      return true;
+    };
 
     const groups = [];
     let current = [sorted[0]];
 
     for (let i = 1; i < sorted.length; i++) {
-      if (sorted[i] === current[current.length - 1] + 1) {
-        current.push(sorted[i]);
+      const lastDay = current[current.length - 1];
+      const nextDay = sorted[i];
+      if (nextDay === lastDay + 1 || isGapAllWeekends(lastDay + 1, nextDay - 1)) {
+        current.push(nextDay);
       } else {
         groups.push(current);
         current = [sorted[i]];
