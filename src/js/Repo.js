@@ -1,14 +1,15 @@
 import mockData from "./mock-data";
+import StorageService from "./StorageService";
 
 class Repo {
   constructor () {
-    this.data = mockData;
+    this.storage = new StorageService();
   }
   save(data) {
-    this.data = data;
+    this.storage.saveObject(data);
   }
   load() {
-    return this.data;
+    return this.storage.getObject() ?? mockData;
   }
 }
 
