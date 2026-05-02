@@ -156,7 +156,7 @@ class AppController {
         estimatedPayment: this.finService.getMonthlySalaryPayment(employee.id),
         projectedIncome: this.finService.getIncomePerEmployee(employee.id),
         numberProjects: this.finService.getNumberProjectsForEmployee(employee.id),
-        capacityUsage: this.finService.getCapacityUsageString(employee.id),
+        capacityUsageNom: this.finService.getEmployeeNominalCapacity(employee.id),
       };
     });
   }

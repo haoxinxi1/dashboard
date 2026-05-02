@@ -180,8 +180,7 @@ class FinancialFigureService {
   }
 
   getCapacityUsageString(employeeID) {
-    const used = this.employeesResultsMap.get(employeeID).effectiveCap;
-    return `${Formatter.decimal1(used)} / 1.5`;
+    return this.employeesResultsMap.get(employeeID).effectiveCap;
   }
 
   // assignments popup

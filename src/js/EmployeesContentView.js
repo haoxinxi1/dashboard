@@ -133,7 +133,7 @@ class EmployeesContentView {
    * @param {string} data.estimatedPayment
    * @param {string} data.projectedIncome
    * @param {number} data.numberProjects;
-   * @param {string} data.capacityUsage;
+   * @param {number} data.capacityUsage;
    * @returns {DocumentFragment}
    */
   createEmployeeRow({
@@ -146,7 +146,7 @@ class EmployeesContentView {
     estimatedPayment,
     projectedIncome,
     numberProjects,
-    capacityUsage,
+    capacityUsageNom,
   }) {
     const template = document.getElementById('employee-row-template');
     const clone = template.content.cloneNode(true);
@@ -172,7 +172,7 @@ class EmployeesContentView {
     showProjectsBtn.dataset.id = employeeID;
     showProjectsBtn.dataset.action = 'show';
     showProjectsBtn.querySelector('.assignments-label').textContent = `Show Assignments (${numberProjects}) `;
-    showProjectsBtn.querySelector('.capacity-indicator').textContent = capacityUsage;
+    showProjectsBtn.querySelector('.capacity-indicator').textContent = `${Formatter.decimal1(capacityUsageNom)} / ${MAX_CAP_FOR_EMPLOYEE}`;
 
     clone.querySelector('.employee-row-availability-btn').dataset.id = employeeID;
     clone.querySelector('.employee-row-availability-btn').dataset.action = 'check-schedule';
@@ -185,7 +185,7 @@ class EmployeesContentView {
     deleteBtn.dataset.action = 'delete';
     deleteBtn.dataset.name = `${name} ${surname}`;
 
-    this.disableAssignBtnIfNeeded(clone, capacityUsage);
+    this.disableAssignBtnIfNeeded(clone, capacityUsageNom);
 
     return clone;
   }

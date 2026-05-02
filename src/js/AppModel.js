@@ -28,9 +28,9 @@ class AppModel {
     return arr.reduce((acc, current) => {
       let key = Object.keys(current)[0];
       let value = Object.values(current)[0];
-      value.employees = value.employees.map(e => Object.assign(new EmployeeModel(e), e));
-      value.projects = value.projects.map(p => Object.assign(new ProjectModel(p), p));
-      value.assignments = value.assignments.map(a => Object.assign(new AssignmentModel(a), a));
+      value.employees = value.employees.map((e) => Object.assign(new EmployeeModel(e), e));
+      value.projects = value.projects.map((p) => Object.assign(new ProjectModel(p), p));
+      value.assignments = value.assignments.map((a) => Object.assign(new AssignmentModel(a), a));
       acc[key] = value;
       return acc;
     }, {});
@@ -66,18 +66,19 @@ class AppModel {
     this.callbacks.onModelChange();
   }
 
-  // seedData(chosenPeriod) {
-  //   this.data[this.currentPeriod] = structuredClone(this.data[chosenPeriod]);
-  //   this.callbacks.onModelChange();
-  //   this.saveToRepo();
-  //   console.log('Periods :', this.data);
-  // }
-
   seedData(chosenPeriod) {
+    if (chosenPeriod === this.currentPeriod) return;
+
     const cloned = structuredClone(this.data[chosenPeriod]);
-    cloned.employees = cloned.employees.map(e => Object.assign(new EmployeeModel(e), e));
-    cloned.projects = cloned.projects.map(p => Object.assign(new ProjectModel(p), p));
-    cloned.assignments = cloned.assignments.map(a => Object.assign(new AssignmentModel(a), a));
+    cloned.employees = cloned.employees.map((e) => Object.assign(new EmployeeModel(e), e));
+    cloned.projects = cloned.projects.map((p) => Object.assign(new ProjectModel(p), p));
+    cloned.assignments = cloned.assignments.map((a) => Object.assign(new AssignmentModel(a), a));
+
+    cloned.employees.forEach((e) => {
+      e.setVacationDays(this.currentPeriod, []);
+      e.setVacationWorkingDays(this.currentPeriod, 0);
+    });
+
     this.data[this.currentPeriod] = cloned;
     this.callbacks.onModelChange();
     this.saveToRepo();
@@ -144,7 +145,7 @@ class AppModel {
     assignment.setProjectFit(projectFit);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Changed assignment: ", assignment);
+    console.log('Changed assignment: ', assignment);
   }
 
   getWholeData() {
@@ -165,19 +166,18 @@ class AppModel {
 
   deleteAssignment(id, skipSave = false) {
     const array = this.getAssignments();
-    const index = array.findIndex(item => item.id === id);
+    const index = array.findIndex((item) => item.id === id);
     if (index === -1) return;
     const toDelete = array[index];
     const employee = this.data[this.currentPeriod].employees.find((el) => el.id === toDelete.employeeID);
     const arrayInEmployee = employee.assignments[this.currentPeriod];
-    const indexInEmployee = arrayInEmployee.findIndex(item => item === toDelete.id);
+    const indexInEmployee = arrayInEmployee.findIndex((item) => item === toDelete.id);
     array.splice(index, 1);
     if (indexInEmployee !== -1) arrayInEmployee.splice(indexInEmployee, 1);
-    if (!skipSave)
-    {
+    if (!skipSave) {
       this.callbacks.onModelChange();
       this.saveToRepo();
-      console.log("Assignments: ", array);
+      console.log('Assignments: ', array);
     }
   }
 
@@ -185,22 +185,22 @@ class AppModel {
     const array = this.getEmployees();
     const assignments = this.getAssignmentsOfEmployee(id);
     assignments.forEach((el) => this.deleteAssignment(el.id, true));
-    const index = array.findIndex(item => item.id === id);
+    const index = array.findIndex((item) => item.id === id);
     if (index !== -1) array.splice(index, 1);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Employees: ", array);
+    console.log('Employees: ', array);
   }
 
   deleteProject(id) {
     const array = this.getProjects();
     const assignments = this.getAssignmentsOfProject(id);
     assignments.forEach((el) => this.deleteAssignment(el.id, true));
-    const index = array.findIndex(item => item.id === id);
+    const index = array.findIndex((item) => item.id === id);
     if (index !== -1) array.splice(index, 1);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Projects: ", array);
+    console.log('Projects: ', array);
   }
 
   updateVacationDays(employeeID, vacationDays, vacationWorkingDays) {
@@ -209,7 +209,7 @@ class AppModel {
     employee.setVacationWorkingDays(this.currentPeriod, vacationWorkingDays);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("Vacation days: ", employee.vacationDays[this.currentPeriod]);
+    console.log('Vacation days: ', employee.vacationDays[this.currentPeriod]);
   }
 
   updateEmployeeSalary(employeeID, value) {
@@ -217,7 +217,7 @@ class AppModel {
     employee.setSalary(value);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("New salary: ", employee.salary);
+    console.log('New salary: ', employee.salary);
   }
 
   updateEmployeePosition(employeeID, value) {
@@ -225,7 +225,7 @@ class AppModel {
     employee.setPosition(value);
     this.callbacks.onModelChange();
     this.saveToRepo();
-    console.log("New position: ", employee.position);
+    console.log('New position: ', employee.position);
   }
 }
 
