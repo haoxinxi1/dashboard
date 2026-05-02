@@ -68,7 +68,7 @@ class FinancialFigureService {
     this.projectsMap.forEach((project, id) => {
       console.log(`Project ${id}:`, { budget: project.budget, capacity: project.capacity });
       const usedEffectiveCapacity = this.getAggregatedValue('projectID', id, 'effectiveCap');
-      const capacityForRevenue = Math.min(project.employeeCapacity, usedEffectiveCapacity);
+      const capacityForRevenue = Math.max(project.employeeCapacity, usedEffectiveCapacity);
       const revenueEffectiveCap = (!project.budget || !capacityForRevenue) ? 0 : project.budget / capacityForRevenue;
       this.projectsResultsMap.set(id, {
         usedEffectiveCapacity:  usedEffectiveCapacity,
@@ -228,12 +228,15 @@ class FinancialFigureService {
     return this.assignResults.find(el => el.id === assignmentID).revenue;
   }
 
-  getProjectProfit(projectID) {
-    const budget = this.projectsMap.get(projectID).budget;
-    const costs = this.projectsResultsMap.get(projectID).costs;
-    return budget - costs;
-  }
+  // getProjectProfit(projectID) {
+  //   const budget = this.projectsMap.get(projectID).budget;
+  //   const costs = this.projectsResultsMap.get(projectID).costs;
+  //   return budget - costs;
+  // }
 
+  getProjectProfit(projectID) {
+    return this.projectsResultsMap.get(projectID).profit;
+  }
 
   // calendar popup
   calculateWorkingDays() {
