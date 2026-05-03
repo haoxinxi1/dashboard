@@ -429,11 +429,7 @@ class AppController {
   // action popup
   onNavigate(itemID) {
     const item = this.appModel.searchData(itemID);
-    // DEBUG
-    console.log("Item found: ", item);
-
     this.appView.hideAssignmentsPopupView();
-
     this.appView.clearFiltersProjects();
     this.appView.clearFiltersEmployees();
 
@@ -441,19 +437,12 @@ class AppController {
       const filterObj = { projectName: item.projectName };
       this.appView.callAddFilterProjects(filterObj)
       this.appView.showProjects();
-      // DEBUG
-      console.log("Filter by: ", filterObj);
-      console.log("Project tab shown");
-
     } else if (item instanceof EmployeeModel) {
       const filterObj1 = { name: item.name };
       const filterObj2 = { surname: item.surname };
       this.appView.callAddFilterEmployees(filterObj1);
       this.appView.callAddFilterEmployees(filterObj2);
       this.appView.showEmployees();
-      // DEBUG
-      console.log("Filter by: ", filterObj1, filterObj2);
-      console.log("Employees tab shown");
     }
   }
 }
