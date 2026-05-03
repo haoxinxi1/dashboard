@@ -1,0 +1,1628 @@
+body {
+  margin: 0px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background-color: rgb(236, 240, 241);
+  min-width: 1200px;
+}
+
+#side-panel {
+  width: 250px;
+  background-color: rgb(44, 62, 80);
+  color: rgb(255, 255, 255);
+  transition: width 0.3s;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#side-panel.hidden {
+  width: 0px;
+}
+
+#side-panel nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.month-selector {
+  padding: 20px;
+  border-bottom: 1px solid rgb(52, 73, 94);
+}
+
+.month-selector h3 {
+  margin: 0px 0px 15px;
+  color: rgb(236, 240, 241);
+  font-size: 1.1em;
+  text-align: center;
+}
+
+.month-select,
+.year-select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 5px;
+  background-color: rgb(52, 73, 94);
+  color: rgb(236, 240, 241);
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.month-select:hover,
+.year-select:hover {
+  background-color: rgb(74, 98, 122);
+}
+
+.month-select:focus,
+.year-select:focus {
+  outline: rgb(52, 152, 219) solid 2px;
+  background-color: rgb(74, 98, 122);
+}
+
+.nav-item {
+  padding: 15px 20px;
+  text-decoration: none;
+  color: rgb(236, 240, 241);
+  transition: background-color 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: rgb(52, 73, 94);
+}
+
+.nav-item.active {
+  background-color: rgb(52, 73, 94);
+  border-left-color: rgb(52, 152, 219);
+  font-weight: 700;
+}
+
+#main-content {
+  flex-grow: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+#main-content h1 {
+  color: rgb(44, 62, 80);
+  border-bottom: 2px solid rgb(189, 195, 199);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+th.sortable:hover {
+  background-color: rgb(74, 98, 122);
+}
+
+th.sortable.sorted {
+  background-color: rgb(44, 62, 80);
+}
+
+.sort-icon {
+  margin-left: 5px;
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+
+th.sortable:hover .sort-icon {
+  opacity: 1;
+}
+
+.filter-icon {
+  margin-left: 5px;
+  font-size: 0.9em;
+  opacity: 0.5;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.filter-icon:hover {
+  opacity: 1;
+  background-color: rgb(74, 98, 122);
+}
+
+.filter-popup {
+  position: absolute;
+  background: rgb(255, 255, 255);
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 8px;
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.filter-popup input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.filter-popup select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid rgb(221, 221, 221);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-size: 1em;
+}
+
+.filter-popup button {
+  padding: 6px 12px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.filter-popup .accept-filter {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+}
+
+.filter-popup .accept-filter:hover {
+  background-color: rgb(41, 128, 185);
+}
+
+.filter-popup .cancel-filter {
+  background-color: rgb(149, 165, 166);
+  color: rgb(255, 255, 255);
+}
+
+.filter-popup .cancel-filter:hover {
+  background-color: rgb(127, 140, 141);
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+  min-height: 30px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.9em;
+}
+
+.filter-chip .chip-label {
+  margin-right: 8px;
+}
+
+.filter-chip .chip-remove {
+  cursor: pointer;
+  font-weight: 700;
+  padding: 0px 4px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.filter-chip .chip-remove:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.clear-all-chip {
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  background-color: rgb(231, 76, 60) !important;
+}
+
+.clear-all-chip:hover {
+  background-color: rgb(192, 57, 43) !important;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 10px;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid rgb(221, 221, 221);
+}
+
+thead {
+  background-color: rgb(52, 73, 94);
+  color: rgb(255, 255, 255);
+}
+
+tbody tr:nth-child(2n) {
+  background-color: rgb(242, 242, 242);
+}
+
+tbody tr:hover {
+  background-color: rgb(232, 244, 248);
+}
+
+#toggle-button {
+  background-color: rgb(52, 73, 94);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 15px;
+  cursor: pointer;
+  margin: 0px;
+  text-align: center;
+  font-size: 1em;
+}
+
+#toggle-button:hover {
+  background-color: rgb(74, 98, 122);
+}
+
+#open-button {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1.2em;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
+}
+
+#open-button.hidden,
+.hidden {
+  display: none;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-btn {
+  background-color: rgb(40, 167, 69);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s;
+}
+
+.add-btn:hover {
+  background-color: rgb(33, 136, 56);
+}
+
+.side-panel-right {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 350px;
+  height: 100%;
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.1) -2px 0px 10px;
+  transition: transform 0.3s, visibility 0.3s, opacity 0.3s;
+  z-index: 1001;
+  padding: 20px;
+  overflow-y: auto;
+  transform: translate(100%);
+  visibility: hidden;
+  opacity: 0;
+}
+
+.side-panel-right.open {
+  transform: translate(0px);
+  visibility: visible;
+  opacity: 1;
+}
+
+.side-panel-right h2 {
+  color: rgb(44, 62, 80);
+  border-bottom: 2px solid rgb(189, 195, 199);
+  padding-bottom: 10px;
+  margin-top: 0px;
+}
+
+#add-employee-form label,
+#add-project-form label {
+  display: block;
+  margin-top: 15px;
+  color: rgb(52, 73, 94);
+}
+
+#add-employee-form input,
+#add-employee-form select,
+#add-project-form input,
+#add-project-form select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+#add-employee-form input:invalid,
+#add-employee-form select:invalid,
+#add-project-form input:invalid,
+#add-project-form select:invalid {
+  border-color: rgb(231, 76, 60);
+}
+
+#add-employee-form input:valid,
+#add-employee-form select:valid,
+#add-project-form input:valid,
+#add-project-form select:valid {
+  border-color: rgb(39, 174, 96);
+}
+
+.error-message {
+  display: none;
+  color: rgb(231, 76, 60);
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
+.error-message.show {
+  display: block;
+}
+
+.form-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-buttons button {
+  padding: 10px 20px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#add-btn-form {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+}
+
+#add-btn-form:disabled {
+  background-color: rgb(149, 165, 166);
+  cursor: not-allowed;
+}
+
+#cancel-btn-form {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+}
+
+.assign-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.assign-btn:hover {
+  background-color: rgb(41, 128, 185);
+}
+
+.assignment-popup {
+  position: fixed;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(189, 195, 199);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
+  padding: 20px;
+  z-index: 10001;
+  min-width: 320px;
+  max-width: 400px;
+}
+
+.assignment-popup-content label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: rgb(44, 62, 80);
+}
+
+.assignment-popup-content .project-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid rgb(189, 195, 199);
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 1em;
+}
+
+.project-info {
+  background-color: rgb(236, 240, 241);
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.info-row:last-child {
+  margin-bottom: 0px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: rgb(44, 62, 80);
+}
+
+.info-value {
+  color: rgb(52, 73, 94);
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.apply-assignment,
+.cancel-assignment {
+  padding: 8px 16px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95em;
+  transition: background-color 0.2s;
+}
+
+.apply-assignment {
+  background-color: rgb(39, 174, 96);
+  color: rgb(255, 255, 255);
+}
+
+.apply-assignment:hover {
+  background-color: rgb(34, 153, 84);
+}
+
+.cancel-assignment {
+  background-color: rgb(149, 165, 166);
+  color: rgb(255, 255, 255);
+}
+
+.cancel-assignment:hover {
+  background-color: rgb(127, 140, 141);
+}
+
+.over-capacity {
+  color: rgb(231, 76, 60);
+  font-weight: 700;
+}
+
+.total-income-info {
+  margin-top: 20px;
+  padding: 15px 20px;
+  background-color: rgb(236, 240, 241);
+  border-radius: 6px;
+  font-size: 1.1em;
+}
+
+.total-income-info .total-amount {
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.total-income-info .total-amount.positive-income {
+  color: rgb(39, 174, 96);
+}
+
+.total-income-info .total-amount.negative-income {
+  color: rgb(231, 76, 60);
+}
+
+.project-link {
+  color: rgb(52, 152, 219);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.project-link:hover {
+  color: rgb(41, 128, 185);
+  text-decoration: underline;
+}
+
+.employee-link {
+  color: rgb(52, 152, 219);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.employee-link:hover {
+  color: rgb(41, 128, 185);
+  text-decoration: underline;
+}
+
+.editable-position,
+.editable-salary {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.editable-position:hover,
+.editable-salary:hover {
+  background-color: rgb(236, 240, 241);
+}
+
+.editable-position::after,
+.editable-salary::after {
+  content: "✎";
+  opacity: 0;
+  margin-left: 8px;
+  font-size: 0.85em;
+  color: rgb(149, 165, 166);
+  transition: opacity 0.2s;
+}
+
+.editable-position:hover::after,
+.editable-salary:hover::after {
+  opacity: 1;
+}
+
+.inline-edit-input,
+.inline-edit-select {
+  width: 100%;
+  padding: 4px 8px;
+  border: 2px solid rgb(52, 152, 219);
+  border-radius: 4px;
+  font-size: 1em;
+  font-family: inherit;
+}
+
+.inline-edit-input:focus,
+.inline-edit-select:focus {
+  outline: none;
+  border-color: rgb(41, 128, 185);
+}
+
+.project-cell-wrapper,
+.employee-cell-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.action-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 5px;
+  background: rgb(255, 255, 255);
+  border: 1px solid rgb(189, 195, 199);
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
+  z-index: 1000;
+  min-width: 150px;
+  padding: 8px;
+}
+
+.action-popup button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  margin: 4px 0px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+  text-align: left;
+}
+
+.action-popup .navigate-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+}
+
+.action-popup .navigate-btn:hover {
+  background-color: rgb(41, 128, 185);
+}
+
+.action-popup .unassign-action-btn {
+  background-color: rgb(230, 126, 34);
+  color: rgb(255, 255, 255);
+}
+
+.action-popup .unassign-action-btn:hover {
+  background-color: rgb(211, 84, 0);
+}
+
+@media (max-width: 768px) {
+  #side-panel {
+    width: 200px;
+  }
+
+  #main-content {
+    padding: 20px;
+  }
+}
+
+.delete-btn,
+.unassign-action-btn {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover,
+.unassign-action-btn:hover {
+  background-color: rgb(192, 57, 43);
+}
+
+.edit-assignment-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+  margin-right: 8px;
+}
+
+.edit-assignment-btn:hover {
+  background-color: rgb(41, 128, 185);
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+}
+
+.capacity-badge {
+  display: inline-block;
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.profit-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.profit-badge.positive-income {
+  background-color: rgb(39, 174, 96);
+  color: rgb(255, 255, 255);
+}
+
+.profit-badge.negative-income {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+}
+
+.capacity-indicator {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+.assign-btn:disabled {
+  background-color: rgb(149, 165, 166);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.assign-btn:disabled:hover {
+  background-color: rgb(149, 165, 166);
+}
+
+.capacity-status {
+  background-color: rgb(232, 244, 248);
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  border-left: 3px solid rgb(52, 152, 219);
+}
+
+.available-capacity {
+  font-weight: 700;
+  color: rgb(39, 174, 96);
+}
+
+.capacity-input-section {
+  margin-bottom: 15px;
+}
+
+.capacity-input,
+.fit-input {
+  width: 100%;
+  padding: 0px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+
+.capacity-hint {
+  display: block;
+  font-size: 0.8em;
+  color: rgb(127, 140, 141);
+  margin-top: 4px;
+}
+
+.validation-message {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+}
+
+.validation-message.error {
+  background-color: rgb(255, 230, 230);
+  border-left: 3px solid rgb(231, 76, 60);
+  color: rgb(192, 57, 43);
+}
+
+.validation-message.warning {
+  background-color: rgb(255, 244, 230);
+  border-left: 3px solid rgb(243, 156, 18);
+  color: rgb(214, 137, 16);
+}
+
+.validation-message.success {
+  background-color: rgb(230, 247, 238);
+  border-left: 3px solid rgb(39, 174, 96);
+  color: rgb(34, 153, 84);
+}
+
+.project-cell-wrapper,
+.employee-cell-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.project-cell-wrapper:last-child,
+.employee-cell-wrapper:last-child {
+  margin-bottom: 0px;
+}
+
+.assignment-popup-content h3 {
+  margin-top: 0px;
+  margin-bottom: 15px;
+  color: rgb(44, 62, 80);
+  border-bottom: 2px solid rgb(236, 240, 241);
+  padding-bottom: 8px;
+}
+
+.apply-assignment:disabled {
+  background-color: rgb(149, 165, 166);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.apply-assignment:disabled:hover {
+  background-color: rgb(149, 165, 166);
+}
+
+.target-capacity {
+  font-weight: 600;
+}
+
+.show-details-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.show-details-btn:hover {
+  background-color: rgb(41, 128, 185);
+}
+
+.details-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;
+  z-index: 10000;
+  width: 80%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.popup-header {
+  background-color: rgb(52, 73, 94);
+  color: rgb(255, 255, 255);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px 8px 0px 0px;
+}
+
+.popup-header h3 {
+  margin: 0px;
+  font-size: 1.1em;
+}
+
+.close-popup-btn {
+  background: none;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  color: rgb(255, 255, 255);
+  font-size: 1.8em;
+  cursor: pointer;
+  padding: 0px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.close-popup-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.popup-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1 1 0%;
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.details-table thead {
+  background-color: rgb(52, 73, 94);
+  color: rgb(255, 255, 255);
+}
+
+.details-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.details-table tbody tr {
+  border-bottom: 1px solid rgb(236, 240, 241);
+}
+
+.details-table tbody tr:hover {
+  background-color: rgb(248, 249, 250);
+}
+
+.details-table td {
+  padding: 12px;
+}
+
+.details-table a {
+  color: rgb(52, 152, 219);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.details-table a:hover {
+  text-decoration: underline;
+}
+
+.calendar-popup {
+  position: fixed;
+  background: rgb(255, 255, 255);
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 32px;
+  z-index: 10002;
+  min-width: 400px;
+  max-width: 500px;
+  padding: 20px;
+}
+
+.calendar-header {
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  border-bottom: 2px solid rgb(236, 240, 241);
+  padding-bottom: 15px;
+}
+
+.calendar-header h3 {
+  margin: 0px 0px 10px;
+  color: rgb(44, 62, 80);
+  font-size: 1.3em;
+}
+
+.calendar-header h4 {
+  margin: 0px;
+  color: rgb(127, 140, 141);
+  font-weight: 400;
+  font-size: 1.1em;
+}
+
+.close-calendar-btn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: none;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  font-size: 28px;
+  color: rgb(149, 165, 166);
+  cursor: pointer;
+  padding: 0px;
+  width: 30px;
+  height: 30px;
+  line-height: 28px;
+  transition: color 0.2s;
+}
+
+.close-calendar-btn:hover {
+  color: rgb(231, 76, 60);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-weight: 700;
+  color: rgb(52, 73, 94);
+  padding: 10px 5px;
+  background-color: rgb(236, 240, 241);
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.calendar-day {
+  text-align: center;
+  padding: 12px 8px;
+  border: 1px solid rgb(236, 240, 241);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 0.95em;
+  color: rgb(44, 62, 80);
+  background-color: rgb(255, 255, 255);
+}
+
+.calendar-day:hover:not(.empty) {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  transform: scale(1.05);
+  box-shadow: rgba(52, 152, 219, 0.3) 0px 2px 8px;
+}
+
+.calendar-day.empty {
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  cursor: default;
+}
+
+.calendar-day.today {
+  background-color: rgb(46, 204, 113);
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  border-color: rgb(39, 174, 96);
+}
+
+.calendar-day.today:hover {
+  background-color: rgb(39, 174, 96);
+}
+
+.availability-btn {
+  background-color: rgb(155, 89, 182);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.availability-btn:hover {
+  background-color: rgb(142, 68, 173);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.calendar-day.weekend {
+  opacity: 0.4;
+  background-color: rgb(248, 249, 250);
+  color: rgb(149, 165, 166);
+  cursor: default;
+}
+
+.calendar-day.weekend:hover {
+  background-color: rgb(248, 249, 250);
+  color: rgb(149, 165, 166);
+  transform: none;
+  box-shadow: none;
+}
+
+.calendar-day.weekend.today {
+  opacity: 0.6;
+  background-color: rgb(168, 230, 193);
+  color: rgb(39, 174, 96);
+}
+
+.calendar-day.weekend.today:hover {
+  background-color: rgb(168, 230, 193);
+}
+
+.calendar-day.selected {
+  background-color: rgb(230, 126, 34);
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  border-color: rgb(211, 84, 0);
+}
+
+.calendar-day.selected:hover {
+  background-color: rgb(211, 84, 0);
+  transform: scale(1.05);
+}
+
+.calendar-day.weekend.selected {
+  opacity: 0.7;
+  background-color: rgb(230, 126, 34);
+  color: rgb(255, 255, 255);
+}
+
+.calendar-day.weekend.selected:hover {
+  background-color: rgb(211, 84, 0);
+  transform: scale(1.05);
+}
+
+.calendar-day.vacation {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+  font-weight: 700;
+  border-color: rgb(192, 57, 43);
+  position: relative;
+}
+
+.calendar-day.vacation::after {
+  content: "✈";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.7em;
+}
+
+.calendar-day.vacation:hover {
+  background-color: rgb(192, 57, 43);
+}
+
+.calendar-day.weekend.vacation {
+  opacity: 0.7;
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+}
+
+.calendar-day.weekend.vacation:hover {
+  background-color: rgb(192, 57, 43);
+}
+
+.calendar-day.vacation.selected {
+  background-color: rgb(230, 126, 34);
+  border: 2px solid rgb(231, 76, 60);
+}
+
+.calendar-info {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid rgb(236, 240, 241);
+}
+
+.working-days-info {
+  text-align: center;
+  padding: 10px;
+  background-color: rgb(232, 245, 233);
+  border-radius: 6px;
+  color: rgb(44, 62, 80);
+  font-size: 1em;
+  margin-bottom: 15px;
+}
+
+.working-days-info strong {
+  color: rgb(39, 174, 96);
+}
+
+.chosen-days-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: rgb(255, 243, 224);
+  border-radius: 6px;
+  min-height: 45px;
+}
+
+.chosen-days-label {
+  font-weight: 700;
+  color: rgb(230, 126, 34);
+  margin-right: 10px;
+  white-space: nowrap;
+}
+
+.chosen-days-display {
+  flex: 1 1 0%;
+  color: rgb(44, 62, 80);
+  font-size: 0.95em;
+  margin-right: 15px;
+}
+
+.set-vacation-btn {
+  background-color: rgb(230, 126, 34);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.set-vacation-btn:hover {
+  background-color: rgb(211, 84, 0);
+}
+
+.set-vacation-btn:active {
+  transform: scale(0.98);
+}
+
+.seed-data-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 20px;
+  z-index: 10000;
+  width: 80%;
+  max-height: 80vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.seed-data-popup .popup-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1 1 0%;
+}
+
+.seed-data-popup p {
+  margin-bottom: 20px;
+  color: rgb(85, 85, 85);
+  font-size: 14px;
+}
+
+#current-month-display {
+  font-weight: 700;
+  color: rgb(41, 128, 185);
+}
+
+#seed-data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+#seed-data-table th,
+#seed-data-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgb(221, 221, 221);
+}
+
+#seed-data-table th {
+  background-color: rgb(52, 73, 94);
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+}
+
+#seed-data-table tr:hover {
+  background-color: rgb(245, 245, 245);
+}
+
+#seed-data-table td {
+  color: rgb(51, 51, 51);
+}
+
+.seed-month-btn {
+  padding: 6px 16px;
+  background-color: rgb(39, 174, 96);
+  color: rgb(255, 255, 255);
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.seed-month-btn:hover {
+  background-color: rgb(34, 153, 84);
+}
+
+.seed-month-btn:active {
+  transform: scale(0.98);
+}
+
+.positive-income {
+  color: rgb(39, 174, 96);
+  font-weight: 600;
+}
+
+.negative-income {
+  color: rgb(231, 76, 60);
+  font-weight: 600;
+}
+
+.unassignment-popup-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10002;
+}
+
+.unassignment-popup-content {
+  background: rgb(255, 255, 255);
+  padding: 30px;
+  border-radius: 8px;
+  min-width: 450px;
+  max-width: 550px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 20px;
+}
+
+.unassignment-popup-content h3 {
+  margin-top: 0px;
+  margin-bottom: 15px;
+  color: rgb(44, 62, 80);
+  font-size: 1.5em;
+}
+
+.unassign-message {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: rgb(85, 85, 85);
+  line-height: 1.5;
+}
+
+.unassignment-info {
+  background: rgb(248, 249, 250);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.popup-btn {
+  padding: 10px 20px;
+  border-width: medium;
+  border-style: none;
+  border-color: currentcolor;
+  border-image: initial;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.popup-cancel {
+  background-color: rgb(149, 165, 166);
+  color: rgb(255, 255, 255);
+}
+
+.popup-cancel:hover {
+  background-color: rgb(127, 140, 141);
+}
+
+.popup-confirm-unassign {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+}
+
+.popup-confirm-unassign:hover {
+  background-color: rgb(192, 57, 43);
+}
+
+.popup-backdrop {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.hidden {
+  display: none;
+}
+
+.seed-data-popup.hidden {
+  display: none;
+}
+
+.show-details-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: background-color 0.2s;
+}
+
+.delete-btn, .unassign-action-btn {
+  background-color: rgb(231, 76, 60);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.editable-position, .editable-salary {
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s;
+}
+
+.capacity-indicator {
+  font-size: 0.8em;
+  opacity: 0.8;
+  margin-left: 4px;
+}
+
+.assign-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.total-income-info.hidden {
+  display: none;
+}
+
+.bench-payments {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.details-popup.hidden {
+  display: none;
+}
+ /* update assignment popup */
+ .form-group {
+  margin-bottom: 15px;
+}
+
+.popup-cancel-edit {
+  background-color: rgb(149, 165, 166);
+  color: rgb(255, 255, 255);
+}
+
+.popup-cancel-edit:hover {
+  background-color: rgb(127, 140, 141);
+}
+
+.popup-save-edit {
+  background-color: rgb(39, 174, 96);
+  color: rgb(255, 255, 255);
+}
+
+.popup-save-edit:hover {
+  background-color: rgb(34, 153, 84);
+}
+
+/* no items message*/
+
+.no-entries-msg {
+  color: rgb(149, 165, 166);
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+}
+
+/* action popup */
+
+.action-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 5px;
+  background: rgb(255, 255, 255);
+  border: 1px solid rgb(189, 195, 199);
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 12px;
+  z-index: 10001;
+  min-width: 150px;
+  padding: 8px;
+}
+.action-popup button {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  margin: 4px 0px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+  text-align: left;
+}
+.action-popup .navigate-btn {
+  background-color: rgb(52, 152, 219);
+  color: rgb(255, 255, 255);
+}
+.action-popup .popup-unassign-btn {
+  background-color: rgb(230, 126, 34);
+  color: rgb(255, 255, 255);
+}
+
+
+
+/*# sourceMappingURL=main.css.map*/
