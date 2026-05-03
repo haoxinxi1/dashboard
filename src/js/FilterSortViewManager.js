@@ -13,9 +13,11 @@ class FilterSortViewManager {
   }
 
   handleSortBtnClick(targetBtn) {
-    const column = targetBtn.closest('th').dataset.sort;
+    const th = targetBtn.closest('th');
+    const column = th.dataset.sort;
 
     if (this.sortedIcon && this.sortedIcon !== targetBtn) {
+      this.sortedIcon.closest('th').classList.remove('sorted');
       this.sortedIcon.textContent = '⇅';
       this.isAscendingOrder = false;
     }
@@ -30,7 +32,8 @@ class FilterSortViewManager {
     this.callbacks.onSort(criteria);
     if (this.isAscendingOrder) targetBtn.textContent = '↑';
     else targetBtn.textContent = '↓';
-    
+
+    th.classList.add('sorted');
     this.sortedIcon = targetBtn;
   }
 
