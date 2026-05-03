@@ -91,3 +91,28 @@ export function validateEmployeeCapacity(popup, currentCapacity, capacityToAdd, 
     msg.style.display = 'none';
   }
 }
+
+/**
+ * @param {HTMLElement} popup
+ * @param {HTMLElement} anchor
+ * @param {number} [gap=10]
+ */
+export function positionPopupNearElement(popup, anchor, gap = 10) {
+  const rect = anchor.getBoundingClientRect();
+  let left = rect.left;
+  let top = rect.bottom + gap;
+
+  const popupRect = popup.getBoundingClientRect();
+
+  if (left + popupRect.width > window.innerWidth) {
+    left = window.innerWidth - popupRect.width - gap;
+  }
+  if (top + popupRect.height > window.innerHeight) {
+    top = window.innerHeight - popupRect.height - gap;
+  }
+  if (left < gap) left = gap;
+  if (top < gap) top = gap;
+
+  popup.style.left = `${left}px`;
+  popup.style.top = `${top}px`;
+}

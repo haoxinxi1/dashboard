@@ -1,4 +1,5 @@
 import Formatter from './Formatter';
+import { IS_DEBUG } from './constants';
 
 class FinancialFigureService {
   constructor(model, callbacks) {
@@ -49,7 +50,7 @@ class FinancialFigureService {
     this.aggregated.totalEstIncome = this.calcTotalEstIncome();
 
     // DEBUG
-    this.debugPrint();
+    if (IS_DEBUG) this.debugPrint();
   }
 
   /* Calculation of figures */
@@ -66,7 +67,7 @@ class FinancialFigureService {
 
   calcProjectsEffectiveCapacity() {
     this.projectsMap.forEach((project, id) => {
-      console.log(`Project ${id}:`, { budget: project.budget, capacity: project.capacity });
+      if (IS_DEBUG) console.log(`Project ${id}:`, { budget: project.budget, capacity: project.capacity });
       const usedEffectiveCapacity = this.getAggregatedValue('projectID', id, 'effectiveCap');
       const capacityForRevenue = Math.max(project.employeeCapacity, usedEffectiveCapacity);
       const revenueEffectiveCap = (!project.budget || !capacityForRevenue) ? 0 : project.budget / capacityForRevenue;

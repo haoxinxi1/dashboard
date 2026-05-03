@@ -11,17 +11,6 @@ class AppModel {
     this.data = this.loadFromRepo();
   }
 
-  // loadFromRepo() {
-  //   let arr = this.repo.load();
-  //   if (!arr) return {};
-  //   return arr.reduce((acc, current) => {
-  //     let key = Object.keys(current)[0];
-  //     let value = Object.values(current)[0];
-  //     acc[key] = value;
-  //     return acc;
-  //   }, {});
-  // }
-
   loadFromRepo() {
     let arr = this.repo.load();
     if (!arr) return {};

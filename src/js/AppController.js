@@ -59,6 +59,7 @@ class AppController {
         onCloseAssignmentsPopup: this.onCloseAssignmentsPopup.bind(this),
         onStartEditAssignment: this.onStartEditAssignment.bind(this),
         handleStartDeleteAssignment: this.handleStartDeleteAssignment.bind(this),
+        onNavigate: this.onNavigate.bind(this),
       },
       addAssignmentPopup: {
         onCreateNewAssignment: this.onCreateNewAssignment.bind(this),
@@ -189,6 +190,7 @@ class AppController {
     const content = {};
 
     if (type === undefined || id === undefined) return {};
+    content.type = type;
 
     if (type === 'employee') {
       assignments = this.appModel.getAssignmentsOfEmployee(id);
@@ -215,6 +217,8 @@ class AppController {
       const {vacation, effective, revenue, cost, profit} = this.finService.getAssignFigures(assignment.id);
       return {
         assignmentID: assignment.id,
+        projectID: project.id,
+        employeeID: employee.id,
         linkText: firstColLinkText,
         linkHref: '',
         capacity: assignment.capacity,
@@ -410,6 +414,7 @@ class AppController {
     this.appModel.updateEmployeePosition(employeeID, value)
   }
 
+  /* other */
   calculateAge(dateOfBirth) {
     const birth = new Date(dateOfBirth);
     const today = new Date();
@@ -421,6 +426,36 @@ class AppController {
     return age;
   }
 
+  // action popup
+  onNavigate(itemID) {
+    const item = this.appModel.searchData(itemID);
+    // DEBUG
+    console.log("Item found: ", item);
+
+    this.appView.hideAssignmentsPopupView();
+
+    this.appView.clearFiltersProjects();
+    this.appView.clearFiltersEmployees();
+
+    if (item instanceof ProjectModel) {
+      const filterObj = { projectName: item.projectName };
+      this.appView.callAddFilterProjects(filterObj)
+      this.appView.showProjects();
+      // DEBUG
+      console.log("Filter by: ", filterObj);
+      console.log("Project tab shown");
+
+    } else if (item instanceof EmployeeModel) {
+      const filterObj1 = { name: item.name };
+      const filterObj2 = { surname: item.surname };
+      this.appView.callAddFilterEmployees(filterObj1);
+      this.appView.callAddFilterEmployees(filterObj2);
+      this.appView.showEmployees();
+      // DEBUG
+      console.log("Filter by: ", filterObj1, filterObj2);
+      console.log("Employees tab shown");
+    }
+  }
 }
 
 export default AppController;

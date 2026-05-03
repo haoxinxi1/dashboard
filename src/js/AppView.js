@@ -118,6 +118,27 @@ class AppView {
   showCalendarPopup(content) {
     this.staticViews.calendarPopup.createPopup(content);
   }
+
+  hideAssignmentsPopupView = () => {
+    this.staticViews.assignmentsPopupView.hideAssignmentsPopupView();
+  };
+
+  callAddFilterEmployees(filterObj) {
+    this.staticViews.employeesContentView.callAddFilter(filterObj);
+  }
+
+  callAddFilterProjects(filterObj) {
+    this.staticViews.projectsContentView.callAddFilter(filterObj);
+  }
+
+  clearFiltersProjects() {
+  this.staticViews.projectsContentView.clearFilters();
+  }
+  
+  clearFiltersEmployees() {
+    this.staticViews.employeesContentView.clearFilters();
+  }
+
 }
 
 export default AppView ;

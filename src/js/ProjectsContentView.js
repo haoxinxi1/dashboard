@@ -128,6 +128,13 @@ class ProjectsContentView {
 
     return clone;
   }
+
+  callAddFilter(filterObj) {
+    this.filterSortManager.addFilter(filterObj);
+  }
+  clearFilters() {
+    this.filterSortManager.removeFilter();
+  }
 }
 
 export default ProjectsContentView;

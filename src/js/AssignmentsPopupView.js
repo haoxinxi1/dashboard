@@ -1,11 +1,17 @@
 import { bindEvent, toggleNoEntries, applyFinancialStyle } from './utils';
 import Formatter from './Formatter';
+import ActionPopup from './ActionPopup';
 
 class AssignmentsPopupView {
   constructor(callbacks) {
     this.callbacks = callbacks;
     this.popup = document.getElementById('details-popup');
     this.bindListeners();
+    this.type = '';
+    this.actionPopup = new ActionPopup({
+      onNavigate: this.callbacks.onNavigate,
+      handleStartDeleteAssignment: this.callbacks.handleStartDeleteAssignment,
+    });
   }
 
   bindListeners() {
@@ -22,6 +28,9 @@ class AssignmentsPopupView {
   };
 
   handleBtnClick = (e) => {
+    const link = e.target.closest('.details-action-link');
+    if (link) return this.handleActionLinkClick(e);
+
     let targetBtn = e.target.closest('.edit-assignment-btn');
     if (!targetBtn) targetBtn = e.target.closest('.unassign-action-btn');
     if (!targetBtn) return;
@@ -31,9 +40,19 @@ class AssignmentsPopupView {
     else if (action === 'unassign') this.callbacks.handleStartDeleteAssignment(id);
   };
 
+  handleActionLinkClick = (e) => {
+    e.preventDefault();
+    const { assignmentId, projectId, employeeId } = e.target.dataset;
+    this.actionPopup.createPopup(
+      e.target,
+      { type: this.type, assignmentID: assignmentId, projectID: projectId, employeeID: employeeId }
+    );
+  }
+
   // render
   fillContent(content) {
     if (content.header === undefined) return;
+    this.type = content.type;
 
     this.popup.querySelector('#details-popup-header').textContent = content.header;
     this.popup.querySelector('#details-first-col-header').textContent = content.firstColHeader;
@@ -66,6 +85,8 @@ class AssignmentsPopupView {
    */
   createAssignmentDataRow({
     assignmentID,
+    projectID,
+    employeeID,
     linkText,
     linkHref,
     capacity,
@@ -82,6 +103,9 @@ class AssignmentsPopupView {
     const link = clone.querySelector('.details-action-link');
     link.textContent = linkText;
     link.href = linkHref || '#';
+    link.dataset.assignmentId = assignmentID;
+    link.dataset.projectId = projectID;
+    link.dataset.employeeId = employeeID;
 
     clone.querySelector('.detail-capacity').textContent = capacity;
     clone.querySelector('.detail-fit').textContent = fit;

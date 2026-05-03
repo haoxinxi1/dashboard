@@ -1,4 +1,4 @@
-import { bindEvent, populatePositionSelect } from './utils';
+import { bindEvent, populatePositionSelect, positionPopupNearElement } from './utils';
 
 class FilterPopup {
   constructor(callbacks) {
@@ -12,7 +12,7 @@ class FilterPopup {
     this.column = button.closest('th').dataset.filter;
     this.popup = this.render();
     document.body.appendChild(this.popup);
-    this.positionFilterPopup(button);
+    positionPopupNearElement(this.popup, button);
     this.bindListeners();
   }
 
@@ -56,28 +56,6 @@ class FilterPopup {
     popup.style.display = 'block';
     populatePositionSelect(popup.querySelector('.filter-popup-select'));
     return popup;
-  }
-
-  positionFilterPopup(button) {
-    const th = button.closest('th');
-    const rect = th.getBoundingClientRect();
-    const gap = 10;
-    let left = rect.left;
-    let top = rect.bottom + gap;
-
-    const popupRect = this.popup.getBoundingClientRect();
-
-    if (left + popupRect.width > window.innerWidth) {
-      left = window.innerWidth - popupRect.width - gap;
-    }
-    if (top + popupRect.height > window.innerHeight) {
-      top = window.innerHeight - popupRect.height - gap;
-    }
-    if (left < gap) left = gap;
-    if (top < gap) top = gap;
-
-    this.popup.style.left = `${left}px`;
-    this.popup.style.top = `${top}px`;
   }
 }
 

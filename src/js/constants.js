@@ -8,3 +8,5 @@ export const POSITIONS = ['Junior', 'Middle', 'Senior', 'Lead', 'Architect', 'BO
 
 export const MAX_CAP_FOR_EMPLOYEE = 1.5;
 export const MAX_FIT_FOR_EMPLOYEE = 1.0;
+
+export const IS_DEBUG = false;
