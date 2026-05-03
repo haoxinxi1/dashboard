@@ -1,4 +1,3 @@
-import Formatter from './Formatter';
 import { IS_DEBUG } from './constants';
 
 class FinancialFigureService {
@@ -28,6 +27,8 @@ class FinancialFigureService {
 
   update(period) {
     this.currentPeriod = period || this.appModel.getCurrentPeriod();
+    this.employeesResultsMap.clear();
+    this.projectsResultsMap.clear();
     this.employeesMap = new Map(this.appModel.getEmployees().map((el) => [el.id, el]));
     this.projectsMap = new Map(this.appModel.getProjects().map((el) => [el.id, el]));
     this.assignments = this.appModel.getAssignments();
@@ -67,7 +68,7 @@ class FinancialFigureService {
 
   calcProjectsEffectiveCapacity() {
     this.projectsMap.forEach((project, id) => {
-      if (IS_DEBUG) console.log(`Project ${id}:`, { budget: project.budget, capacity: project.capacity });
+      if (IS_DEBUG) console.log(`Project ${id}:`, { budget: project.budget, capacity: project.employeeCapacity });
       const usedEffectiveCapacity = this.getAggregatedValue('projectID', id, 'effectiveCap');
       const capacityForRevenue = Math.max(project.employeeCapacity, usedEffectiveCapacity);
       const revenueEffectiveCap = (!project.budget || !capacityForRevenue) ? 0 : project.budget / capacityForRevenue;
@@ -114,7 +115,10 @@ class FinancialFigureService {
   calcEmployeesFigures() {
     this.employeesMap.forEach((employee, id) => {
       const revenue = this.getAggregatedValue('employeeID', id, 'revenue');
-      const costs = this.getAggregatedValue('employeeID', id, 'costs');
+      const hasAssignments = this.assignResults.some(el => el.employeeID === id);
+      const costs = hasAssignments
+        ? this.getAggregatedValue('employeeID', id, 'costs')
+        : employee.salary * 0.5;
       this.employeesResultsMap.set(id, {
         revenue,
         costs,
@@ -128,7 +132,7 @@ class FinancialFigureService {
   calcTotalEstIncome() {
     let result = 0;
     this.projectsResultsMap.forEach((project, id) => {
-      result += project.estimatedIncome;
+      result += project.profit;
     });
     return result - this.aggregated.totalBenchPayments;
   }
@@ -155,10 +159,6 @@ class FinancialFigureService {
 
   // projects tab
 
-  getProjectEstIncome(projectID) {
-    return this.projectsResultsMap.get(projectID).estimatedIncome;
-  }
-
   getTotalEstIncomeAllProjects() {
     return this.aggregated.totalEstIncome;
   }
@@ -172,16 +172,8 @@ class FinancialFigureService {
     return this.employeesResultsMap.get(employeeID).costs;
   }
 
-  getIncomePerEmployee(employeeID) {
-    return this.employeesResultsMap.get(employeeID).revenue;
-  }
-
   getNumberProjectsForEmployee(employeeID) {
     return this.employeesResultsMap.get(employeeID).numberAssignments;
-  }
-
-  getCapacityUsageString(employeeID) {
-    return this.employeesResultsMap.get(employeeID).effectiveCap;
   }
 
   // assignments popup
@@ -203,10 +195,6 @@ class FinancialFigureService {
     return this.getAggregatedValue('employeeID', employeeID, 'capacity');
   }
 
-  getEmployeeEffectiveCapacity(employeeID) {
-    return this.employeesResultsMap.get(employeeID).effectiveCap;
-  }
-
   getProjectEffectiveCapacityUsed(projectID) {
     return this.projectsResultsMap.get(projectID).usedEffectiveCapacity;
   }
@@ -223,16 +211,6 @@ class FinancialFigureService {
   getBudgetShare(assignmentID) {
     return this.assignResults.find(el => el.id === assignmentID).budgetShare;
   }
-
-  getEstIncome(assignmentID) {
-    return this.assignResults.find(el => el.id === assignmentID).revenue;
-  }
-
-  // getProjectProfit(projectID) {
-  //   const budget = this.projectsMap.get(projectID).budget;
-  //   const costs = this.projectsResultsMap.get(projectID).costs;
-  //   return budget - costs;
-  // }
 
   getProjectProfit(projectID) {
     return this.projectsResultsMap.get(projectID).profit;
@@ -252,6 +230,22 @@ class FinancialFigureService {
 
   calculateDaysInMonth(year, month) {
     return new Date(year, month + 1, 0).getDate();
+  }
+
+  getProfitForEmployee(employeeID) {
+    return this.employeesResultsMap.get(employeeID).profit;
+  }
+
+  getProfitForProject(projectID) {
+    return this.projectsResultsMap.get(projectID).profit;
+  }
+
+  getProjectAssignedCapacity(projectID) {
+    return this.getAggregatedValue('projectID', projectID, 'capacity');
+  }
+
+  getAssignmentProfit(assignmentID) {
+    return this.assignResults.find(el => el.id === assignmentID).profit;
   }
 }
 

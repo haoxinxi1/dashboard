@@ -132,7 +132,7 @@ class AppController {
         budget: project.budget,
         employeeCapacityUsed: this.finService.getProjectEffectiveCapacityUsed(project.id),
         employeeCapacityFull: this.finService.getProjectCapacityNominal(project.id),
-        income: this.finService.getProjectEstIncome(project.id),
+        income: this.finService.getProfitForProject(project.id),
         numberEmployees: this.appModel.getAssignmentsOfProject(project.id)?.length ?? 0,
       };
     });
@@ -155,7 +155,7 @@ class AppController {
         position: employee.position,
         salary: employee.salary,
         estimatedPayment: this.finService.getMonthlySalaryPayment(employee.id),
-        projectedIncome: this.finService.getIncomePerEmployee(employee.id),
+        projectedIncome: this.finService.getProfitForEmployee(employee.id),
         numberProjects: this.finService.getNumberProjectsForEmployee(employee.id),
         capacityUsageNom: this.finService.getEmployeeNominalCapacity(employee.id),
       };
@@ -281,8 +281,6 @@ class AppController {
     const salaryShare = this.finService.getSalaryShare(assignmentID);
     const projectIncomeBefore = this.finService.getProjectProfit(projectID);
     const projectIncomeAfter = projectIncomeBefore + salaryShare;
-    const projectCapacityBefore = this.finService.getProjectCapacityNominal(projectID);
-    const projectCapacityAfter = projectCapacityBefore - assignment.capacity;
 
     return {
       assignmentID: assignmentID,
@@ -292,11 +290,12 @@ class AppController {
       assignedCapacity: assignment.capacity,
       salaryShare,
       budgetShare: this.finService.getBudgetShare(assignmentID),
-      estimatedIncome: this.finService.getEstIncome(assignmentID),
-      currentCapacity: projectCapacityBefore,
-      afterCapacity: projectCapacityAfter,
+      estimatedIncome: this.finService.getAssignmentProfit(assignmentID),
       incomeNow: projectIncomeBefore,
       incomeAfter: projectIncomeAfter,
+      totalNomCapacity: this.finService.getProjectCapacityNominal(projectID),
+      currentNomCapacity: this.finService.getProjectAssignedCapacity(projectID),
+      afterNomCapacity: this.finService.getProjectAssignedCapacity(projectID) - assignment.capacity,
     }
   }
 

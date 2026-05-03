@@ -21,6 +21,7 @@ class AddAssignmentPopup {
     document.body.appendChild(this.popup);
     positionPopup(button, this.popup);
     this.bindListeners();
+    this.updateCapacityDisplay();
     this._onScrollResize = () => positionPopup(this.triggerButton, this.popup);
     window.addEventListener('scroll', this._onScrollResize, true);
     window.addEventListener('resize', this._onScrollResize);
@@ -84,7 +85,9 @@ class AddAssignmentPopup {
     this.popup.querySelector('.target-capacity').textContent =
       `${Formatter.decimal2(used + this.added)} / ${this.popup.querySelector('.total-capacity').textContent}`;
     validateEmployeeCapacity(this.popup, this.employeeCurrentCapacity, parseFloat(this.capacityInput), MAX_CAP_FOR_EMPLOYEE);
-    this.validateProjectCapacity(used, this.added, total);
+    if (this.popup.querySelector('.project-select').value) {
+      this.validateProjectCapacity(used, this.added, total);
+    }
   }
 
   validateProjectCapacity(usedCapacity, effectiveToAdd, totalCapacity) {

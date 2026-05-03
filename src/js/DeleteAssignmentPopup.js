@@ -57,10 +57,11 @@ class DeleteAssignmentPopup {
     salaryShare,
     budgetShare,
     estimatedIncome,
-    currentCapacity,
-    afterCapacity,
     incomeNow,
     incomeAfter,
+    totalNomCapacity,
+    currentNomCapacity,
+    afterNomCapacity,
   }) {
     const template = document.getElementById('unassignment-popup-template');
     const clone = template.content.cloneNode(true);
@@ -71,11 +72,11 @@ class DeleteAssignmentPopup {
     clone.querySelector('.employee-capacity').textContent = Formatter.decimal1(employeeCapacity);
     clone.querySelector('.project-name').textContent = projectName;
     clone.querySelector('.assigned-capacity').textContent = Formatter.decimal1(assignedCapacity);
-    clone.querySelector('.salary-share').textContent = salaryShare;
-    clone.querySelector('.budget-share').textContent = budgetShare;
+    clone.querySelector('.salary-share').textContent = Formatter.currency(salaryShare);
+    clone.querySelector('.budget-share').textContent = Formatter.currency(budgetShare);
     clone.querySelector('.estimated-income').textContent = Formatter.currency(estimatedIncome);
-    clone.querySelector('.current-capacity').textContent = Formatter.decimal1(currentCapacity);
-    clone.querySelector('.after-capacity').textContent = Formatter.decimal1(afterCapacity);
+    clone.querySelector('.current-capacity').textContent = `${Formatter.decimal1(currentNomCapacity)} / ${Formatter.decimal0(totalNomCapacity)}`;
+    clone.querySelector('.after-capacity').textContent = `${Formatter.decimal1(afterNomCapacity)} / ${Formatter.decimal0(totalNomCapacity)}`;
     clone.querySelector('.income-now').textContent = Formatter.currency(incomeNow);
     clone.querySelector('.income-after').textContent = Formatter.currency(incomeAfter);
 

@@ -107,9 +107,9 @@ class AssignmentsPopupView {
     link.dataset.projectId = projectID;
     link.dataset.employeeId = employeeID;
 
-    clone.querySelector('.detail-capacity').textContent = capacity;
-    clone.querySelector('.detail-fit').textContent = fit;
-    clone.querySelector('.detail-vacation').textContent = vacation;
+    clone.querySelector('.detail-capacity').textContent = Formatter.decimal2(capacity);
+    clone.querySelector('.detail-fit').textContent = Formatter.decimal2(fit);
+    clone.querySelector('.detail-vacation').textContent = vacation ? `${Formatter.decimal0(vacation)} days` : '-';
     clone.querySelector('.detail-effective').textContent = Formatter.decimal3(effective);
     clone.querySelector('.detail-revenue').textContent = Formatter.currency(revenue);
     clone.querySelector('.detail-cost').textContent = Formatter.currency(cost);
