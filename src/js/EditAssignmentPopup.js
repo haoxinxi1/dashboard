@@ -43,12 +43,12 @@ class EditAssignmentPopup {
     bindEvent('click', '.popup-cancel-edit', this.deletePopup);
     bindEvent('click', '.popup-save-edit', this.handleEditClick);
     bindEvent('input', '.edit-capacity-input', (e) => {
-      this.popup.querySelector('.edit-capacity-value').textContent = Formatter.decimal2(e.target.value);
+      this.popup.querySelector('.edit-capacity-value').textContent = Formatter.decimal2(parseFloat(e.target.value));
       const delta = parseFloat(e.target.value) - this.assignmentCapBefore;
       validateEmployeeCapacity(this.popup, this.employeeCurrentCapacity, delta, MAX_CAP_FOR_EMPLOYEE);
     });
     bindEvent('input', '.edit-fit-input', (e) => {
-      this.popup.querySelector('.edit-fit-value').textContent = Formatter.decimal2(e.target.value);
+      this.popup.querySelector('.edit-fit-value').textContent = Formatter.decimal2(parseFloat(e.target.value));
     });
   }
 

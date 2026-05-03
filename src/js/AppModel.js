@@ -66,8 +66,11 @@ class AppModel {
     cloned.employees.forEach((e) => {
       e.setVacationDays(this.currentPeriod, []);
       e.setVacationWorkingDays(this.currentPeriod, 0);
+      e.assignments[this.currentPeriod] = e.assignments[chosenPeriod] ?? [];
+      delete e.assignments[chosenPeriod];
+      delete e.vacationDays[chosenPeriod];
+      delete e.vacationWorkingDays[chosenPeriod];
     });
-
     this.data[this.currentPeriod] = cloned;
     this.callbacks.onModelChange();
     this.saveToRepo();
@@ -159,7 +162,7 @@ class AppModel {
     if (index === -1) return;
     const toDelete = array[index];
     const employee = this.data[this.currentPeriod].employees.find((el) => el.id === toDelete.employeeID);
-    const arrayInEmployee = employee.assignments[this.currentPeriod];
+    const arrayInEmployee = employee?.assignments?.[this.currentPeriod];
     const indexInEmployee = arrayInEmployee.findIndex((item) => item === toDelete.id);
     array.splice(index, 1);
     if (indexInEmployee !== -1) arrayInEmployee.splice(indexInEmployee, 1);

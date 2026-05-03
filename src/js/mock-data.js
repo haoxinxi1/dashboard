@@ -7,18 +7,12 @@ const employee1 = {
     salary: 4500,
     assignments: {
         '2026-0': ["300"],
-        '2026-1': ["300"],
-        '2026-2': ["300"]
     },
     vacationDays: {
         '2026-0': [],
-        '2026-1': [],
-        '2026-2': []
     },
     vacationWorkingDays: {
         '2026-0': 0,
-        '2026-1': 0,
-        '2026-2': 0
     }
 };
 
@@ -31,18 +25,12 @@ const employee2 = {
     salary: 3200,
     assignments: {
         '2026-0': ["301"],
-        '2026-1': ["301"],
-        '2026-2': ["301"]
     },
     vacationDays: {
         '2026-0': [],
-        '2026-1': [],
-        '2026-2': []
     },
     vacationWorkingDays: {
         '2026-0': 0,
-        '2026-1': 0,
-        '2026-2': 0
     }
 };
 
@@ -80,8 +68,6 @@ const assignment2 = {
 
 const mockData = [
   { '2026-0': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } },
-  { '2026-1': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } },
-  { '2026-2': { employees: [employee1, employee2], projects: [project1, project2], assignments: [assignment1, assignment2] } }
 ];
 
 export default mockData;
