@@ -114,6 +114,8 @@ class AddAssignmentPopup {
    */
   render({ employeeID, employeeName, currentCapacity, maxCapacity, availableCapacity, projects }) {
     this.employeeCurrentCapacity = currentCapacity;
+    this.capacityInput = Math.min(1.0, availableCapacity);
+    this.fitInput = 1.0;
 
     const template = document.getElementById('assignment-popup-template');
     const clone = template.content.cloneNode(true);
@@ -122,6 +124,10 @@ class AddAssignmentPopup {
     clone.querySelector('.current-capacity').textContent = Formatter.decimal1(currentCapacity);
     clone.querySelector('.max-capacity').textContent = Formatter.decimal1(maxCapacity);
     clone.querySelector('.available-capacity').textContent = Formatter.decimal1(availableCapacity);
+
+    const capacitySlider = clone.querySelector('.capacity-input');
+    capacitySlider.value = this.capacityInput;
+    clone.querySelector('.capacity-value').textContent = this.capacityInput;
 
     const select = clone.querySelector('.project-select');
     projects.forEach(({ id, name, available }) => {
