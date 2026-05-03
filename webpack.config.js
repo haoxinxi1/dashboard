@@ -24,6 +24,7 @@ module.exports = (env, { mode }) => {
       new HtmlWebpackPlugin({
         template: './src/index.html',
         filename: 'index.html',
+        favicon: './public/icons/favicon.svg',
       }),
       new MiniCssExtractPlugin(),
     ],
